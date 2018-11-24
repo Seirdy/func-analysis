@@ -1,0 +1,18 @@
+{
+    "python.pythonPath": "/home/rkumar/Executables/anaconda3/bin/python",
+    "python.formatting.blackArgs": [
+        "-l 79",
+        "--py36",
+        "--fast"
+    ],
+    "python.unitTest.pyTestArgs": [],
+    "python.unitTest.unittestEnabled": false,
+    "python.unitTest.nosetestsEnabled": false,
+    "python.unitTest.pyTestEnabled": true,
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.minimap.maxColumn": 70,
+    "editor.minimap.showSlider": "always",
+    "code-runner.executorMap": {
+        "python": "/home/rkumar/Executables/anaconda3/bin/python3"
+    }
+}
