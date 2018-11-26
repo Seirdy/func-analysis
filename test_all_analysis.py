@@ -28,8 +28,12 @@ EPSILON_1 = 3.05e-15
 EPSILON_2 = 1.196_789_1e-6
 
 
-def mpf_maxerror(arr1, arr2):
-    return np.amax(np.abs(np.subtract(arr1, arr2)))
+def mpf_assert_allclose(arr1, arr2, atol=1e-3):
+    """Assert that the two arrays are close enough.
+
+    Similar to numpy.testing.assert_allclose().
+    """
+    assert np.amax(np.abs(np.subtract(arr1, arr2))) < atol
 
 
 # pylint: disable = too-few-public-methods
@@ -178,8 +182,8 @@ def pois_stay_close_when_given_fp2(fp2_zeros):
     assert sec_der.call_count - sec_der_counts_before > 50
 
     typecheck_zcp(more_exact_pois)
-    assert mpf_maxerror(fp2_zeros, more_exact_pois) < EPSILON_0
-    assert mpf_maxerror(more_exact_pois, ANALYZED_TRIG_FUNC_POIS) < EPSILON_2
+    mpf_assert_allclose(fp2_zeros, more_exact_pois, EPSILON_0)
+    mpf_assert_allclose(more_exact_pois, ANALYZED_TRIG_FUNC_POIS, EPSILON_2)
 
 
 def test_trig_func_has_correct_pois():
@@ -195,7 +199,7 @@ def test_trig_func_has_correct_pois():
     fp2_zeros = FuncSpecialPts(
         func=sec_der, x_range=(-47.05, -46.35), zeros_wanted=21
     ).zeros()
-    assert mpf_maxerror(fp2_zeros, ANALYZED_TRIG_FUNC_POIS) < EPSILON_2
+    mpf_assert_allclose(fp2_zeros, ANALYZED_TRIG_FUNC_POIS, EPSILON_2)
     pois_stay_close_when_given_fp2(fp2_zeros)
 
 
@@ -321,9 +325,8 @@ def test_interval_helpers_work_correctly():
 
 
 def test_analyzed_incdecfunc_has_correct_decreasing():
-    assert (
-        mpf_maxerror(analyzed_incdecfunc.decreasing(), [(-3, mp.fneg(mp.e))])
-        < EPSILON_1 / 11
+    mpf_assert_allclose(
+        analyzed_incdecfunc.decreasing(), [(-3, mp.fneg(mp.e))], EPSILON_1 / 11
     )
 
 
@@ -345,11 +348,10 @@ def test_analyzed_incdecfunc_has_correct_increasing():
         analyzed_incdecfunc_increasing[0][0]
         == analyzed_incdecfunc_decreasing[0][1]
     )
-    assert (
-        mpf_maxerror(
-            analyzed_incdecfunc.increasing(), [(mp.fneg(mp.e), -0.001)]
-        )
-        < EPSILON_1 / 10
+    mpf_assert_allclose(
+        analyzed_incdecfunc.increasing(),
+        [(mp.fneg(mp.e), -0.001)],
+        EPSILON_1 / 10,
     )
 
 
