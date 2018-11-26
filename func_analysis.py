@@ -150,7 +150,7 @@ class AnalyzedFunc:
         try:
             return self._derivatives[nth]
         except KeyError:
-            if nth is 0:
+            if nth == 0:
                 return self.func
 
             def derivative_computed(
