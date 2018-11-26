@@ -2,5 +2,5 @@
 jobs = 4
 disable = C0330,wrong-import-order,no-member,invalid-name,missing-docstring
 max-line-length=79
-score=no
+score=yes
 ignore=.ropeproject
