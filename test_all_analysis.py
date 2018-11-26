@@ -12,11 +12,13 @@ from typing import Iterable, List, Union
 import mpmath as mp
 import numpy as np
 
-from func_analysis import (FuncIntervals,
-                           FuncSpecialPts,
-                           decreasing_intervals,
-                           increasing_intervals,
-                           make_intervals)
+from func_analysis import (
+    FuncIntervals,
+    FuncSpecialPts,
+    decreasing_intervals,
+    increasing_intervals,
+    make_intervals,
+)
 
 BuiltinFloat = Union[np.float128, np.float64, float]
 Number = Union[mp.mpf, BuiltinFloat]
@@ -54,15 +56,6 @@ class CountCalls:
 # pylint: enable = too-few-public-methods
 
 
-@CountCalls
-def trig_func(x_val: mp.mpf) -> mp.mpf:
-    """Define a test function requiring high precision for analysis.
-
-    cos(x^2)-sin(x)+x/68
-    """
-    return mp.cos(mp.power(x_val, 2)) - mp.sin(x_val) + (x_val / 68)
-
-
 def typecheck_multi(item, *args) -> bool:
     """Assert that item is instance of anything in *args."""
     return any(isinstance(item, type) for type in args)
@@ -83,6 +76,15 @@ def typecheck_iterable(items: Iterable, *args):
     if isinstance(items, np.ndarray):
         assert typecheck_multi(items[0], args)
     assert all(typecheck_multi(item, args) for item in items)
+
+
+@CountCalls
+def trig_func(x_val: mp.mpf) -> mp.mpf:
+    """Define a test function requiring high precision for analysis.
+
+    cos(x^2)-sin(x)+x/68
+    """
+    return mp.cos(mp.power(x_val, 2)) - mp.sin(x_val) + (x_val / 68)
 
 
 analyzed_trig_func = FuncIntervals(
