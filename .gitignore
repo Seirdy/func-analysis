@@ -116,7 +116,7 @@ dmypy.json
 .pyre/
 
 # editor files
-.vscode/
+
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -227,6 +227,5 @@ tags
 
 # other
 numpy-stubs/
-numpy-stubs
 format.sh
 test_this.sh
