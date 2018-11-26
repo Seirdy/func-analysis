@@ -12,12 +12,14 @@ from typing import Iterable, List, Union
 import mpmath as mp
 import numpy as np
 
-from func_analysis import (FuncIntervals,
-                           FuncSpecialPts,
-                           decreasing_intervals,
-                           has_symmetry,
-                           increasing_intervals,
-                           make_intervals)
+from func_analysis import (
+    FuncIntervals,
+    FuncSpecialPts,
+    decreasing_intervals,
+    has_symmetry,
+    increasing_intervals,
+    make_intervals,
+)
 
 BuiltinFloat = Union[np.float128, np.float64, float]
 Number = Union[mp.mpf, BuiltinFloat]
