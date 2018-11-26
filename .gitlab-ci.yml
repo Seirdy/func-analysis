@@ -1,0 +1,9 @@
+image: python:latest
+
+before_script:
+  - pip install pytest numpy scipy mpmath pandas mypy pytest-mypy
+
+test:
+  stage: test
+  script:
+  - python -m pytest
