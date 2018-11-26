@@ -1,5 +1,6 @@
 # Function Analysis
 
+[![pipeline status](https://gitlab.com/Seirdy/func-analysis/badges/master/pipeline.svg)](https://gitlab.com/Seirdy/func-analysis/commits/master)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 This library uses concepts typically taught in an introductory Calculus class to describe properties of continuous, differentiable, single-variable functions.
