@@ -12,14 +12,11 @@ from typing import Iterable, List, Union
 import mpmath as mp
 import numpy as np
 
-from func_analysis import (
-    FuncIntervals,
-    FuncSpecialPts,
-    decreasing_intervals,
-    has_symmetry,
-    increasing_intervals,
-    make_intervals,
-)
+from func_analysis import (FuncIntervals,
+                           FuncSpecialPts,
+                           decreasing_intervals,
+                           increasing_intervals,
+                           make_intervals)
 
 BuiltinFloat = Union[np.float128, np.float64, float]
 Number = Union[mp.mpf, BuiltinFloat]
@@ -266,7 +263,7 @@ def test_parabola_has_correct_crits():
 
 
 def test_parabola_has_symmetry():
-    assert has_symmetry(axis=0, analyzed_func=ANALYZED_PARAB)
+    assert ANALYZED_PARAB.has_symmetry(axis=0)
     np.testing.assert_equal(
         ANALYZED_PARAB.vertical_axis_of_symmetry(), ANALYZED_PARAB.crits(), [0]
     )

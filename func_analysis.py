@@ -482,23 +482,3 @@ class FuncIntervals(FuncSpecialPts):
         )
         pairs: np.ndarray = assemble_table(self.func_iterable, x_vals)
         return pairs[np.argmin(pairs[:, 1])]
-
-
-def has_symmetry(axis: mp.mpf, analyzed_func: AnalyzedFunc) -> bool:
-    """Determine if func is symmetric about given axis."""
-    try:
-        # Dedupe self.plotted_points.
-        # Pandas is really good at deduplication,
-        # so we'll use a DataFrame object.
-        analyzed_func.plotted_points = (
-            DataFrame(analyzed_func.plotted_points).drop_duplicates().values
-        )
-        if len(analyzed_func.plotted_points) < 50:
-            analyzed_func.plot(50)
-    except AttributeError:
-        analyzed_func.plot(50)
-    x_mirror = np.subtract(2 * axis, analyzed_func.plotted_points[:, 0])
-    return np.array_equal(
-        analyzed_func.plotted_points[:, 1],
-        analyzed_func.func_iterable(x_mirror),
-    )
