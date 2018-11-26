@@ -35,7 +35,7 @@ from scipy.optimize import brentq
 
 # the three main types of Number used in this program are:
 #   1. mpmath arbitrary-precision floating points (mp.mpf)
-#   2. numpy.np.float64
+#   2. numpy.float64
 #   3. Python's native floats.
 Number = Union[mp.mpf, np.float64, float]
 Interval = Tuple[mp.mpf, mp.mpf]  # intervals between mp.mpf Number
