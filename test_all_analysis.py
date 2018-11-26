@@ -94,9 +94,9 @@ analyzed_trig_func = FuncIntervals(
     crits_wanted=21,
     known_zeros=[-47.038_289_673_236_127, -46.406_755_885_040_056],
 )
-analyzed_trig_func_zeros = analyzed_trig_func.zeros()
-analyzed_trig_func_crits = analyzed_trig_func.crits()
-analyzed_trig_func_pois = analyzed_trig_func.pois()
+ANALYZED_TRIG_FUNC_ZEROS = analyzed_trig_func.zeros()
+ANALYZED_TRIG_FUNC_CRITS = analyzed_trig_func.crits()
+ANALYZED_TRIG_FUNC_POIS = analyzed_trig_func.pois()
 
 
 def test_zeroth_derivative_is_itself():
@@ -109,15 +109,15 @@ def typecheck_zcp(points):
 
 
 def test_trig_func_has_correct_zeros():
-    typecheck_zcp(analyzed_trig_func_zeros)
+    typecheck_zcp(ANALYZED_TRIG_FUNC_ZEROS)
 
 
 def test_trig_func_has_correct_crits():
     # typechecks
-    typecheck_zcp(analyzed_trig_func_crits)
+    typecheck_zcp(ANALYZED_TRIG_FUNC_CRITS)
     # approximate accuracy
     np.testing.assert_allclose(
-        np.float128(analyzed_trig_func_crits),
+        np.float128(ANALYZED_TRIG_FUNC_CRITS),
         [
             -47.028_400_867_252_13,
             -46.995_216_177_440_79,
@@ -179,7 +179,7 @@ def pois_stay_close_when_given_fp2(fp2_zeros):
 
     typecheck_zcp(more_exact_pois)
     assert mpf_maxerror(fp2_zeros, more_exact_pois) < EPSILON_0
-    assert mpf_maxerror(more_exact_pois, analyzed_trig_func_pois) < EPSILON_2
+    assert mpf_maxerror(more_exact_pois, ANALYZED_TRIG_FUNC_POIS) < EPSILON_2
 
 
 def test_trig_func_has_correct_pois():
@@ -190,12 +190,12 @@ def test_trig_func_has_correct_pois():
     derivative. Try to use Hypothesis for typechecking.
     """
     # typechecking
-    typecheck_zcp(analyzed_trig_func_pois)
-    trig_func_pois_match_imprecise_expectation(analyzed_trig_func_pois)
+    typecheck_zcp(ANALYZED_TRIG_FUNC_POIS)
+    trig_func_pois_match_imprecise_expectation(ANALYZED_TRIG_FUNC_POIS)
     fp2_zeros = FuncSpecialPts(
         func=sec_der, x_range=(-47.05, -46.35), zeros_wanted=21
     ).zeros()
-    assert mpf_maxerror(fp2_zeros, analyzed_trig_func_pois) < EPSILON_2
+    assert mpf_maxerror(fp2_zeros, ANALYZED_TRIG_FUNC_POIS) < EPSILON_2
     pois_stay_close_when_given_fp2(fp2_zeros)
 
 
@@ -212,8 +212,8 @@ def test_trig_func_has_correct_relative_extrema():
     minima = analyzed_trig_func.relative_minima()
     typecheck_zcp(maxima)
     typecheck_zcp(minima)
-    np.testing.assert_equal(maxima, analyzed_trig_func_crits[::2])
-    np.testing.assert_equal(minima, analyzed_trig_func_crits[1::2])
+    np.testing.assert_equal(maxima, ANALYZED_TRIG_FUNC_CRITS[::2])
+    np.testing.assert_equal(minima, ANALYZED_TRIG_FUNC_CRITS[1::2])
 
 
 def test_trig_func_has_correct_abs_max():
@@ -251,27 +251,27 @@ def parab_func(x_val: Number) -> mp.mpf:
     return mp.power(x_val, 2) - 4
 
 
-ANALYZED_PARAB = FuncIntervals(
+analyzed_parab = FuncIntervals(
     func=parab_func, x_range=(-8, 8), zeros_wanted=2
 )
 
 
 def test_parabola_has_correct_zeros():
-    np.testing.assert_equal(ANALYZED_PARAB.zeros(), np.array([-2, 2]))
+    np.testing.assert_equal(analyzed_parab.zeros(), np.array([-2, 2]))
 
 
 def test_parabola_has_correct_crits():
-    assert ANALYZED_PARAB.crits() == [0]
+    assert analyzed_parab.crits() == [0]
 
 
 def test_parabola_has_symmetry():
-    assert ANALYZED_PARAB.has_symmetry(axis=0)
+    assert analyzed_parab.has_symmetry(axis=0)
     np.testing.assert_equal(
-        ANALYZED_PARAB.vertical_axis_of_symmetry(), ANALYZED_PARAB.crits(), [0]
+        analyzed_parab.vertical_axis_of_symmetry(), analyzed_parab.crits(), [0]
     )
-    delattr(ANALYZED_PARAB, "plotted_points")
+    delattr(analyzed_parab, "plotted_points")
     np.testing.assert_equal(
-        ANALYZED_PARAB.vertical_axis_of_symmetry(), ANALYZED_PARAB.crits(), [0]
+        analyzed_parab.vertical_axis_of_symmetry(), analyzed_parab.crits(), [0]
     )
 
 
@@ -284,7 +284,7 @@ def inc_dec_func(x_val):
     return mp.fdiv(mp.log(mp.power(x_val, 2)), x_val)
 
 
-ANALYZED_INCDECFUNC = FuncIntervals(
+analyzed_incdecfunc = FuncIntervals(
     func=inc_dec_func, x_range=(-3, -0.001), crits_wanted=0, zeros_wanted=1
 )
 
@@ -322,7 +322,7 @@ def test_interval_helpers_work_correctly():
 
 def test_analyzed_incdecfunc_has_correct_decreasing():
     assert (
-        mpf_maxerror(ANALYZED_INCDECFUNC.decreasing(), [(-3, mp.fneg(mp.e))])
+        mpf_maxerror(analyzed_incdecfunc.decreasing(), [(-3, mp.fneg(mp.e))])
         < EPSILON_1 / 11
     )
 
@@ -336,8 +336,8 @@ def typecheck_intervals(intervals):
 
 
 def test_analyzed_incdecfunc_has_correct_increasing():
-    analyzed_incdecfunc_increasing = ANALYZED_INCDECFUNC.increasing()
-    analyzed_incdecfunc_decreasing = ANALYZED_INCDECFUNC.decreasing()
+    analyzed_incdecfunc_increasing = analyzed_incdecfunc.increasing()
+    analyzed_incdecfunc_decreasing = analyzed_incdecfunc.decreasing()
     typecheck_intervals(analyzed_incdecfunc_increasing)
     typecheck_intervals(analyzed_incdecfunc_decreasing)
     # assert isinstance(analyzed_incdecfunc_increasing[0], tuple)
@@ -347,14 +347,14 @@ def test_analyzed_incdecfunc_has_correct_increasing():
     )
     assert (
         mpf_maxerror(
-            ANALYZED_INCDECFUNC.increasing(), [(mp.fneg(mp.e), -0.001)]
+            analyzed_incdecfunc.increasing(), [(mp.fneg(mp.e), -0.001)]
         )
         < EPSILON_1 / 10
     )
 
 
 def test_correct_incdecfunc_zeros():
-    assert ANALYZED_INCDECFUNC.zeros() == [-1]
+    assert analyzed_incdecfunc.zeros() == [-1]
 
 
 # def test_trig_func_has_correct_concavity():
