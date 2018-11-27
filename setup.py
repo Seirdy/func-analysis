@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Package func-analysis"""
+"""Package func-analysis."""
 
 from setuptools import find_packages, setup
 
@@ -25,7 +25,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: Implementation :: CPython",
-        "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)", # NOQA
+        "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",  # NOQA
         "Topic :: Utilities",
     ],
 )
