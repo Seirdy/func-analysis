@@ -61,7 +61,7 @@ class CountCalls:
 
 
 def typecheck_multi(item, *args) -> bool:
-    """Assert that item is instance of anything in *args."""
+    """Check if item is instance of anything in *args."""
     return any(isinstance(item, type) for type in args)
 
 
