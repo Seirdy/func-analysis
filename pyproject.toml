@@ -1,5 +1,5 @@
 [build-system]
-requires = ["numpy", "scipy", "mpmath", "pandas"]
+requires = ['setuptools>=38.6.0', 'wheel>0.31.0']
 
 [tool.isort]
 multi_line_output=3
