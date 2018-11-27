@@ -5,7 +5,7 @@ stages:
 - build
 
 before_script:
-  - pip install pytest numpy scipy mpmath pandas mypy pytest-mypy pytest-cov pytest-pylint
+  - pip install tox pytest numpy scipy mpmath pandas mypy pytest-mypy pytest-cov pytest-pylint
 
 pytest-py37:
   stage: test
