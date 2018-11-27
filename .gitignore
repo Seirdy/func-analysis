@@ -225,3 +225,4 @@ tags
 numpy-stubs/
 format.sh
 test_this.sh
+.snekrc
