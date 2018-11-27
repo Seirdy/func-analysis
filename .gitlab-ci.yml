@@ -1,9 +1,26 @@
 image: python:latest
 
+stages:
+- test
+- build
+
 before_script:
   - pip install pytest numpy scipy mpmath pandas mypy pytest-mypy pytest-cov pytest-pylint
 
-test:
+pytest-py37:
   stage: test
   script:
-  - python -m pytest
+  - tox -e py37
+
+linters:
+  stage: test
+  script:
+  - tox -e linters
+
+build:
+  stage: build
+  script: tox -e build
+  artifacts:
+    paths:
+    - dist/
+    expire_in: 1 month
