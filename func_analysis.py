@@ -33,6 +33,7 @@ import numpy as np
 from pandas import DataFrame
 from scipy.optimize import brentq
 
+__version__ = "0.0.1"
 # the three main types of Number used in this program are:
 #   1. mpmath arbitrary-precision floating points (mp.mpf)
 #   2. numpy.float64

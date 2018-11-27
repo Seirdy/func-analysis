@@ -2,19 +2,30 @@
 # -*- coding: utf-8 -*-
 """Package func-analysis."""
 
+import sys
+from os import path
+
 from setuptools import find_packages, setup
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+assert sys.version_info >= (3, 7, 0), "func_analysis requires Python 3.7+"
+
+CURRENT_DIR = path.dirname(__file__)
+
+
+def read(*parts):
+    """Read files in project directory."""
+    with open(path.join(CURRENT_DIR, *parts), encoding="utf8") as fp:
+        return fp.read()
+
 
 # pylint: disable=line-too-long
 setup(
     name="func-analysis",
-    version="0.0.0",
+    version="0.0.1",
     author="Rohan Kumar",
     author_email="seirdy@pm.ch",
     description="Analyze function behavior using introductory calculus.",
-    long_description=long_description,
+    long_description=read("README.md"),
     long_description_content_type="text/markdown",
     url="https://gitlab.com/Seirdy/func-analysis",
     packages=find_packages(),
