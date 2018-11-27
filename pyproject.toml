@@ -1,6 +1,106 @@
 [build-system]
 requires = ['setuptools>=38.6.0', 'wheel>0.31.0']
 
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py37
+
+[testenv]
+whitelist_externals = sh
+deps =
+	pytest>=4.0.1
+	coverage
+	pytest-cov
+	numpy
+	scipy
+	mpmath
+	pandas
+commands =
+	pytest
+
+[testenv:black]
+basepython = python3
+skip_install = true
+deps =
+	black
+commands =
+	black --py36 -l 79 .
+
+# Linters
+
+[testenv:flake8]
+basepython = python3
+skip_install = true
+deps =
+	flake8
+	pep8-naming
+	flake8-blind-except
+	flake8-builtins
+	flake8-comprehensions
+	flake8-deprecated
+	flake8-eradicate
+	flake8-mutable
+	flake8-pep3101
+	flake8-polyfill
+	flake8-pytest
+	flake8-self
+	flake8-super-call
+	flake8-tuple
+commands =
+	flake8
+
+[testenv:pylint]
+basepython = python3
+skip_install = true
+deps =
+	pylint
+	numpy
+	scipy
+	mpmath
+	pandas
+commands =
+	sh -c "pylint -s n *.py"
+
+[testenv:pydocstyle]
+basepython = python3
+skip_install = true
+deps = pydocstyle
+commands = pydocstyle
+
+[testenv:mypy]
+basepython = python3
+skip_install = true
+deps = mypy
+commands =
+	sh -c "mypy *.py"
+
+[testenv:linters]
+basepython = python3
+skip_install = true
+deps =
+	{[testenv:black]deps}
+	{[testenv:flake8]deps}
+	{[testenv:pylint]deps}
+	{[testenv:pydocstyle]deps}
+	{[testenv:mypy]deps}
+commands =
+	{[testenv:black]commands}
+	{[testenv:flake8]commands}
+	{[testenv:pylint]commands}
+	{[testenv:pydocstyle]commands}
+	{[testenv:mypy]commands}
+
+[testenv:build]
+basepython = python3
+skip_install = true
+deps =
+	wheel
+	setuptools
+commands =
+	python setup.py -q sdist bdist_wheel
+"""
+
 [tool.isort]
 multi_line_output=3
 include_trailing_comma=true
