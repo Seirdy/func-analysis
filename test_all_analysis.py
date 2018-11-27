@@ -359,47 +359,6 @@ def test_correct_incdecfunc_zeros():
     assert analyzed_incdecfunc.zeros() == [-1]
 
 
-# def test_trig_func_has_correct_concavity():
-#     print(analyzed_trig_func.concave())
-
-
-# def test_trig_func_has_correct_convexity():
-#     print(analyzed_trig_func.convex())
-
-
-# @CountCalls
-# def poi_func(x_val):
-#     """Define a function with no points of inflection.
-
-#     Its second and third derivatives at the origin are zero.
-#     """
-#     return x_val ** 3 / (x_val + 2)
-
-
-# AnalyzedPoiFunc = FuncIntervals(
-#     func=poi_func,
-#     x_range=(-2 + 1e-6, 6),
-#     zeros_wanted=1,
-#     known_zeros=[0],
-#     crits_wanted=1,
-#     pois_wanted=1,
-# )
-
-# POI_ZEROS = AnalyzedPoiFunc.zeros()
-# POI_POIS = AnalyzedPoiFunc.pois()
-# POI = POI_POIS[0]
-# X_VALS = mp.linspace(POI * (1 - 1e-6), POI * (1 + 1e-6), 11)
-# assert X_VALS.index(POI) == 5
-# Y_VALS = AnalyzedPoiFunc.rooted_first_derivative().func(X_VALS)
-# print(AnalyzedPoiFunc.rooted_first_derivative().func(0))
-# # print(np.fabs(Y_VALS))
-# print(np.argmin(np.fabs(Y_VALS)))
-
-# print(AnalyzedPoiFunc.rooted_first_derivative().func(POI_POIS))
-# assert POI_ZEROS.size, POI_POIS.size == 1
-# assert POI_ZEROS[0] < EPSILON_2
-
-
 def test_call_counting():
     """Check and print call counts for each executed function."""
     assert trig_func.call_count < 1700
