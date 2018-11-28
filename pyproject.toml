@@ -37,6 +37,7 @@ skip_install = true
 deps =
 	flake8
 	pep8-naming
+	flake8-bandit
 	flake8-blind-except
 	flake8-builtins
 	flake8-comprehensions
