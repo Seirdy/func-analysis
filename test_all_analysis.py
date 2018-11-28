@@ -373,7 +373,7 @@ def typecheck_intervals(intervals):
         typecheck_isnumber(interval[1])
 
 
-def test_analyzed_incdecfunc_has_correct_increasing():
+def test_analyzed_incdecfunc_has_correct_increasing_decreasing():
     """Test FuncIntervals' increasing() and decreasing() methods."""
     analyzed_incdecfunc_increasing = analyzed_incdecfunc.increasing()
     analyzed_incdecfunc_decreasing = analyzed_incdecfunc.decreasing()
