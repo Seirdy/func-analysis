@@ -104,20 +104,27 @@ ANALYZED_TRIG_FUNC_POIS = analyzed_trig_func.pois()
 
 
 def test_zeroth_derivative_is_itself():
+    """Check that nth_derivative(0) returns the unaltered function."""
     assert analyzed_trig_func.nth_derivative(0) == analyzed_trig_func.func
 
 
 def typecheck_zcp(points):
+    """Typecheck functions returning arrays of points.
+
+    Such functions include zeros(), crits(), pois(),
+    relative_maxima(), relative_minima().
+    """
     assert isinstance(points, np.ndarray)
     typecheck_iterable(points, mp.mpf)
 
 
 def test_trig_func_has_correct_zeros():
+    """Test the correctness of analyzed_trig_func.zeros()."""
     typecheck_zcp(ANALYZED_TRIG_FUNC_ZEROS)
 
 
 def test_trig_func_has_correct_crits():
-    # typechecks
+    """Test the correctness of analyzed_trig_func.crits()."""
     typecheck_zcp(ANALYZED_TRIG_FUNC_CRITS)
     # approximate accuracy
     np.testing.assert_allclose(
@@ -161,6 +168,7 @@ def sec_der(x_val: Number) -> mp.mpf:
 
 
 def trig_func_pois_match_imprecise_expectation(pois_found: np.ndarray):
+    """Test pois() accuracy by comparing with correct approximation."""
     assert (
         np.float128(pois_found[3] + 46.944_940_655_832_212_248_274_091_985_22)
         < EPSILON_1
@@ -168,6 +176,12 @@ def trig_func_pois_match_imprecise_expectation(pois_found: np.ndarray):
 
 
 def pois_stay_close_when_given_fp2(fp2_zeros):
+    """Test pois() when providing second derivative.
+
+    This makes sure that it is possible to provide a second derivative
+    to AnalyzedFunnc instances and that it gets used to improve
+    accuracy.
+    """
     analyzed_trig_func_with_fp2 = FuncIntervals(
         func=trig_func,
         x_range=(-47.05, -46.3499),
@@ -221,7 +235,7 @@ def test_trig_func_has_correct_relative_extrema():
 
 
 def test_trig_func_has_correct_abs_max():
-    """Test correctness of analyzed_trig_func.absolute_maximum().
+    """TTest that absolute_maximum() returns correct value.
 
     First, make sure that its approximation is correct. Then, compare
     the exact values.
@@ -239,6 +253,7 @@ def test_trig_func_has_correct_abs_max():
 
 
 def test_trig_func_has_correct_abs_min():
+    """Test that absolute_minimum() returns correct value."""
     expected_min = analyzed_trig_func.relative_minima()[0]
     np.testing.assert_equal(
         analyzed_trig_func.absolute_minimum(),
@@ -261,14 +276,17 @@ analyzed_parab = FuncIntervals(
 
 
 def test_parabola_has_correct_zeros():
+    """Check that analyzed_parab.zeros() returns correct value."""
     np.testing.assert_equal(analyzed_parab.zeros(), np.array([-2, 2]))
 
 
 def test_parabola_has_correct_crits():
+    """Check that analyzed_parab.crits() returns correct value."""
     assert analyzed_parab.crits() == [0]
 
 
 def test_parabola_has_symmetry():
+    """Check analyzed_parab's symmetry functions."""
     assert analyzed_parab.has_symmetry(axis=0)
     np.testing.assert_equal(
         analyzed_parab.vertical_axis_of_symmetry(), analyzed_parab.crits(), [0]
@@ -294,6 +312,11 @@ analyzed_incdecfunc = FuncIntervals(
 
 
 def test_interval_helpers_work_correctly():
+    """Test many helper functions that FuncIntervals leverages.
+
+    These functions include make_intervals(), increasing_intervals(),
+    and decreasing_intervals()/
+    """
     points = [-2.0, 8, -3, -4, -9, 12, 18, 4, 0]
     expected_intervals: List = [
         (-2, 8),
@@ -308,6 +331,11 @@ def test_interval_helpers_work_correctly():
     assert make_intervals(points) == expected_intervals
 
     def dummy_func(x_val):
+        """Return input.
+
+        Used to test increasing_intervals()
+        and decreasing_intervals().
+        """
         return x_val
 
     assert increasing_intervals(dummy_func, make_intervals(points)) == [
@@ -325,12 +353,19 @@ def test_interval_helpers_work_correctly():
 
 
 def test_analyzed_incdecfunc_has_correct_decreasing():
+    """Test accuracy of analyzed_incdecfunc.decreasing().
+
+    This works really well because in x_range, incdecfunc decreases
+    across (-3, -e). Comparing with an irrational constant really
+    pushes the boundaries of the precision of func_analysis.
+    """
     mpf_assert_allclose(
         analyzed_incdecfunc.decreasing(), [(-3, mp.fneg(mp.e))], EPSILON_1 / 11
     )
 
 
 def typecheck_intervals(intervals):
+    """Typecheck of all functions with return type List[Interval]."""
     assert isinstance(intervals, List)
     for interval in intervals:
         assert isinstance(interval, tuple)
@@ -339,8 +374,10 @@ def typecheck_intervals(intervals):
 
 
 def test_analyzed_incdecfunc_has_correct_increasing():
+    """Test FuncIntervals' increasing() and decreasing() methods."""
     analyzed_incdecfunc_increasing = analyzed_incdecfunc.increasing()
     analyzed_incdecfunc_decreasing = analyzed_incdecfunc.decreasing()
+
     typecheck_intervals(analyzed_incdecfunc_increasing)
     typecheck_intervals(analyzed_incdecfunc_decreasing)
     # assert isinstance(analyzed_incdecfunc_increasing[0], tuple)
@@ -356,6 +393,7 @@ def test_analyzed_incdecfunc_has_correct_increasing():
 
 
 def test_correct_incdecfunc_zeros():
+    """Test analyzed_incdecfunc.zeros() returns correct value."""
     assert analyzed_incdecfunc.zeros() == [-1]
 
 
