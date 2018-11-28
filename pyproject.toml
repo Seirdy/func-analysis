@@ -110,6 +110,23 @@ deps =
 	setuptools
 commands =
 	python setup.py -q sdist bdist_wheel
+
+# My poor lappie is running low on disk space, partly because of all
+# my venvs. In an act of mercy, I have chosen to create a testenv to do
+# everything so I only need to download one set of dependencies.
+# It seems easier than getting tox to share deps. This is only useful
+# on local machines, and isn't used in CI/CD.
+[testenv:all]
+basepython = python3
+skip_install = true
+deps =
+	{[testenv:linters]deps}
+	{[testenv]deps}
+	{[testenv:build]deps}
+commands =
+	{[testenv:linters]commands}
+	{[testenv]commands}
+	{[testenv:build]commands}
 """
 
 [tool.isort]
