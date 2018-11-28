@@ -77,6 +77,13 @@ deps = mypy
 commands =
 	sh -c "mypy *.py"
 
+[testenv:pyroma]
+basepython = python3
+skip_install = true
+deps = pyroma
+commands =
+	pyroma -n 10 .
+
 [testenv:linters]
 basepython = python3
 skip_install = true
@@ -86,12 +93,14 @@ deps =
 	{[testenv:pylint]deps}
 	{[testenv:pydocstyle]deps}
 	{[testenv:mypy]deps}
+	{[testenv:pyroma]deps}
 commands =
 	{[testenv:format]commands}
 	{[testenv:flake8]commands}
 	{[testenv:pylint]commands}
 	{[testenv:pydocstyle]commands}
 	{[testenv:mypy]commands}
+	{[testenv:pyroma]commands}
 
 [testenv:build]
 basepython = python3

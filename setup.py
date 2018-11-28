@@ -39,4 +39,7 @@ setup(
         "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",  # NOQA
         "Topic :: Utilities",
     ],
+    license="AGPLv3+",
+    keywords=["func-analysis", "calculus", "math"],
+    zip_safe=False,
 )
