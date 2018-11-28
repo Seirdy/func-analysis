@@ -28,12 +28,12 @@ EPSILON_1 = 3.05e-15
 EPSILON_2 = 1.196_789_1e-6
 
 
-def mpf_assert_allclose(arr1, arr2, atol=1e-3):
+def mpf_assert_allclose(actual, desired, atol=1e-3):
     """Assert that the two arrays are close enough.
 
     Similar to numpy.testing.assert_allclose().
     """
-    assert np.amax(np.abs(np.subtract(arr1, arr2))) < atol
+    assert np.amax(np.abs(np.subtract(actual, desired))) < atol
 
 
 def assert_output_lessthan(func, x_vals, max_y):
