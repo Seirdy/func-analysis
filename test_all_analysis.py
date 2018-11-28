@@ -36,6 +36,12 @@ def mpf_assert_allclose(arr1, arr2, atol=1e-3):
     assert np.amax(np.abs(np.subtract(arr1, arr2))) < atol
 
 
+def assert_output_lessthan(func, x_vals, max_y):
+    """Assert that func(x) < max_y for all x_vals."""
+    y_vals = func(x_vals)
+    assert np.amax(np.abs(y_vals)) < max_y
+
+
 # pylint: disable = too-few-public-methods
 class CountCalls:
     """Class decorator for tracking state."""
@@ -121,6 +127,40 @@ def typecheck_zcp(points):
 def test_trig_func_has_correct_zeros():
     """Test the correctness of analyzed_trig_func.zeros()."""
     typecheck_zcp(ANALYZED_TRIG_FUNC_ZEROS)
+    # approximate accuracy
+    np.testing.assert_allclose(
+        np.float128(ANALYZED_TRIG_FUNC_ZEROS),
+        [
+            -47.038_289_673_236_13,
+            -47.018_473_233_395_28,
+            -46.972_318_087_653_95,
+            -46.950_739_626_397_91,
+            -46.906_204_518_117_63,
+            -46.882_958_270_910_02,
+            -46.839_955_720_658_34,
+            -46.815_121_707_485,
+            -46.773_576_011_368_88,
+            -46.747_224_922_729_01,
+            -46.707_068_062_964_04,
+            -46.679_264_553_080_85,
+            -46.640_433_373_296_69,
+            -46.611_238_416_225_63,
+            -46.573_672_554_670_36,
+            -46.543_145_221_101_68,
+            -46.506_785_519_620_84,
+            -46.474_984_380_574_83,
+            -46.439_771_604_599_5,
+            -46.406_755_885_040_05,
+            -46.372_629_655_875_1,
+        ],
+        rtol=EPSILON_1,
+    )
+    # Does the function evaluate to 0 at its zeros?
+    assert_output_lessthan(
+        func=analyzed_trig_func.func,
+        x_vals=ANALYZED_TRIG_FUNC_ZEROS,
+        max_y=3.5692e-19,
+    )
 
 
 def test_trig_func_has_correct_crits():
@@ -154,6 +194,11 @@ def test_trig_func_has_correct_crits():
         ],
         rtol=EPSILON_1,
     )
+    assert_output_lessthan(
+        func=analyzed_trig_func.rooted_first_derivative().func,
+        x_vals=ANALYZED_TRIG_FUNC_CRITS,
+        max_y=EPSILON_1,
+    )
 
 
 @CountCalls
@@ -167,11 +212,16 @@ def sec_der(x_val: Number) -> mp.mpf:
     )
 
 
-def trig_func_pois_match_imprecise_expectation(pois_found: np.ndarray):
-    """Test pois() accuracy by comparing with correct approximation."""
+def assert_trig_func_pois_are_accurate(pois_found: np.ndarray):
+    """Test pois() accuracy."""
     assert (
         np.float128(pois_found[3] + 46.944_940_655_832_212_248_274_091_985_22)
         < EPSILON_1
+    )
+    assert_output_lessthan(
+        func=analyzed_trig_func.rooted_second_derivative().func,
+        x_vals=ANALYZED_TRIG_FUNC_POIS,
+        max_y=EPSILON_1,
     )
 
 
@@ -205,11 +255,11 @@ def test_trig_func_has_correct_pois():
 
     First, compare the output with approximate floating-point values.
     Then, compare the output with the pois found from its exact second
-    derivative. Try to use Hypothesis for typechecking.
+    derivative.
     """
     # typechecking
     typecheck_zcp(ANALYZED_TRIG_FUNC_POIS)
-    trig_func_pois_match_imprecise_expectation(ANALYZED_TRIG_FUNC_POIS)
+    assert_trig_func_pois_are_accurate(ANALYZED_TRIG_FUNC_POIS)
     fp2_zeros = FuncSpecialPts(
         func=sec_der, x_range=(-47.05, -46.35), zeros_wanted=21
     ).zeros()
@@ -391,14 +441,14 @@ def test_analyzed_incdecfunc_has_correct_increasing_decreasing():
     )
 
 
-def test_correct_incdecfunc_zeros():
+def test_incdecfunc_has_correct_zeros():
     """Test analyzed_incdecfunc.zeros() returns correct value."""
     assert analyzed_incdecfunc.zeros() == [-1]
 
 
 def test_call_counting():
     """Check and print call counts for each executed function."""
-    assert trig_func.call_count < 1700
+    assert trig_func.call_count < 2000
     assert trig_func.call_count > 10
     print("\ncall counts\n===========")
     for counted_func in CountCalls.functions:
