@@ -380,7 +380,6 @@ def test_analyzed_incdecfunc_has_correct_increasing():
 
     typecheck_intervals(analyzed_incdecfunc_increasing)
     typecheck_intervals(analyzed_incdecfunc_decreasing)
-    # assert isinstance(analyzed_incdecfunc_increasing[0], tuple)
     assert (
         analyzed_incdecfunc_increasing[0][0]
         == analyzed_incdecfunc_decreasing[0][1]
