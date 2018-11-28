@@ -51,9 +51,9 @@ def find_one_zero(
     """Find the zero of a function in a given interval.
 
     mpmath's zero-finding algorithms require a starting "guess" point.
-    scipy.optimize can find an imprecise zero in a given interval.
-    Combining these, this method uses scipy.optimize's output as
-    a starting point for mpmath's more precise root-finding algo.
+    scipy.optimize.brentq can find an imprecise zero in a given
+    interval. Combining these, this method uses scipy.optimize's output
+    as a starting point for mpmath's more precise root-finding algo.
 
     If a starting point is provided, the interval argument
     becomes unnecessary.
@@ -120,7 +120,7 @@ class AnalyzedFunc:
             return [self._func(x_val) for x_val in x_vals]
 
     def func_iterable(self, x_vals: Iterable[Number]) -> Iterable[mp.mpf]:
-        """Map self.simple_func over iterable input.
+        """Map self.func over iterable input.
 
         This also saves x- and y- values in self.plotted_points.
         """
@@ -197,7 +197,9 @@ class FuncZeros(AnalyzedFunc):
 
         Keyword Arguments:
             func -- the function
-            x_range -- specify the open interval of x-values.
+            x_range -- specify the interval of x-values.
+                This is treated as an open interval except when finding
+                absolute extrema.
         """
         super().__init__(**kwargs)
         self.zeros_wanted = zeros_wanted
@@ -328,7 +330,7 @@ class FuncSpecialPts(FuncZeros):
         self.known_pois = known_pois
 
     def rooted_first_derivative(self) -> FuncZeros:
-        """Return FuncZeros object for self.simple_func's 1st derivative."""
+        """Return FuncZeros object for self.func's 1st derivative."""
         derivatives_of_fprime: Optional[Dict[int, Callable[[mp.mpf], mp.mpf]]]
         derivatives_of_fprime = {
             nth - 1: self._derivatives[nth] for nth in self._derivatives.keys()
@@ -342,7 +344,7 @@ class FuncSpecialPts(FuncZeros):
         )
 
     def rooted_second_derivative(self) -> FuncZeros:
-        """Return FuncZeros object for self.simple_func's 2nd derivative."""
+        """Return FuncZeros object for self.func's 2nd derivative."""
         derivatives_of_fprime2: Optional[Dict[int, Callable[[mp.mpf], mp.mpf]]]
         derivatives_of_fprime2 = {
             nth - 2: self._derivatives[nth] for nth in self._derivatives.keys()
@@ -423,33 +425,33 @@ class FuncIntervals(FuncSpecialPts):
         return make_intervals(points)
 
     def increasing(self) -> List[Interval]:
-        """List self.simple_func's intervals of increase."""
+        """List self.func's intervals of increase."""
         return increasing_intervals(
             self.func, self._construct_intervals(list(self.crits()))
         )
 
     def decreasing(self) -> List[Interval]:
-        """List self.simple_func's intervals of decrease."""
+        """List self.func's intervals of decrease."""
         return decreasing_intervals(
             self.func, self._construct_intervals(list(self.crits()))
         )
 
     def concave(self) -> List[Interval]:
-        """List self.simple_func's intervals of concavity."""
+        """List self.func's intervals of concavity."""
         return increasing_intervals(
             self.rooted_first_derivative().func,
             self._construct_intervals(list(self.pois())),
         )
 
     def convex(self) -> List[Interval]:
-        """List self.simple_func's intervals of convexity."""
+        """List self.func's intervals of convexity."""
         return decreasing_intervals(
             self.rooted_first_derivative().func,
             self._construct_intervals(list(self.pois())),
         )
 
     def relative_maxima(self) -> np.ndarray:
-        """List all relative maxima of self.simple_func.
+        """List all relative maxima of self.func.
 
         Filter output of self.crits() to include critical Number
         appearing on intervals in which func is convex.
@@ -459,7 +461,7 @@ class FuncIntervals(FuncSpecialPts):
         return crits_found[mask]
 
     def relative_minima(self) -> np.ndarray:
-        """List all relative maxima of self.simple_func.
+        """List all relative maxima of self.func.
 
         Filter output of self.crits() to include critical Number
         appearing on intervals in which func is concave.
