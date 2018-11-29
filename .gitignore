@@ -224,5 +224,5 @@ tags
 # other
 numpy-stubs/
 format.sh
-test_this.sh
+lint-test.sh
 .snekrc
