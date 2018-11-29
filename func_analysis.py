@@ -51,12 +51,22 @@ def find_one_zero(
     """Find the zero of a function in a given interval.
 
     mpmath's zero-finding algorithms require a starting "guess" point.
-    scipy.optimize.brentq can find an imprecise zero in a given
+    `scipy.optimize.brentq` can find an imprecise zero in a given
     interval. Combining these, this method uses scipy.optimize's output
     as a starting point for mpmath's more precise root-finding algo.
 
     If a starting point is provided, the interval argument
     becomes unnecessary.
+
+    Args:
+        func: The function to find a zero for.
+        x_range: The x-interval in which to find a zero.
+        starting_point: A guess-point. Can be `None`, in which case
+            use `scipy.optimize.brentq` to calculate one.
+
+    Returns:
+        A single very precise zero.
+
     """
     # If a starting point is not provided, find one.
     if not starting_point and x_range:
@@ -70,7 +80,17 @@ def assemble_table(
     func: Callable[[Iterable[mp.mpf]], Iterable[mp.mpf]],
     x_vals: Iterable[Number],
 ) -> np.ndarray:
-    """Make a table of values for the function with the given x-vals."""
+    """Make a table of values for the function with the given x-vals.
+
+    Args:
+        func: The function to generate an x-y table for.
+        x_vals: The values to put in the x-column of the table.
+
+    Returns:
+        A 2d numpy array containing a column of x-values (see
+        Args: x_vals) and computed y-values.
+
+    """
     y_vals = func(x_vals)
     return np.stack((x_vals, y_vals), axis=-1)
 
@@ -84,7 +104,15 @@ class AnalyzedFunc:
         x_range: Tuple[Number, Number],
         derivatives: Dict[int, Func] = None,
     ):
-        """Initialize the object."""
+        """Initialize the object.
+
+        Args:
+            func: The function
+            x_range: The interval of x-values. This is treated as an
+                open interval except when finding absolute extrema.
+            derivatives: A dictionary of derivatives. derivatives[nth]
+                is the nth derivative of func.
+        """
         self._func = mp.memoize(func)
         self.x_range = x_range
         self.min_x: Number = self.x_range[0]
@@ -110,9 +138,14 @@ class AnalyzedFunc:
         same thing. Otherwise, this method maps self._func over
         iterable input.
 
-        If x_vals type is Iterable[Number]:
-            return type is Iterable[mp.mpf].
-        If x_vals type is Number, return type is mp.mpf.
+        Args:
+            x_vals: One or more x-values.
+
+        Returns:
+            One or more y-values. If x_vals type is Iterable[Number],
+            return type is Iterable[mp.mpf]. If x_vals type is Number,
+            return type is mp.mpf.
+
         """
         try:
             return self._func(x_vals)
@@ -123,6 +156,14 @@ class AnalyzedFunc:
         """Map self.func over iterable input.
 
         This also saves x- and y- values in self.plotted_points.
+
+        Args:
+            x_vals: Input values for self.func. See doc for
+                AnalyzedFunc.func()
+
+        Returns:
+            self.func(x_valus). See doc for AnalyzedFunc.func().
+
         """
         y_vals = self.func(x_vals)
         # build np.ndarray of new coords
@@ -138,7 +179,17 @@ class AnalyzedFunc:
         return y_vals
 
     def plot(self, points_to_plot: int) -> np.ndarray:
-        """Produce x,y pairs for self.func in range."""
+        """Produce x,y pairs for self.func in range.
+
+        Args:
+            points_to_plot: The number of evenly-spaced points to plot
+                in self.x_range.
+
+        Returns:
+            A 2d numpy array containing a column of x-values (see
+            Args: x_vals) and computed y-values.
+
+        """
         x_vals = np.linspace(self.min_x, self.max_x, points_to_plot)
         y_vals = self.func_iterable(x_vals)
         return np.stack((x_vals, y_vals), axis=-1)
@@ -146,7 +197,16 @@ class AnalyzedFunc:
     def nth_derivative(self, nth: int) -> Callable[[mp.mpf], mp.mpf]:
         """Create the nth-derivative of a function.
 
-        Numerically computes an arbitrary derivative of self.func
+        If the nth-derivative has already been found, grab it.
+        Otherwise, Numerically compute an arbitrary derivative of
+        self.func and save it for re-use.
+
+        Args:
+            nth: The derivative desired.
+
+        Returns:
+            The nth-derivative of the function.
+
         """
         try:
             return self._derivatives[nth]
@@ -157,7 +217,16 @@ class AnalyzedFunc:
             def derivative_computed(
                 x_val: Number
             ) -> Callable[[Number], Number]:
-                """Evaluate derivatives at an input value."""
+                """Evaluate derivatives at an input value.
+
+                Args:
+                    x_val: Input value to the nth-derivative of
+                        self.func.
+
+                Returns:
+                    The nth-derivative of self.func.
+
+                """
                 return mp.diff(self.func, x_val, n=nth)
 
             # Add this to the dictionary
@@ -165,7 +234,17 @@ class AnalyzedFunc:
             return self._derivatives[nth]
 
     def has_symmetry(self, axis: mp.mpf) -> bool:
-        """Determine if func is symmetric about given axis."""
+        """Determine if func is symmetric about given axis.
+
+        Args:
+            axis: The number representing the domain of the vertical
+                line about which self.func has symmetry.
+
+        Returns:
+            bool: True if self.func is symmetric about axis, False
+            otherwise.
+
+        """
         try:
             # Dedupe self.plotted_points.
             # pylint: disable=attribute-defined-outside-init
@@ -195,11 +274,12 @@ class FuncZeros(AnalyzedFunc):
     ):
         """Initialize the object.
 
-        Keyword Arguments:
-            func -- the function
-            x_range -- specify the interval of x-values.
-                This is treated as an open interval except when finding
-                absolute extrema.
+        Args:
+            zeros_wanted: The number
+            known_zeros: List of zeros already known. Used as starting
+                points for more exact computation.
+            **kwargs: Keyward arguments to pass to super. See doc for
+                AnalyzedFunc.__init__()
         """
         super().__init__(**kwargs)
         self.zeros_wanted = zeros_wanted
@@ -207,7 +287,13 @@ class FuncZeros(AnalyzedFunc):
             self._known_zeros = known_zeros
 
     def _zeros_in_range(self) -> np.ndarray:
-        """Filter zeros to contain just zeros in range."""
+        """Filter self._known_zeros to contain just zeros in range.
+
+        Returns:
+            A subset of self._known_zeros that includes only values in
+            self.x_range
+
+        """
         try:
             known_zeros = np.array(self._known_zeros)
             bools = np.logical_and(
@@ -219,7 +305,16 @@ class FuncZeros(AnalyzedFunc):
 
     @staticmethod
     def zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
-        """Find open intervals containing zeros."""
+        """Find open intervals containing zeros.
+
+        Args:
+            coordinate_pairs: An x-y table represented by a 2d ndarray.
+
+        Returns:
+            A list of x-intervals across which self.func crosses the
+            x-axis
+
+        """
         y_vals = coordinate_pairs[:, 1]
         x_vals = coordinate_pairs[:, 0]
         # First determine if each coordinate is above the x-axis.
@@ -234,11 +329,23 @@ class FuncZeros(AnalyzedFunc):
         ]
 
     def _all_zero_intervals(self) -> List[Interval]:
-        """Find ALL zero intervals for this object's function."""
+        """Find ALL zero intervals for this object's function.
+
+        Returns:
+            All x-intervals across which self.func crosses the x-axis.
+            Minimum number of intervals is self.zeros_wanted.
+
+        """
         points_to_plot = self.zeros_wanted + 3
 
         def recalc_zero_intervals() -> List[Interval]:
-            """Calculate the zero intervals with the given precision."""
+            """Calculate the zero intervals with the given precision.
+
+            Returns:
+                Zero intervals found when checking number of evenly-
+                spaced points specified by points_to_plot.
+
+            """
             return FuncZeros.zero_intervals(self.plot(points_to_plot))
 
         zero_intervals: List[Interval] = recalc_zero_intervals()
@@ -248,7 +355,13 @@ class FuncZeros(AnalyzedFunc):
         return zero_intervals
 
     def _solved_intervals(self) -> List[Interval]:
-        """Filter out zero intervals containing a zero already known."""
+        """Filter zero intervals containing a zero already known.
+
+        Returns:
+            A subset of self._all_zero_intervals() containing zeros
+            in self._known_zeros
+
+        """
         # There are none if there are no zeros already known.
         intervals_found: List[Tuple[mp.mpf, mp.mpf]] = []
         zeros_found = self._zeros_in_range()
@@ -267,7 +380,12 @@ class FuncZeros(AnalyzedFunc):
         return intervals_found
 
     def zeros(self) -> np.ndarray:
-        """List all zeros wanted in x_range."""
+        """List all zeros wanted in x_range.
+
+        Returns:
+            An array of precise zeros for self.func.
+
+        """
         # starting_points is a list of any zeros already found.
         # These zeros are imprecise starting points for exact
         # computation.
@@ -313,9 +431,15 @@ class FuncSpecialPts(FuncZeros):
     ):
         """Initialize a CriticalFunction.
 
-        Keyword Arguments:
-            crits_wanted -- number of critical nums to calculate
-            known_crits -- A list of critical Number already known
+        Args:
+            crits_wanted: Number of critical nums to calculate.
+            known_crits: A list of critical numbers already known,
+                used as starting points for more precise calculation.
+            pois_wanted: Number of points of inflection to calculate.
+            known_pois: A list of points of inflection already known,
+                used as starting points for more precise calculation.
+            **kwargs: Keyword arguments to pass to super. See
+                doc for FuncZeros.__init__()
         """
         super().__init__(**kwargs)
         if not crits_wanted:
@@ -330,12 +454,18 @@ class FuncSpecialPts(FuncZeros):
         self.known_pois = known_pois
 
     def rooted_first_derivative(self) -> FuncZeros:
-        """Return FuncZeros object for self.func's 1st derivative."""
+        """Return FuncZeros object for self.func's 1st derivative.
+
+        Returns:
+            FuncZeros: Analyzed 1st derivative of self.func, complete
+            with zeros, crits, and an iterable func.
+
+        """
         derivatives_of_fprime: Optional[Dict[int, Callable[[mp.mpf], mp.mpf]]]
         derivatives_of_fprime = {
             nth - 1: self._derivatives[nth] for nth in self._derivatives.keys()
         }
-        return FuncZeros(
+        return FuncSpecialPts(
             func=self.nth_derivative(1),
             zeros_wanted=max(self.crits_wanted, 1),
             known_zeros=self.known_crits,
@@ -344,7 +474,13 @@ class FuncSpecialPts(FuncZeros):
         )
 
     def rooted_second_derivative(self) -> FuncZeros:
-        """Return FuncZeros object for self.func's 2nd derivative."""
+        """Return FuncZeros object for self.func's 2nd derivative.
+
+        Returns:
+            FuncZeros: Analyzed 2nd derivative of self.func, complete
+            with zeros and an iterable func.
+
+        """
         derivatives_of_fprime2: Optional[Dict[int, Callable[[mp.mpf], mp.mpf]]]
         derivatives_of_fprime2 = {
             nth - 2: self._derivatives[nth] for nth in self._derivatives.keys()
@@ -358,11 +494,23 @@ class FuncSpecialPts(FuncZeros):
         )
 
     def crits(self) -> np.ndarray:
-        """List all crits wanted of self.function in range."""
+        """List all critical numbers wanted.
+
+        This works by returning the zeros of the 1st derivative.
+
+        Returns:
+            An array of precise critical points for self.func.
+
+        """
         return self.rooted_first_derivative().zeros()
 
     def pois(self) -> np.ndarray:
-        """List all points of inflection."""
+        """List all points of inflection wanted.
+
+        Returns:
+            An array of precise points of inflection for self.func.
+
+        """
         fp2_zeros = self.rooted_second_derivative().zeros()
         return fp2_zeros[
             np.array(self.rooted_first_derivative().func_iterable(fp2_zeros))
@@ -370,12 +518,26 @@ class FuncSpecialPts(FuncZeros):
         ]
 
     def vertical_axis_of_symmetry(self) -> List[mp.mpf]:
-        """Find all vertical axes of symmetry."""
+        """Find all vertical axes of symmetry.
+
+        Returns:
+            A list of x-values for vertical lines about which self.func
+            has symmetry.
+
+        """
         return [crit for crit in self.crits() if self.has_symmetry(axis=crit)]
 
 
 def make_intervals(points: List[Number]) -> List[Interval]:
-    """Pair each point to the next."""
+    """Pair each point to the next.
+
+    Args:
+        points: A list of points
+
+    Returns:
+        A list of intervals in which every two points have been paired.
+
+    """
     return [(points[i], points[i + 1]) for i in range(0, len(points) - 1)]
 
 
@@ -384,9 +546,14 @@ def increasing_intervals(
 ) -> List[Interval]:
     """Return intervals across which func is decreasing.
 
-    Keyword Arguments:
-        func -- The function to analyze.
-        intervals -- list of x-intervals to filter.
+    Args:
+        func: The function to analyze.
+        intervals: List of x-intervals to filter.
+
+    Returns:
+        Subset of intervals containing only intervals across which
+        self.func is increasing.
+
     """
     return [
         x_interval
@@ -400,9 +567,14 @@ def decreasing_intervals(
 ) -> List[Interval]:
     """Return intervals across which func is decreasing.
 
-    Keyword Arguments:
-        func -- The function to analyze.
-        intervals -- list of x-intervals to filter.
+    Args:
+        func: The function to analyze.
+        intervals: List of x-intervals to filter.
+
+    Returns:
+        Subset of intervals containing only intervals across which
+        self.func is decreasing.
+
     """
     return [
         x_interval
@@ -425,26 +597,50 @@ class FuncIntervals(FuncSpecialPts):
         return make_intervals(points)
 
     def increasing(self) -> List[Interval]:
-        """List self.func's intervals of increase."""
+        """List self.func's intervals of increase.
+
+        Returns:
+            All intervals of self.x_range across which self.func is
+            increasing.
+
+        """
         return increasing_intervals(
             self.func, self._construct_intervals(list(self.crits()))
         )
 
     def decreasing(self) -> List[Interval]:
-        """List self.func's intervals of decrease."""
+        """List self.func's intervals of decrease.
+
+        Returns:
+            All intervals of self.x_range across which self.func is
+            increasing.
+
+        """
         return decreasing_intervals(
             self.func, self._construct_intervals(list(self.crits()))
         )
 
     def concave(self) -> List[Interval]:
-        """List self.func's intervals of concavity."""
+        """List self.func's intervals of concavity (opening up).
+
+        Returns:
+            All intervals of self.x_range across which self.func is
+            concave (opening up).
+
+        """
         return increasing_intervals(
             self.rooted_first_derivative().func,
             self._construct_intervals(list(self.pois())),
         )
 
     def convex(self) -> List[Interval]:
-        """List self.func's intervals of convexity."""
+        """List self.func's intervals of convexity. (opening down).
+
+        Returns:
+            All intervals of self.x_range across which self.func is
+            convex (opening down).
+
+        """
         return decreasing_intervals(
             self.rooted_first_derivative().func,
             self._construct_intervals(list(self.pois())),
@@ -453,8 +649,13 @@ class FuncIntervals(FuncSpecialPts):
     def relative_maxima(self) -> np.ndarray:
         """List all relative maxima of self.func.
 
-        Filter output of self.crits() to include critical Number
+        Find the subset of self.crits() that includes critical numbers
         appearing on intervals in which func is convex.
+
+        Returns:
+            Array of precise relative maxima of self.func appearing in
+            x_range.
+
         """
         crits_found = self.crits()
         mask = np.array(self.rooted_second_derivative().func(crits_found)) < 0
@@ -463,15 +664,29 @@ class FuncIntervals(FuncSpecialPts):
     def relative_minima(self) -> np.ndarray:
         """List all relative maxima of self.func.
 
-        Filter output of self.crits() to include critical Number
+        Find the subset of self.crits() that includes critical numbers
         appearing on intervals in which func is concave.
+
+        Returns:
+            Array of precise relative minima of self.func appearing in
+            x_range.
+
         """
         crits_found = self.crits()
         mask = np.array(self.rooted_second_derivative().func(crits_found)) > 0
         return crits_found[mask]
 
     def absolute_maximum(self) -> Iterable[mp.mpf]:
-        """Find the absolute maximum of self.simple_func."""
+        """Find the absolute maximum of self.simple_func.
+
+        Find the maximum of self.relative_maxima and the bounds of
+        x_range.
+
+        Returns:
+            The x-y coordinate of the absolute maximum of self.func in
+            the form [x, y].
+
+        """
         x_vals: List[mp.mpf] = np.concatenate(
             (self.relative_maxima(), self.x_range)
         )
@@ -479,7 +694,16 @@ class FuncIntervals(FuncSpecialPts):
         return pairs[np.argmax(pairs[:, 1])]
 
     def absolute_minimum(self) -> Iterable[mp.mpf]:
-        """Find the absolute minimum of self.simple_func."""
+        """Find the absolute minimum of self.simple_func.
+
+        Find the minimum of self.relative_minima and the bounds of
+        x_range.
+
+        Returns:
+            The x-y coordinate of the absolute minimum of self.func in
+            the form [x, y].
+
+        """
         x_vals: List[mp.mpf] = np.concatenate(
             (self.relative_minima(), self.x_range)
         )

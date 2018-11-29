@@ -12,8 +12,16 @@ assert sys.version_info >= (3, 7, 0), "func_analysis requires Python 3.7+"
 CURRENT_DIR = path.dirname(__file__)
 
 
-def read(*parts):
-    """Read files in project directory."""
+def read(*parts: str) -> str:
+    """Read files in project directory.
+
+    Args:
+        *parts: Relative paths in CURRENT_DIR of files to read.
+
+    Returns:
+        str: The text of all files in *paths.
+
+    """
     with open(path.join(CURRENT_DIR, *parts), encoding="utf8") as fp:
         return fp.read()
 

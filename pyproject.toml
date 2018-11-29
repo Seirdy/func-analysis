@@ -36,6 +36,7 @@ basepython = python3
 skip_install = true
 deps =
 	flake8
+	darglint
 	pep8-naming
 	flake8-bandit
 	flake8-blind-except
@@ -45,6 +46,7 @@ deps =
 	flake8-eradicate
 	flake8-mutable
 	flake8-pep3101
+	flake8-per-file-ignores
 	flake8-polyfill
 	flake8-pytest
 	flake8-self
