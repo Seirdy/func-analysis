@@ -453,7 +453,10 @@ class FuncSpecialPts(FuncZeros):
         self.known_crits = known_crits
         self.known_pois = known_pois
 
-    def rooted_first_derivative(self) -> FuncZeros:
+    # pylint: disable=undefined-variable
+    def rooted_first_derivative(
+        self
+    ) -> Union[FuncZeros, FuncSpecialPts]:  # NOQA: F821
         """Return FuncZeros object for self.func's 1st derivative.
 
         Returns:
@@ -461,6 +464,7 @@ class FuncSpecialPts(FuncZeros):
             with zeros, crits, and an iterable func.
 
         """
+        # pylint: enable=undefined-variable
         derivatives_of_fprime: Optional[Dict[int, Callable[[mp.mpf], mp.mpf]]]
         derivatives_of_fprime = {
             nth - 1: self._derivatives[nth] for nth in self._derivatives.keys()
@@ -471,6 +475,8 @@ class FuncSpecialPts(FuncZeros):
             known_zeros=self.known_crits,
             derivatives=derivatives_of_fprime,
             x_range=self.x_range,
+            crits_wanted=self.pois_wanted,
+            known_crits=self.known_pois,
         )
 
     def rooted_second_derivative(self) -> FuncZeros:
