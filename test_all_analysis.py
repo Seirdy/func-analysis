@@ -71,7 +71,7 @@ def typecheck_multi(item, *args) -> bool:
     return any(isinstance(item, type) for type in args)
 
 
-def typecheck_isnumber(num):
+def typecheck_number(num):
     """Assert that item is a Number."""
     assert typecheck_multi(num, mp.mpf, float, np.float64, int)
 
@@ -291,9 +291,9 @@ def test_trig_func_has_correct_abs_max():
     the exact values.
     """
     trig_abs_max = analyzed_trig_func.absolute_maximum()
-    appproximate_expected_max = [-46.355_597_936_762_38, 1.013_176_643_861_527]
+    approximate_expected_max = [-46.355_597_936_762_38, 1.013_176_643_861_527]
     np.testing.assert_allclose(
-        np.float128(trig_abs_max), appproximate_expected_max
+        np.float128(trig_abs_max), approximate_expected_max
     )
     exact_expected_max = analyzed_trig_func.relative_maxima()[10]
     np.testing.assert_equal(
@@ -419,8 +419,8 @@ def typecheck_intervals(intervals):
     assert isinstance(intervals, List)
     for interval in intervals:
         assert isinstance(interval, tuple)
-        typecheck_isnumber(interval[0])
-        typecheck_isnumber(interval[1])
+        typecheck_number(interval[0])
+        typecheck_number(interval[1])
 
 
 def test_analyzed_incdecfunc_has_correct_increasing_decreasing():

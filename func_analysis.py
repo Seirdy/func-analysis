@@ -129,7 +129,6 @@ class AnalyzedFunc:
         # A table of x- and y-values saved as an np.ndarray.
         self.func_iterable(self.x_range)
 
-
     def func(self, x_vals):
         """Define the function to be analyzed.
 
@@ -166,7 +165,7 @@ class AnalyzedFunc:
 
         """
         y_vals = self.func(x_vals)
-        # build np.ndarray of new coords
+        # build np.ndarray of new coordinates
         result_array: np.ndarray = np.stack((x_vals, y_vals), axis=-1)
         # attach this np.ndarray to self.plotted_points.
         # Create self.plotted_points if it doesn't already exist.
@@ -279,7 +278,7 @@ def _zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
     # First determine if each coordinate is above the x-axis.
     is_positive = y_vals > 0
     # Using is_positive, return a list of tuples containing every pair of
-    # consecutive x-values that has correspondin y-values on the opposite
+    # consecutive x-values that has corresponding y-values on the opposite
     # sides of the x-axis
     return [
         (x_vals[i], x_vals[i + 1])
@@ -321,10 +320,10 @@ class FuncZeros(AnalyzedFunc):
         """
         try:
             known_zeros = np.array(self._known_zeros)
-            bools = np.logical_and(
+            mask = np.logical_and(
                 self.min_x <= known_zeros, self.max_x >= known_zeros
             )
-            return known_zeros[bools]
+            return known_zeros[mask]
         except AttributeError:
             return np.array([])
 
