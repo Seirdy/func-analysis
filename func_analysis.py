@@ -123,12 +123,12 @@ class AnalyzedFunc:
             self._derivatives = {
                 k: mp.memoize(v) for k, v in derivatives.items()
             }
-            self._derivatives = derivatives
         else:
             self._derivatives = {}
 
         # A table of x- and y-values saved as an np.ndarray.
         self.func_iterable(self.x_range)
+
 
     def func(self, x_vals):
         """Define the function to be analyzed.
