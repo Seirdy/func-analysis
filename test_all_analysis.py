@@ -15,9 +15,9 @@ import numpy as np
 from func_analysis import (
     FuncIntervals,
     FuncSpecialPts,
-    decreasing_intervals,
-    increasing_intervals,
-    make_intervals,
+    _decreasing_intervals,
+    _increasing_intervals,
+    _make_intervals,
 )
 
 BuiltinFloat = Union[np.float128, np.float64, float]
@@ -364,8 +364,8 @@ analyzed_incdecfunc = FuncIntervals(
 def test_interval_helpers_work_correctly():
     """Test many helper functions that FuncIntervals leverages.
 
-    These functions include make_intervals(), increasing_intervals(),
-    and decreasing_intervals()/
+    These functions include _make_intervals(), _increasing_intervals(),
+    and _decreasing_intervals()/
     """
     points = [-2.0, 8, -3, -4, -9, 12, 18, 4, 0]
     expected_intervals: List = [
@@ -378,22 +378,22 @@ def test_interval_helpers_work_correctly():
         (18, 4),
         (4, 0),
     ]
-    assert make_intervals(points) == expected_intervals
+    assert _make_intervals(points) == expected_intervals
 
     def dummy_func(x_val):
         """Return input.
 
-        Used to test increasing_intervals()
-        and decreasing_intervals().
+        Used to test _increasing_intervals()
+        and _decreasing_intervals().
         """
         return x_val
 
-    assert increasing_intervals(dummy_func, make_intervals(points)) == [
+    assert _increasing_intervals(dummy_func, _make_intervals(points)) == [
         expected_intervals[0],
         expected_intervals[4],
         expected_intervals[5],
     ]
-    assert decreasing_intervals(dummy_func, make_intervals(points)) == [
+    assert _decreasing_intervals(dummy_func, _make_intervals(points)) == [
         expected_intervals[1],
         expected_intervals[2],
         expected_intervals[3],

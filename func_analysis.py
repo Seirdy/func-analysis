@@ -263,6 +263,31 @@ class AnalyzedFunc:
         )
 
 
+def _zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
+    """Find open intervals containing zeros.
+
+    Args:
+        coordinate_pairs: An x-y table represented by a 2d ndarray.
+
+    Returns:
+        A list of x-intervals across which self.func crosses the
+        x-axis
+
+    """
+    y_vals = coordinate_pairs[:, 1]
+    x_vals = coordinate_pairs[:, 0]
+    # First determine if each coordinate is above the x-axis.
+    is_positive = y_vals > 0
+    # Using is_positive, return a list of tuples containing every pair of
+    # consecutive x-values that has correspondin y-values on the opposite
+    # sides of the x-axis
+    return [
+        (x_vals[i], x_vals[i + 1])
+        for i in range(0, len(coordinate_pairs) - 1)
+        if is_positive[i] is not is_positive[i + 1]
+    ]
+
+
 class FuncZeros(AnalyzedFunc):
     """A function with some of its properties.
 
@@ -303,31 +328,6 @@ class FuncZeros(AnalyzedFunc):
         except AttributeError:
             return np.array([])
 
-    @staticmethod
-    def zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
-        """Find open intervals containing zeros.
-
-        Args:
-            coordinate_pairs: An x-y table represented by a 2d ndarray.
-
-        Returns:
-            A list of x-intervals across which self.func crosses the
-            x-axis
-
-        """
-        y_vals = coordinate_pairs[:, 1]
-        x_vals = coordinate_pairs[:, 0]
-        # First determine if each coordinate is above the x-axis.
-        is_positive = y_vals > 0
-        # Using is_positive, return a list of tuples containing every pair of
-        # consecutive x-values that has correspondin y-values on the opposite
-        # sides of the x-axis
-        return [
-            (x_vals[i], x_vals[i + 1])
-            for i in range(0, len(coordinate_pairs) - 1)
-            if is_positive[i] is not is_positive[i + 1]
-        ]
-
     def _all_zero_intervals(self) -> List[Interval]:
         """Find ALL zero intervals for this object's function.
 
@@ -346,13 +346,13 @@ class FuncZeros(AnalyzedFunc):
                 spaced points specified by points_to_plot.
 
             """
-            return FuncZeros.zero_intervals(self.plot(points_to_plot))
+            return _zero_intervals(self.plot(points_to_plot))
 
-        zero_intervals: List[Interval] = recalc_zero_intervals()
-        while len(zero_intervals) < self.zeros_wanted:
+        zero_intervals_found: List[Interval] = recalc_zero_intervals()
+        while len(zero_intervals_found) < self.zeros_wanted:
             points_to_plot += 1
-            zero_intervals = recalc_zero_intervals()
-        return zero_intervals
+            zero_intervals_found = recalc_zero_intervals()
+        return zero_intervals_found
 
     def _solved_intervals(self) -> List[Interval]:
         """Filter zero intervals containing a zero already known.
@@ -534,7 +534,7 @@ class FuncSpecialPts(FuncZeros):
         return [crit for crit in self.crits() if self.has_symmetry(axis=crit)]
 
 
-def make_intervals(points: List[Number]) -> List[Interval]:
+def _make_intervals(points: List[Number]) -> List[Interval]:
     """Pair each point to the next.
 
     Args:
@@ -547,7 +547,7 @@ def make_intervals(points: List[Number]) -> List[Interval]:
     return [(points[i], points[i + 1]) for i in range(0, len(points) - 1)]
 
 
-def increasing_intervals(
+def _increasing_intervals(
     func: Callable[[mp.mpf], mp.mpf], intervals: List[Interval]
 ) -> List[Interval]:
     """Return intervals across which func is decreasing.
@@ -568,7 +568,7 @@ def increasing_intervals(
     ]
 
 
-def decreasing_intervals(
+def _decreasing_intervals(
     func: Callable[[mp.mpf], mp.mpf], intervals: List[Interval]
 ) -> List[Interval]:
     """Return intervals across which func is decreasing.
@@ -600,7 +600,7 @@ class FuncIntervals(FuncSpecialPts):
     def _construct_intervals(self, points) -> List[Interval]:
         points.insert(0, self.min_x)
         points.append(self.max_x)
-        return make_intervals(points)
+        return _make_intervals(points)
 
     def increasing(self) -> List[Interval]:
         """List self.func's intervals of increase.
@@ -610,7 +610,7 @@ class FuncIntervals(FuncSpecialPts):
             increasing.
 
         """
-        return increasing_intervals(
+        return _increasing_intervals(
             self.func, self._construct_intervals(list(self.crits()))
         )
 
@@ -622,7 +622,7 @@ class FuncIntervals(FuncSpecialPts):
             increasing.
 
         """
-        return decreasing_intervals(
+        return _decreasing_intervals(
             self.func, self._construct_intervals(list(self.crits()))
         )
 
@@ -634,7 +634,7 @@ class FuncIntervals(FuncSpecialPts):
             concave (opening up).
 
         """
-        return increasing_intervals(
+        return _increasing_intervals(
             self.rooted_first_derivative().func,
             self._construct_intervals(list(self.pois())),
         )
@@ -647,7 +647,7 @@ class FuncIntervals(FuncSpecialPts):
             convex (opening down).
 
         """
-        return decreasing_intervals(
+        return _decreasing_intervals(
             self.rooted_first_derivative().func,
             self._construct_intervals(list(self.pois())),
         )
