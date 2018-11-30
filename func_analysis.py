@@ -338,20 +338,12 @@ class FuncZeros(AnalyzedFunc):
         """
         points_to_plot = self.zeros_wanted + 3
 
-        def recalc_zero_intervals() -> List[Interval]:
-            """Calculate the zero intervals with the given precision.
-
-            Returns:
-                Zero intervals found when checking number of evenly-
-                spaced points specified by points_to_plot.
-
-            """
-            return _zero_intervals(self.plot(points_to_plot))
-
-        zero_intervals_found: List[Interval] = recalc_zero_intervals()
+        zero_intervals_found: List[Interval] = _zero_intervals(
+            self.plot(points_to_plot)
+        )
         while len(zero_intervals_found) < self.zeros_wanted:
             points_to_plot += 1
-            zero_intervals_found = recalc_zero_intervals()
+            zero_intervals_found = _zero_intervals(self.plot(points_to_plot))
         return zero_intervals_found
 
     def _solved_intervals(self) -> List[Interval]:
