@@ -38,14 +38,13 @@ setup(
     url="https://gitlab.com/Seirdy/func-analysis",
     packages=find_packages(),
     classifiers=[
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",  # NOQA
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: Implementation :: CPython",
-        "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",  # NOQA
-        "Topic :: Utilities",
+        'Topic :: Scientific/Engineering :: Mathematics',
     ],
     license="AGPLv3+",
     keywords=["func-analysis", "calculus", "math"],
