@@ -174,7 +174,7 @@ class AnalyzedFunc:
                 (self.plotted_points, result_array)
             )
         except AttributeError:
-            self.plotted_points = result_array
+            self.plotted_points: np.ndarray = result_array
         return y_vals
 
     def plot(self, points_to_plot: int) -> np.ndarray:
@@ -673,7 +673,7 @@ class FuncIntervals(FuncSpecialPts):
         mask = np.array(self.rooted_second_derivative().func(crits_found)) > 0
         return crits_found[mask]
 
-    def absolute_maximum(self) -> Iterable[mp.mpf]:
+    def absolute_maximum(self) -> np.ndarray:
         """Find the absolute maximum of self.simple_func.
 
         Find the maximum of self.relative_maxima and the bounds of
@@ -690,7 +690,7 @@ class FuncIntervals(FuncSpecialPts):
         pairs: np.ndarray = assemble_table(self.func_iterable, x_vals)
         return pairs[np.argmax(pairs[:, 1])]
 
-    def absolute_minimum(self) -> Iterable[mp.mpf]:
+    def absolute_minimum(self) -> np.ndarray:
         """Find the absolute minimum of self.simple_func.
 
         Find the minimum of self.relative_minima and the bounds of
