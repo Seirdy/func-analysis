@@ -44,7 +44,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: Implementation :: CPython",
-        'Topic :: Scientific/Engineering :: Mathematics',
+        "Topic :: Scientific/Engineering :: Mathematics",
     ],
     license="AGPLv3+",
     keywords=["func-analysis", "calculus", "math"],
