@@ -7,7 +7,9 @@ legacy_tox_ini = """
 envlist = py37
 
 [testenv]
-whitelist_externals = sh
+whitelist_externals =
+	sh
+	rm
 deps =
 	pytest>=4.0.1
 	coverage
@@ -111,6 +113,7 @@ deps =
 	setuptools
 commands =
 	python setup.py -q sdist bdist_wheel
+	rm -rf build
 
 # My poor lappie is running low on disk space, partly because of all
 # my venvs. In an act of mercy, I have chosen to create a testenv to do
