@@ -10,20 +10,19 @@ This library uses concepts typically taught in an introductory Calculus class to
 
 `func_analysis.py` defines the class `FuncIntervals`. An instance of this class has several attributes describing the behavior of this function.
 
-Required attributes include:
+Required data include:
 
 - A range
 - The function to be analyzed
 
-Optional attributes include:
+Special points include zeros, critical numbers, extrema, and points of inflection. Calculating these is possible when given the number of points wanted.
+
+Optional data can be provided to improve precision and performance. Such data include:
 
 - Any derivatives of the function
-- The number of zeros, critical numbers, extrema, points of inflection
 - Any known zeros, critical numbers, extrema, points of inflection
 - Intervals of concavity, convexity, increase, decrease
 - Any vertical axis of symmetry
-
-An instance of `FuncIntervals` will contain *all* the above attributes, whether or not it was provided with them when instantiated. Providing any of the above during instantiation will improve the speed and/or accuracy of computation.
 
 # License
 
