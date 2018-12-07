@@ -65,7 +65,7 @@ deps =
 	mpmath
 	pandas
 commands =
-	sh -c "pylint -s n *.py"
+	sh -c "pylint -s n *.py */*.py"
 
 [testenv:pydocstyle]
 basepython = python3
