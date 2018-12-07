@@ -28,7 +28,7 @@ deps =
 	black
 	isort
 commands =
-	sh -c "isort --multi-line=3 --trailing-comma --line-width=79 *.py"
+	sh -c "isort --multi-line=3 --trailing-comma --line-width=79 *.py */*.py"
 	black --py36 -l 79 .
 
 # Linters
@@ -78,7 +78,7 @@ basepython = python3
 skip_install = true
 deps = mypy
 commands =
-	sh -c "mypy *.py"
+	mypy .
 
 [testenv:pyroma]
 basepython = python3
