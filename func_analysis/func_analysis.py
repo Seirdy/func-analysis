@@ -26,6 +26,8 @@ This code uses the Black formatter.
 
 from __future__ import annotations
 
+from collections import abc
+from functools import singledispatch, update_wrapper
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
 
 import mpmath as mp
@@ -43,6 +45,18 @@ Interval = Tuple[mp.mpf, mp.mpf]  # intervals between mp.mpf Number
 Func = Callable[
     [Union[Iterable[Number], Number]], Union[Iterable[mp.mpf], mp.mpf]
 ]
+
+
+def singledispatchmethod(func):
+    """Single-dispatch generic method decorator."""
+    dispatcher = singledispatch(func)
+
+    def wrapper(*args, **kw):
+        return dispatcher.dispatch(args[1].__class__)(*args, **kw)
+
+    wrapper.register = dispatcher.register  # type: ignore
+    update_wrapper(wrapper, func)
+    return wrapper
 
 
 def find_one_zero(
@@ -145,8 +159,26 @@ class AnalyzedFunc:
         # A table of x- and y-values saved as an np.ndarray.
         self.func_iterable(self.x_range)
 
-    def func(self, x_vals) -> Union[Number, np.ndarray]:
+    @singledispatchmethod
+    def func(self, x_val: Number) -> mp.mpf:
         """Define the function to be analyzed.
+
+        Parameters
+        ----------
+        x_val
+            The independent variable to input to self._func.
+
+        Returns
+        -------
+        y_val
+            The y_value of self._func when x is x_val
+
+        """
+        return self._func(x_val)
+
+    @func.register(abc.Iterable)
+    def _(self, x_vals: Iterable[Number]) -> Iterable[mp.mpf]:
+        """Register an iterable type as the parameter for self.func.
 
         self._func might already be able to handle an iterable input,
         in which case this method acts like a different name for the
@@ -169,7 +201,9 @@ class AnalyzedFunc:
         try:
             return self._func(x_vals)
         except TypeError:
-            return [self._func(x_val) for x_val in x_vals]
+            return [self.func(x_val) for x_val in x_vals]
+
+    del _
 
     def func_iterable(self, x_vals: Iterable[Number]) -> Iterable[mp.mpf]:
         """Map self.func over iterable input.
