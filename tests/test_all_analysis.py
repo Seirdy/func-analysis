@@ -285,7 +285,7 @@ def test_trig_func_has_correct_relative_extrema():
 
 
 def test_trig_func_has_correct_abs_max():
-    """TTest that absolute_maximum() returns correct value.
+    """Test that absolute_maximum() returns correct value.
 
     First, make sure that its approximation is correct. Then, compare
     the exact values.
