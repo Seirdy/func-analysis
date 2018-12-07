@@ -110,6 +110,11 @@ ANALYZED_TRIG_FUNC_CRITS = analyzed_trig_func.crits()
 ANALYZED_TRIG_FUNC_POIS = analyzed_trig_func.pois()
 
 
+def test_analyzedfunc_has_no_throwaways():
+    """Ensure that the throwaway overloading functions are removed."""
+    assert not hasattr(analyzed_trig_func, "_")
+
+
 def test_zeroth_derivative_is_itself():
     """Check that nth_derivative(0) returns the unaltered function."""
     assert analyzed_trig_func.nth_derivative(0) == analyzed_trig_func.func
