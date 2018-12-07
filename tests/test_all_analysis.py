@@ -7,6 +7,7 @@ This deliberately uses a function requiring a high degree of precision
 """
 from __future__ import annotations
 
+from functools import update_wrapper
 from typing import Iterable, List, Union
 
 import mpmath as mp
@@ -52,10 +53,10 @@ class CountCalls:
 
     def __init__(self, func):
         """Initialize the object."""
+        update_wrapper(self, func)
         self.func = func
         CountCalls.functions.append(self)
         self.call_count = 0
-        self.__name__ = self.func.__name__
 
     def __call__(self, *args):
         """Increment counter each time func is called."""
