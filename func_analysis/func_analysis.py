@@ -145,7 +145,7 @@ class AnalyzedFunc:
         # A table of x- and y-values saved as an np.ndarray.
         self.func_iterable(self.x_range)
 
-    def func(self, x_vals):
+    def func(self, x_vals) -> Union[Number, np.ndarray]:
         """Define the function to be analyzed.
 
         self._func might already be able to handle an iterable input,
@@ -160,7 +160,7 @@ class AnalyzedFunc:
 
         Returns
         -------
-        y_vals : np.ndarray or Number
+        y_vals
             One or more y-values. If x_vals type is Iterable[Number],
             return type is Iterable[mp.mpf]. If x_vals type is Number,
             return type is mp.mpf.
@@ -188,7 +188,7 @@ class AnalyzedFunc:
             self.func(x_valus). See doc for AnalyzedFunc.func().
 
         """
-        y_vals = self.func(x_vals)
+        y_vals = np.array(self.func(x_vals))
         # build np.ndarray of new coordinates
         result_array: np.ndarray = np.stack((x_vals, y_vals), axis=-1)
         # attach this np.ndarray to self.plotted_points.
