@@ -19,7 +19,7 @@ deps =
 	mpmath
 	pandas
 commands =
-	pytest
+	pytest -v
 
 [testenv:format]
 basepython = python3
