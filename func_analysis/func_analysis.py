@@ -46,9 +46,6 @@ Func = Callable[
     [Union[Iterable[Number], Number]], Union[Iterable[mp.mpf], mp.mpf]
 ]
 
-# TODO: Make Func an abstract generic type with the register attribute.
-
-
 def singledispatchmethod(func):
     """Single-dispatch generic method decorator."""
     dispatcher = singledispatch(func)
