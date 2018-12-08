@@ -8,6 +8,7 @@ This deliberately uses a function requiring a high degree of precision
 from __future__ import annotations
 
 from functools import update_wrapper
+from numbers import Real
 from typing import Iterable, List, Union
 
 import mpmath as mp
@@ -22,7 +23,6 @@ from func_analysis.func_analysis import (
 )
 
 BuiltinFloat = Union[np.float128, np.float64, float]
-Number = Union[mp.mpf, BuiltinFloat]
 
 EPSILON_0 = 1e-20
 EPSILON_1 = 3.05e-15
@@ -73,7 +73,7 @@ def typecheck_multi(item, *args) -> bool:
 
 
 def typecheck_number(num):
-    """Assert that item is a Number."""
+    """Assert that item is a Real."""
     assert typecheck_multi(num, mp.mpf, float, np.float64, int)
 
 
@@ -208,7 +208,7 @@ def test_trig_func_has_correct_crits():
 
 
 @CountCalls
-def sec_der(x_val: Number) -> mp.mpf:
+def sec_der(x_val: Real) -> mp.mpf:
     """Define the actual second derivative."""
     return (
         mp.cos(x_val)
@@ -318,7 +318,7 @@ def test_trig_func_has_correct_abs_min():
 
 
 @CountCalls
-def parab_func(x_val: Number) -> mp.mpf:
+def parab_func(x_val: Real) -> mp.mpf:
     """Define a simple parabola.
 
     It is concave and symmetric about the y-axis.
@@ -373,7 +373,7 @@ def test_interval_helpers_work_correctly():
     These functions include _make_intervals(), _increasing_intervals(),
     and _decreasing_intervals()/
     """
-    points = [-2.0, 8, -3, -4, -9, 12, 18, 4, 0]
+    points: List = [-2, 8, -3, -4, -9, 12, 18, 4, 0]
     expected_intervals: List = [
         (-2, 8),
         (8, -3),

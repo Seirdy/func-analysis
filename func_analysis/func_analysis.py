@@ -8,7 +8,7 @@ performs calculus to determine:
 
 1. Special points
     - roots
-    - critical Number, relative/absolute extrema, and saddle points
+    - critical numbers, relative/absolute extrema, and saddle points
     - points of inflection
 2. Special intervals
     - intervals of increase/decrease
@@ -28,6 +28,7 @@ from __future__ import annotations
 
 from collections import abc
 from functools import singledispatch, update_wrapper
+from numbers import Real
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
 
 import mpmath as mp
@@ -36,15 +37,10 @@ from pandas import DataFrame
 from scipy.optimize import brentq
 
 __version__ = "0.0.1"
-# the three main types of Number used in this program are:
-#   1. mpmath arbitrary-precision floating points (mp.mpf)
-#   2. numpy.float64
-#   3. Python's native floats.
-Number = Union[mp.mpf, np.float64, float]
-Interval = Tuple[mp.mpf, mp.mpf]  # intervals between mp.mpf Number
-Func = Callable[
-    [Union[Iterable[Number], Number]], Union[Iterable[mp.mpf], mp.mpf]
-]
+
+Interval = Tuple[mp.mpf, mp.mpf]  # intervals between mp.mpf numbers
+Func = Callable[[Union[Iterable[Real], Real]], Union[Iterable[mp.mpf], mp.mpf]]
+
 
 def singledispatchmethod(func):
     """Single-dispatch generic method decorator."""
@@ -59,7 +55,7 @@ def singledispatchmethod(func):
 
 
 def find_one_zero(
-    func: Func, x_range: Tuple[Number, Number], starting_point: Number
+    func: Func, x_range: Tuple[Real, Real], starting_point: Real = None
 ) -> mp.mpf:
     """Find the zero of a function in a given interval.
 
@@ -97,7 +93,7 @@ def find_one_zero(
 
 def assemble_table(
     func: Callable[[Iterable[mp.mpf]], Iterable[mp.mpf]],
-    x_vals: Iterable[Number],
+    x_vals: Iterable[Real],
 ) -> np.ndarray:
     """Make a table of values for the function with the given x-vals.
 
@@ -125,7 +121,7 @@ class AnalyzedFunc:
     def __init__(
         self,
         func: Func,
-        x_range: Tuple[Number, Number],
+        x_range: Tuple[Real, Real],
         derivatives: Dict[int, Func] = None,
     ):
         """Initialize the object.
@@ -144,8 +140,8 @@ class AnalyzedFunc:
         """
         self._func = mp.memoize(func)
         self.x_range = x_range
-        self.min_x: Number = min(self.x_range)
-        self.max_x: Number = max(self.x_range)
+        self.min_x: Real = min(self.x_range)
+        self.max_x: Real = max(self.x_range)
 
         self._derivatives: Dict[int, Callable[[mp.mpf], mp.mpf]]
         if derivatives:
@@ -159,7 +155,7 @@ class AnalyzedFunc:
         self.func_iterable(self.x_range)
 
     @singledispatchmethod
-    def func(self, x_val: Number) -> mp.mpf:
+    def func(self, x_val: Real) -> mp.mpf:
         """Define the function to be analyzed.
 
         Parameters
@@ -176,7 +172,7 @@ class AnalyzedFunc:
         return self._func(x_val)
 
     @func.register(abc.Iterable)
-    def _(self, x_vals: Iterable[Number]) -> Iterable[mp.mpf]:
+    def _(self, x_vals: Iterable[Real]) -> Iterable[mp.mpf]:
         """Register an iterable type as the parameter for self.func.
 
         self._func might already be able to handle an iterable input,
@@ -192,8 +188,8 @@ class AnalyzedFunc:
         Returns
         -------
         y_vals
-            One or more y-values. If x_vals type is Iterable[Number],
-            return type is Iterable[mp.mpf]. If x_vals type is Number,
+            One or more y-values. If x_vals type is Iterable[Real],
+            return type is Iterable[mp.mpf]. If x_vals type is Real,
             return type is mp.mpf.
 
         """
@@ -204,7 +200,7 @@ class AnalyzedFunc:
 
     del _
 
-    def func_iterable(self, x_vals: Iterable[Number]) -> Iterable[mp.mpf]:
+    def func_iterable(self, x_vals: Iterable[Real]) -> Iterable[mp.mpf]:
         """Map self.func over iterable input.
 
         This also saves x- and y- values in self.plotted_points.
@@ -277,9 +273,7 @@ class AnalyzedFunc:
             if nth == 0:
                 return self.func
 
-            def derivative_computed(
-                x_val: Number
-            ) -> Callable[[mp.mpf], mp.mpf]:
+            def derivative_computed(x_val: Real) -> Callable[[mp.mpf], mp.mpf]:
                 """Evaluate derivatives at an input value.
 
                 Parameters
@@ -368,7 +362,7 @@ class FuncZeros(AnalyzedFunc):
     """
 
     def __init__(
-        self, zeros_wanted: int, known_zeros: Iterable[Number] = None, **kwargs
+        self, zeros_wanted: int, known_zeros: Iterable[Real] = None, **kwargs
     ):
         """Initialize the object.
 
@@ -478,7 +472,7 @@ class FuncZeros(AnalyzedFunc):
             # If this interval has an already-found zero,
             # use that as the starting point. Otherwise, let
             # find_one_zero() use the interval's bounds to find a zero.
-            starting_pt: Number = None
+            starting_pt: Optional[Real] = None
             if x_interval in intervals_with_zero:
                 starting_pt = starting_points[sp_index]
                 sp_index += 1
@@ -488,7 +482,7 @@ class FuncZeros(AnalyzedFunc):
 
 
 class FuncSpecialPts(FuncZeros):
-    """A RootedFunction with additional properties (critical Number).
+    """A RootedFunction with additional properties (critical Real).
 
     This object includes a function and its properties. If those
     properties are not provided, they will be calculated and saved.
@@ -496,15 +490,15 @@ class FuncSpecialPts(FuncZeros):
     The function properties included:
         - generator of derivatives
         - zeros
-        - critical Number
+        - critical Real
     """
 
     def __init__(
         self,
         crits_wanted: int = None,
-        known_crits: Tuple[Number, ...] = None,
+        known_crits: Tuple[Real, ...] = None,
         pois_wanted: int = None,
-        known_pois: Tuple[Number, ...] = None,
+        known_pois: Tuple[Real, ...] = None,
         **kwargs,
     ):
         """Initialize a CriticalFunction.
@@ -512,12 +506,12 @@ class FuncSpecialPts(FuncZeros):
         Parameters
         ----------
         crits_wanted
-            Number of critical nums to calculate.
+            Real of critical nums to calculate.
         known_crits
             A list of critical numbers already known, used
             as starting points for more precise calculation.
         pois_wanted
-            Number of points of inflection to calculate.
+            Real of points of inflection to calculate.
         known_pois
             A list of points of inflection already known, used
             as starting points for more precise calculation.
@@ -629,7 +623,7 @@ class FuncSpecialPts(FuncZeros):
         return [crit for crit in self.crits() if self.has_symmetry(axis=crit)]
 
 
-def _make_intervals(points: List[Number]) -> List[Interval]:
+def _make_intervals(points: List[Real]) -> List[Interval]:
     """Pair each point to the next.
 
     Parameters
