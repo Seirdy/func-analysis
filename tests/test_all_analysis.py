@@ -95,7 +95,7 @@ def trig_func(x_val: mp.mpf) -> mp.mpf:
 
     cos(x^2)-sin(x)+x/68
     """
-    return mp.cos(mp.power(x_val, 2)) - mp.sin(x_val) + (x_val / 68)
+    return mp.cos(x_val ** 2) - mp.sin(x_val) + (x_val / 68)
 
 
 analyzed_trig_func = FuncIntervals(
