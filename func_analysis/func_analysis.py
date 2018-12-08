@@ -46,6 +46,8 @@ Func = Callable[
     [Union[Iterable[Number], Number]], Union[Iterable[mp.mpf], mp.mpf]
 ]
 
+# TODO: Make Func an abstract generic type with the register attribute.
+
 
 def singledispatchmethod(func):
     """Single-dispatch generic method decorator."""
@@ -145,8 +147,8 @@ class AnalyzedFunc:
         """
         self._func = mp.memoize(func)
         self.x_range = x_range
-        self.min_x: Number = self.x_range[0]
-        self.max_x: Number = self.x_range[1]
+        self.min_x: Number = min(self.x_range)
+        self.max_x: Number = max(self.x_range)
 
         self._derivatives: Dict[int, Callable[[mp.mpf], mp.mpf]]
         if derivatives:
@@ -250,7 +252,7 @@ class AnalyzedFunc:
             Args: x_vals) and computed y-values.
 
         """
-        x_vals = np.linspace(self.min_x, self.max_x, points_to_plot)
+        x_vals = np.linspace(*self.x_range, points_to_plot)
         y_vals = self.func_iterable(x_vals)
         return np.stack((x_vals, y_vals), axis=-1)
 
