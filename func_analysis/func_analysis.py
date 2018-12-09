@@ -33,7 +33,6 @@ from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
 
 import mpmath as mp
 import numpy as np
-from pandas import DataFrame
 from scipy.optimize import brentq
 
 __version__ = "0.0.1"
@@ -42,7 +41,7 @@ Interval = Tuple[mp.mpf, mp.mpf]  # intervals between mp.mpf numbers
 Func = Callable[[Union[Iterable[Real], Real]], Union[Iterable[mp.mpf], mp.mpf]]
 
 
-def singledispatchmethod(func):
+def singledispatchmethod(func: Callable):
     """Single-dispatch generic method decorator."""
     dispatcher = singledispatch(func)
 
@@ -52,6 +51,50 @@ def singledispatchmethod(func):
     wrapper.register = dispatcher.register  # type: ignore
     update_wrapper(wrapper, func)
     return wrapper
+
+
+class SaveXY:
+    """Class decorator for saving X-Y coordinates.
+
+    This is not used for memoization; mp.memoize() serves that purpose
+    better because of how it handles mp.mpf numbers. This only exists
+    to save values to use in AnalyzedFunc.has_symmetry.
+
+    Attributes
+    ----------
+    func: Callable[[Real], mp.mpf]
+        The function to decorate and save values for.
+    plotted_points: List[Tuple[mp.mpf, mp.mpf]]
+        The saved coordinate pairs.
+
+    """
+
+    def __init__(self, func: Callable[[Real], mp.mpf]):
+        """Update wrapper; this is a decorator.
+
+        Parameters
+        ----------
+        func
+            The function to save values for.
+
+        """
+        self.func = func
+        update_wrapper(self, self.func)
+        self.plotted_points: List[Tuple[mp.mpf, mp.mpf]] = []
+
+    def __call__(self, x_val: Real):
+        """Save the x-y coordinate before returning the y-value.
+
+        Parameters
+        ----------
+        x_val
+            The x-value of the coordinate and the input to self.func
+
+        """
+        y_val = self.func(x_val)
+        coordinate = (x_val, y_val)
+        self.plotted_points.append(coordinate)
+        return y_val
 
 
 def find_one_zero(
@@ -138,7 +181,8 @@ class AnalyzedFunc:
             is the nth derivative of func.
 
         """
-        self._func = mp.memoize(func)
+        self._func_plotted = SaveXY(func)
+        self._func = mp.memoize(self._func_plotted)
         self.x_range = x_range
         self.min_x: Real = min(self.x_range)
         self.max_x: Real = max(self.x_range)
@@ -152,7 +196,7 @@ class AnalyzedFunc:
             self._derivatives = {}
 
         # A table of x- and y-values saved as an np.ndarray.
-        self.func_iterable(self.x_range)
+        self.func(self.x_range)
 
     @singledispatchmethod
     def func(self, x_val: Real) -> mp.mpf:
@@ -193,42 +237,9 @@ class AnalyzedFunc:
             return type is mp.mpf.
 
         """
-        try:
-            return self._func(x_vals)
-        except TypeError:
-            return [self.func(x_val) for x_val in x_vals]
+        return [self.func(x_val) for x_val in x_vals]
 
     del _
-
-    def func_iterable(self, x_vals: Iterable[Real]) -> Iterable[mp.mpf]:
-        """Map self.func over iterable input.
-
-        This also saves x- and y- values in self.plotted_points.
-
-        Parameters
-        ----------
-        x_vals
-            Input values for self.func. See doc for
-            AnalyzedFunc.func().
-
-        Returns
-        -------
-        y_vals : Iterable[mp.mpf]
-            self.func(x_valus). See doc for AnalyzedFunc.func().
-
-        """
-        y_vals = np.array(self.func(x_vals))
-        # build np.ndarray of new coordinates
-        result_array: np.ndarray = np.stack((x_vals, y_vals), axis=-1)
-        # attach this np.ndarray to self.plotted_points.
-        # Create self.plotted_points if it doesn't already exist.
-        try:
-            self.plotted_points: np.ndarray = np.concatenate(
-                (self.plotted_points, result_array)
-            )
-        except AttributeError:
-            self.plotted_points: np.ndarray = result_array
-        return y_vals
 
     def plot(self, points_to_plot: int) -> np.ndarray:
         """Produce x,y pairs for self.func in range.
@@ -246,7 +257,7 @@ class AnalyzedFunc:
 
         """
         x_vals = np.linspace(*self.x_range, points_to_plot)
-        y_vals = self.func_iterable(x_vals)
+        y_vals = self.func(x_vals)
         return np.stack((x_vals, y_vals), axis=-1)
 
     def nth_derivative(self, nth: int) -> Callable[[mp.mpf], mp.mpf]:
@@ -309,21 +320,15 @@ class AnalyzedFunc:
 
         """
         try:
-            # Dedupe self.plotted_points.
-            # pylint: disable=attribute-defined-outside-init
-            # Pandas is really good at deduplication,
-            # so we'll use a DataFrame object.
-            self.plotted_points = (
-                DataFrame(self.plotted_points).drop_duplicates().values
-            )  # pylint: enable=attribute-defined-outside-init
-            if len(self.plotted_points) < 50:
-                self.plot(50)
-        except AttributeError:
+            assert len(self._func_plotted.plotted_points) > 50
+        except (AssertionError, AttributeError):
             self.plot(50)
-        x_mirror = np.subtract(2 * axis, self.plotted_points[:, 0])
-        return np.array_equal(
-            self.plotted_points[:, 1], self.func_iterable(x_mirror)
-        )
+        saved_coords = np.array(self._func_plotted.plotted_points)
+        x_vals = saved_coords[:, 0]
+        y_vals = saved_coords[:, 1]
+        x_mirror = np.subtract(2 * axis, x_vals)
+        y_mirror = self.func(x_mirror)
+        return np.array_equal(np.abs(y_vals), np.abs(y_mirror))
 
 
 def _zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
@@ -606,8 +611,7 @@ class FuncSpecialPts(FuncZeros):
         """
         fp2_zeros = self.rooted_second_derivative().zeros()
         return fp2_zeros[
-            np.array(self.rooted_first_derivative().func_iterable(fp2_zeros))
-            != 0
+            np.array(self.rooted_first_derivative().func(fp2_zeros)) != 0
         ]
 
     def vertical_axis_of_symmetry(self) -> List[mp.mpf]:
@@ -813,7 +817,7 @@ class FuncIntervals(FuncSpecialPts):
         x_vals: List[mp.mpf] = np.concatenate(
             (self.relative_maxima(), self.x_range)
         )
-        pairs: np.ndarray = assemble_table(self.func_iterable, x_vals)
+        pairs: np.ndarray = assemble_table(self.func, x_vals)
         return pairs[np.argmax(pairs[:, 1])]
 
     def absolute_minimum(self) -> np.ndarray:
@@ -832,5 +836,5 @@ class FuncIntervals(FuncSpecialPts):
         x_vals: List[mp.mpf] = np.concatenate(
             (self.relative_minima(), self.x_range)
         )
-        pairs: np.ndarray = assemble_table(self.func_iterable, x_vals)
+        pairs: np.ndarray = assemble_table(self.func, x_vals)
         return pairs[np.argmin(pairs[:, 1])]
