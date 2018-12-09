@@ -17,7 +17,6 @@ deps =
 	numpy
 	scipy
 	mpmath
-	pandas
 commands =
 	pytest -v
 
@@ -63,7 +62,6 @@ deps =
 	numpy
 	scipy
 	mpmath
-	pandas
 commands =
 	sh -c "pylint -s n *.py */*.py"
 
