@@ -46,7 +46,7 @@ def singledispatchmethod(func: Callable):
     dispatcher = singledispatch(func)
 
     def wrapper(*args, **kw):
-        """Wrapped function."""
+        """Wrap decorated function."""
         return dispatcher.dispatch(args[1].__class__)(*args, **kw)
 
     wrapper.register = dispatcher.register  # type: ignore
@@ -220,10 +220,7 @@ class AnalyzedFunc:
     def _(self, x_vals: Iterable[Real]) -> Iterable[mp.mpf]:
         """Register an iterable type as the parameter for self.func.
 
-        self._func might already be able to handle an iterable input,
-        in which case this method acts like a different name for the
-        same thing. Otherwise, this method maps self._func over
-        iterable input.
+        Map self._func over iterable input.
 
         Parameters
         ----------
@@ -265,7 +262,7 @@ class AnalyzedFunc:
         """Create the nth-derivative of a function.
 
         If the nth-derivative has already been found, grab it.
-        Otherwise, Numerically compute an arbitrary derivative of
+        Otherwise, numerically compute an arbitrary derivative of
         self.func and save it for re-use.
 
         Parameters
@@ -552,8 +549,9 @@ class FuncSpecialPts(FuncZeros):
 
         """
         # pylint: enable=undefined-variable
-        derivatives_of_fprime: Optional[Dict[int, Callable[[mp.mpf], mp.mpf]]]
-        derivatives_of_fprime = {
+        derivatives_of_fprime: Optional[
+            Dict[int, Callable[[mp.mpf], mp.mpf]]
+        ] = {
             nth - 1: self._derivatives[nth] for nth in self._derivatives.keys()
         }
         return FuncSpecialPts(
@@ -576,8 +574,9 @@ class FuncSpecialPts(FuncZeros):
             and an iterable func.
 
         """
-        derivatives_of_fprime2: Optional[Dict[int, Callable[[mp.mpf], mp.mpf]]]
-        derivatives_of_fprime2 = {
+        derivatives_of_fprime2: Optional[
+            Dict[int, Callable[[mp.mpf], mp.mpf]]
+        ] = {
             nth - 2: self._derivatives[nth] for nth in self._derivatives.keys()
         }
         return FuncZeros(
