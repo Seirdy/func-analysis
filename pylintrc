@@ -1,6 +1,11 @@
 [MASTER]
 jobs = 4
-disable = C0330,wrong-import-order,no-member,invalid-name,too-few-public-methods
+disable =
+    C0330,
+    wrong-import-order,
+    no-member,
+    invalid-name,
+    too-few-public-methods
 max-line-length=79
 score=yes
 ignore=.ropeproject
