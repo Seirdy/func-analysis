@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from functools import update_wrapper
 from numbers import Real
-from typing import Iterable, List, Union
+from typing import Iterable, List
 
 import mpmath as mp
 import numpy as np
@@ -21,8 +21,6 @@ from func_analysis.func_analysis import (
     _increasing_intervals,
     _make_intervals,
 )
-
-BuiltinFloat = Union[np.float128, np.float64, float]
 
 EPSILON_0 = 1e-20
 EPSILON_1 = 3.05e-15
