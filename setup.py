@@ -12,21 +12,16 @@ assert sys.version_info >= (3, 7, 0), "func_analysis requires Python 3.7+"
 CURRENT_DIR = path.dirname(__file__)
 
 
-def read(*parts: str) -> str:
-    """Read files in project directory.
-
-    Parameters
-    ----------
-    *parts
-        Relative paths in CURRENT_DIR of files to read.
+def readme() -> str:
+    """Read README.md.
 
     Returns
     -------
     str
-        The text of all files in *paths.
+        The text of README.md
 
     """
-    with open(path.join(CURRENT_DIR, *parts), encoding="utf8") as fp:
+    with open(path.join(CURRENT_DIR, "README.md"), encoding="utf8") as fp:
         return fp.read()
 
 
@@ -37,12 +32,13 @@ setup(
     author="Rohan Kumar",
     author_email="seirdy@pm.ch",
     description="Analyze function behavior using introductory calculus.",
-    long_description=read("README.md"),
+    long_description=readme(),
     long_description_content_type="text/markdown",
     url="https://gitlab.com/Seirdy/func-analysis",
     packages=find_packages(),
     classifiers=[
-        "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",  # NOQA
+        "License :: OSI Approved :: GNU Affero General Public License"
+        "v3 or later (AGPLv3+)",  # NOQA
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.7",
