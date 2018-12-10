@@ -128,10 +128,13 @@ def find_one_zero(
 
     """
     # If a starting point is not provided, find one.
-    if not starting_point and x_range:
+    if starting_point is None:
         starting_point = brentq(
             f=func, a=x_range[0], b=x_range[1], maxiter=50, disp=False
         )
+    # Maybe this starting point is good enough.
+    if func(starting_point) == 0:
+        return starting_point
     return mp.findroot(f=func, x0=starting_point)
 
 
@@ -384,7 +387,7 @@ class FuncZeros(AnalyzedFunc):
         super().__init__(**kwargs)
         self.zeros_wanted = zeros_wanted
         if known_zeros:
-            self._known_zeros = known_zeros
+            self._known_zeros: np.ndarray = np.array(known_zeros)
 
     def _zeros_in_range(self) -> np.ndarray:
         """Filter self._known_zeros to contain just zeros in range.
@@ -425,6 +428,15 @@ class FuncZeros(AnalyzedFunc):
             zero_intervals_found = _zero_intervals(self.plot(points_to_plot))
         return zero_intervals_found
 
+    def _zeros_are_solved(self):
+        """Determine if self._known_zeros is complete."""
+        return (
+            len(self._zeros_in_range())
+            == self.zeros_wanted  # We have enough zeros.
+            and np.sum(self.func(self._zeros_in_range()))
+            == 0  # The zeros are accurate.
+        )
+
     def _solved_intervals(self) -> List[Interval]:
         """Filter zero intervals containing a zero already known.
 
@@ -452,15 +464,8 @@ class FuncZeros(AnalyzedFunc):
                 intervals_found.append(possible_zero_interval)
         return intervals_found
 
-    def zeros(self) -> np.ndarray:
-        """List all zeros wanted in x_range.
-
-        Returns
-        -------
-        np.ndarray
-            An array of precise zeros for self.func.
-
-        """
+    def _compute_zeros(self):
+        """Compute all zeros wanted and updates self._known_zeros."""
         # starting_points is a list of any zeros already found.
         # These zeros are imprecise starting points for exact
         # computation.
@@ -481,7 +486,20 @@ class FuncZeros(AnalyzedFunc):
                 sp_index += 1
             # Add the exact zero.
             zeros.append(find_one_zero(self.func, x_interval, starting_pt))
-        return np.array(zeros)
+        self._known_zeros = np.array(zeros)
+
+    def zeros(self) -> np.ndarray:
+        """List all zeros wanted in x_range.
+
+        Returns
+        -------
+        np.ndarray
+            An array of precise zeros for self.func.
+
+        """
+        if not self._zeros_are_solved():
+            self._compute_zeros()
+        return self._known_zeros
 
 
 class FuncSpecialPts(FuncZeros):
