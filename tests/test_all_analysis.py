@@ -69,7 +69,7 @@ class CountCalls:
 
 def typecheck_multi(item, *args) -> bool:
     """Check if item is instance of anything in *args."""
-    return any(isinstance(item, type) for type in args)
+    return any(isinstance(item, allowed_type) for allowed_type in args)
 
 
 def typecheck_number(num):
@@ -345,15 +345,13 @@ def test_parabola_has_symmetry():
     """Check analyzed_parab's symmetry functions."""
     assert analyzed_parab.has_symmetry(axis=0)
     np.testing.assert_equal(
-        analyzed_parab.vertical_axis_of_symmetry(), analyzed_parab.crits(), [0]
+        analyzed_parab.vertical_axis_of_symmetry(), analyzed_parab.crits()
     )
     analyzed_parab_new = FuncIntervals(
         func=parab_func, x_range=(-8, 8), zeros_wanted=2
     )
     np.testing.assert_equal(
-        analyzed_parab_new.vertical_axis_of_symmetry(),
-        analyzed_parab.crits(),
-        [0],
+        analyzed_parab_new.vertical_axis_of_symmetry(), analyzed_parab.crits()
     )
 
 
