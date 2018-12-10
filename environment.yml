@@ -1,0 +1,47 @@
+name: func-analysis
+channels:
+    - anaconda
+    - conda-forge
+    - defaults
+dependencies:
+    - python>=3.7
+    - pip
+    - numpy
+    - scipy
+    - mpmath
+    - pytest-sugar>=0.9.2
+    - pytest>=4.0.1
+    - pytest-cov
+    - black
+    - isort
+    - flake8
+    - pep8-naming
+    - flake8-blind-except
+    - flake8-builtins
+    - flake8-comprehensions
+    - flake8-mutable
+    - flake8-pep3101
+    - flake8-polyfill
+    - flake8-self
+    - pylint
+    - pydocstyle
+    - pyroma
+    - wheel
+    - setuptools
+    - pytest-pylint
+    - pytest-flake8
+    - tox
+    - pip:
+        - pydiatra
+        - flake8-eradicate
+        - flake8-tuple
+        - flake8-super-call
+        - flake8-colors
+        - flake8-per-file-ignores
+        - flake8-bugbear
+        - flake8-deprecated
+        - flake8-bandit
+        - flake8-pytest
+        - pytest-black
+        - pytest-mypy
+        - pytest-docstyle
