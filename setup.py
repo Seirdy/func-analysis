@@ -53,4 +53,5 @@ setup(
     license="AGPLv3+",
     keywords=["func-analysis", "calculus", "math"],
     zip_safe=False,
+    install_requires=["mpmath", "numpy", "scipy"],
 )
