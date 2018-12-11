@@ -7,7 +7,8 @@ stages:
 
 before_script:
   # Alpine needs some deps to run scipy's FORTRAN code.
-  - apk add --no-cache svnversion
+  - apk --no-cache add lapack libstdc++
+  - apk --no-cache add --virtual .builddeps g++ gcc gfortran musl-dev lapack-dev
   - pip install twine tox setuptools wheel
 
 pytest-py37:
