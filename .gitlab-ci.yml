@@ -6,7 +6,7 @@ stages:
 - deploy
 
 before_script:
-  - pip install twine tox
+  - pip install twine tox setuptools wheel
 
 pytest-py37:
   stage: test
@@ -32,7 +32,7 @@ deploy_staging:
     TWINE_USER: $PYPI_USER
     TWINE_PASS: $PYPI_PASS
   script:
-    - twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+    - twine upload --repository-url https://test.pypi.org/legacy/ dist/* -u $TWINE_USER -p $TWINE_PASS
   except:
     - tags
 
