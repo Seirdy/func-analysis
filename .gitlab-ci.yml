@@ -34,7 +34,7 @@ deploy-staging:
     TWINE_USERNAME: $TWINE_USERNAME
     TWINE_PASSWORD: $TWINE_PASSWORD
   script:
-    - twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ -u Seirdy dist/*
+    - twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ -u Seirdy -p ${TWINE_PASSWORD} dist/*
   except:
     - tags
 
