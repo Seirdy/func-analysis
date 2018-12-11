@@ -1,9 +1,9 @@
 image: python:latest
 
 stages:
-- test
-- build
-- deploy
+  - test
+  - build
+  - deploy
 
 before_script:
   - pip install twine tox setuptools wheel
@@ -11,19 +11,19 @@ before_script:
 pytest-py37:
   stage: test
   script:
-  - tox -e py37
+    - tox -e py37
 
 linters:
   stage: test
   script:
-  - tox -e linters
+    - tox -e linters
 
 build:
   stage: build
   script: tox -e build
   artifacts:
     paths:
-    - dist/
+      - dist/
     expire_in: 1 month
 
 deploy_staging:
