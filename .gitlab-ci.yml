@@ -6,11 +6,13 @@ stages:
   - deploy
 
 before_script:
+  # Alpine needs some deps to run scipy's FORTRAN code.
+  - apk add --no-cache svnversion
   - pip install twine tox setuptools wheel
 
 pytest-py37:
   stage: test
-  script: 
+  script:
     - tox -e py37
 
 linters:
@@ -18,13 +20,15 @@ linters:
   script:
     - tox -e linters
 
-build:
+build-staging:
   stage: build
   script: tox -e build
   artifacts:
     paths:
       - dist/
     expire_in: 1 month
+  except:
+    - tags
 
 deploy-staging:
   stage: deploy
@@ -36,7 +40,16 @@ deploy-staging:
   except:
     - tags
 
-deploy-production:
+build-release:
+  stage: build
+  script: tox -e build
+  artifacts:
+    paths:
+      - dist/
+  only:
+    - tags
+
+deploy-release:
   stage: deploy
   variables:
     TWINE_USERNAME: $PYPI_USER
