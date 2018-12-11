@@ -27,7 +27,7 @@ deps =
 	black
 	isort
 commands =
-	sh -c "isort --multi-line=3 --trailing-comma --line-width=79 *.py */*.py"
+	sh -c "isort *.py */*.py"
 	black --py36 -l 79 .
 
 # Linters
@@ -44,6 +44,7 @@ deps =
 	flake8-comprehensions
 	flake8-deprecated
 	flake8-eradicate
+	flake8-isort
 	flake8-mutable
 	flake8-pep3101
 	flake8-polyfill

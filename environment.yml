@@ -43,6 +43,7 @@ dependencies:
       - flake8-deprecated
       - flake8-bandit
       - flake8-pytest
+      - flake8-isort
       - pytest-black
       - pytest-mypy
       - pytest-docstyle
