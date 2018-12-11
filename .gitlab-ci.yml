@@ -26,17 +26,7 @@ build:
       - dist/
     expire_in: 1 month
 
-deploy_staging:
-  stage: deploy
-  variables:
-    TWINE_USER: $PYPI_USER
-    TWINE_PASS: $PYPI_PASS
-  script:
-    - twine upload --repository-url https://test.pypi.org/legacy/ dist/* -u $TWINE_USER -p $TWINE_PASS
-  except:
-    - tags
-
-deploy_production:
+upload:
   stage: deploy
   variables:
     TWINE_USER: $PYPI_USER
