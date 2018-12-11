@@ -31,6 +31,7 @@ dependencies:
     - pytest-pylint
     - pytest-flake8
     - tox
+    - twine
     - pip:
         - pydiatra
         - flake8-eradicate

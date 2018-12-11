@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """Package func-analysis."""
 
+import ast
+import re
 import sys
 from os import path
 
@@ -12,7 +14,7 @@ assert sys.version_info >= (3, 7, 0), "func_analysis requires Python 3.7+"
 CURRENT_DIR = path.dirname(__file__)
 
 
-def readme() -> str:
+def get_long_description() -> str:
     """Read README.md.
 
     Returns
@@ -25,14 +27,24 @@ def readme() -> str:
         return fp.read()
 
 
+def get_version() -> str:
+    """Exract single-source version from func_analysis/func_analysis.py."""
+    func_analysis_py = "func_analysis/func_analysis.py"
+    _version_re = re.compile(r"__version__\s+=\s+(?P<version>.*)")
+    with open(func_analysis_py, "r", encoding="utf8") as f:
+        match = _version_re.search(f.read())
+        version = match.group("version") if match is not None else '"unknown"'
+    return str(ast.literal_eval(version))
+
+
 # pylint: disable=line-too-long
 setup(
     name="func-analysis",
-    version="0.0.1",
+    version=get_version(),
     author="Rohan Kumar",
     author_email="seirdy@pm.ch",
     description="Analyze function behavior using introductory calculus.",
-    long_description=readme(),
+    long_description=get_long_description(),
     long_description_content_type="text/markdown",
     url="https://gitlab.com/Seirdy/func-analysis",
     packages=find_packages(),

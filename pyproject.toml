@@ -110,7 +110,7 @@ deps =
 	wheel
 	setuptools
 commands =
-	python setup.py -q sdist bdist_wheel
+	python setup.py sdist bdist_wheel
 
 # My poor lappie is running low on disk space, partly because of all
 # my venvs. In an act of mercy, I have chosen to create a testenv to do
