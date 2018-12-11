@@ -5,7 +5,7 @@
 import ast
 import re
 import sys
-from os import path
+from os import environ, path
 
 from setuptools import find_packages, setup
 
@@ -28,7 +28,16 @@ def get_long_description() -> str:
 
 
 def get_version() -> str:
-    """Exract single-source version from func_analysis/func_analysis.py."""
+    """Determine correct version.
+
+    Use gitlab pipelines to generate correct version.
+    If this isn't a GitLab pipeline, then exract single-source version
+    from func_analysis/func_analysis.py.
+    """
+    if environ.get("CI_COMMIT_TAG"):
+        return environ["CI_COMMIT_TAG"]
+    if environ.get("CI_JOB_ID"):
+        return environ["CI_JOB_ID"]
     func_analysis_py = "func_analysis/func_analysis.py"
     _version_re = re.compile(r"__version__\s+=\s+(?P<version>.*)")
     with open(func_analysis_py, "r", encoding="utf8") as f:
