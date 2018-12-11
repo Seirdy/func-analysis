@@ -1,4 +1,4 @@
-image: python:latest
+image: python:3-alpine
 
 stages:
   - test
@@ -10,7 +10,7 @@ before_script:
 
 pytest-py37:
   stage: test
-  script:
+  script: 
     - tox -e py37
 
 linters:
@@ -42,6 +42,6 @@ deploy-production:
     TWINE_USERNAME: $PYPI_USER
     TWINE_PASSWORD: $PYPI_PASS
   script:
-    - twine upload --skip-existing --verbose --repository-url https://upload.pypi.org/legacy/ --username=$PYPI_USER --password=$PYPI_PASS dist/*
+    - twine upload --skip-existing --verbose --repository-url https://upload.pypi.org/legacy/  dist/*
   only:
     - tags
