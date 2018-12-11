@@ -52,6 +52,7 @@ setup(
         "License :: OSI Approved :: GNU Affero General Public License "
         "v3 or later (AGPLv3+)",  # NOQA
         "Operating System :: OS Independent",
+        "Development Status :: 2 - Pre-Alpha",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3 :: Only",
