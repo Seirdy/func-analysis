@@ -49,7 +49,7 @@ setup(
     url="https://gitlab.com/Seirdy/func-analysis",
     packages=find_packages(),
     classifiers=[
-        "License :: OSI Approved :: GNU Affero General Public License"
+        "License :: OSI Approved :: GNU Affero General Public License "
         "v3 or later (AGPLv3+)",  # NOQA
         "Operating System :: OS Independent",
         "Programming Language :: Python",
