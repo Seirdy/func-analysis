@@ -13,10 +13,10 @@ pytest-py37:
   script:
     - tox -e py37
 
-linters:
-  stage: test
-  script:
-    - tox -e linters
+#linters:
+#  stage: test
+#  script:
+#    - tox -e linters
 
 build-staging:
   stage: build
@@ -30,11 +30,8 @@ build-staging:
 
 deploy-staging:
   stage: deploy
-  variables:
-    TWINE_USERNAME: $PYPI_USER
-    TWINE_PASSWORD: $PYPI_PASS
   script:
-    - twine upload --skip-existing --verbose --repository-url https://test.pypi.org/legacy/ dist/* --username=$PYPI_USER --password=$PYPI_PASS
+    - twine upload --skip-existing --verbose --repository-url https://test.pypi.org/legacy/ dist/*
   except:
     - tags
 
@@ -53,6 +50,6 @@ deploy-release:
     TWINE_USERNAME: $PYPI_USER
     TWINE_PASSWORD: $PYPI_PASS
   script:
-    - twine upload --skip-existing --verbose --repository-url https://upload.pypi.org/legacy/  dist/* --username=$PYPI_USER --password=$PYPI_PASS
+    - twine upload --skip-existing --verbose --repository-url https://upload.pypi.org/legacy/  dist/*
   only:
     - tags
