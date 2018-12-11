@@ -53,7 +53,7 @@ deps =
 	flake8-super-call
 	flake8-tuple
 commands =
-	flake8
+	sh -c "flake8 *.py */*.py"
 
 [testenv:pylint]
 basepython = python3
@@ -86,20 +86,16 @@ deps = pyroma
 commands =
 	pyroma -n 10 .
 
-[testenv:linters]
+[testenv:linters-nopylint]
 basepython = python3
 skip_install = true
 deps =
-	{[testenv:format]deps}
 	{[testenv:flake8]deps}
-	{[testenv:pylint]deps}
 	{[testenv:pydocstyle]deps}
 	{[testenv:mypy]deps}
 	{[testenv:pyroma]deps}
 commands =
-	{[testenv:format]commands}
 	{[testenv:flake8]commands}
-	{[testenv:pylint]commands}
 	{[testenv:pydocstyle]commands}
 	{[testenv:mypy]commands}
 	{[testenv:pyroma]commands}
@@ -122,11 +118,13 @@ commands =
 basepython = python3
 skip_install = true
 deps =
-	{[testenv:linters]deps}
+	{[testenv:linters-nopylint]deps}
+	{[testenv:pylint]deps}
 	{[testenv]deps}
 	{[testenv:build]deps}
 commands =
-	{[testenv:linters]commands}
+	{[testenv:linters-nopylint]commands}
+	{[testenv:pylint]commands}
 	{[testenv]commands}
 	{[testenv:build]commands}
 """

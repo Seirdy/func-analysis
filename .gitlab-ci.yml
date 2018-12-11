@@ -13,46 +13,22 @@ pytest-py37:
   script:
     - tox -e py37
 
-#linters:
-#  stage: test
-#  script:
-#    - tox -e linters
+# Pylint is hella slow, so it gets its own pipeline.
+linters-nopylint:
+  stage: test
+  script:
+    - tox -e linters-nopylint
+
+linters-pylint:
+  stage: test
+  script:
+    - tox -e pylint
 
 build-staging:
   stage: build
+  image: python:alpine
   script: tox -e build
   artifacts:
     paths:
       - dist/
     expire_in: 1 month
-  except:
-    - tags
-
-deploy-staging:
-  stage: deploy
-  variables:
-    TWINE_USERNAME: $TWINE_USERNAME
-    TWINE_PASSWORD: $TWINE_PASSWORD
-  script:
-    - twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ -u Seirdy -p ${TWINE_PASSWORD} dist/*
-  except:
-    - tags
-
-build-release:
-  stage: build
-  script: tox -e build
-  artifacts:
-    paths:
-      - dist/
-  only:
-    - tags
-
-deploy-release:
-  stage: deploy
-  variables:
-    TWINE_USERNAME: $PYPI_USER
-    TWINE_PASSWORD: $PYPI_PASS
-  script:
-    - twine upload --skip-existing --verbose --repository-url https://upload.pypi.org/legacy/  dist/*
-  only:
-    - tags
