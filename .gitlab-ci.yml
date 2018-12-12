@@ -3,10 +3,9 @@ image: python:3-slim
 stages:
   - test
   - build
-  - deploy
 
 before_script:
-  - pip install twine tox setuptools wheel
+  - pip install tox
 
 pytest-py37:
   stage: test
