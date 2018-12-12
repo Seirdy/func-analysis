@@ -14,7 +14,6 @@ pytest-py37:
 
 # Pylint is hella slow, so it gets its own pipeline.
 linters-nopylint:
-  image: python:alpine
   stage: test
   script:
     - tox -e linters-nopylint
