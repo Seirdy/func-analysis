@@ -1,47 +1,33 @@
-image: python:latest
+image: python:3-slim
 
 stages:
   - test
   - build
-  - deploy
 
 before_script:
-  - pip install twine tox setuptools wheel
+  - pip install tox
 
 pytest-py37:
   stage: test
   script:
     - tox -e py37
 
-linters:
+# Pylint is hella slow, so it gets its own pipeline.
+linters-nopylint:
   stage: test
   script:
-    - tox -e linters
+    - tox -e linters-nopylint
 
-build:
+linters-pylint:
+  stage: test
+  script:
+    - tox -e pylint
+
+build-staging:
   stage: build
+  image: python:alpine
   script: tox -e build
   artifacts:
     paths:
       - dist/
     expire_in: 1 month
-
-deploy-staging:
-  stage: deploy
-  variables:
-    TWINE_USERNAME: $PYPI_USER
-    TWINE_PASSWORD: $PYPI_PASS
-  script:
-    - twine upload --skip-existing --verbose --repository-url https://test.pypi.org/legacy/ dist/*
-  except:
-    - tags
-
-deploy-production:
-  stage: deploy
-  variables:
-    TWINE_USERNAME: $PYPI_USER
-    TWINE_PASSWORD: $PYPI_PASS
-  script:
-    - twine upload --skip-existing --verbose --repository-url https://upload.pypi.org/legacy/ --username=$PYPI_USER --password=$PYPI_PASS dist/*
-  only:
-    - tags
