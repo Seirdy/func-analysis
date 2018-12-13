@@ -2,13 +2,15 @@
 
 [![pipeline status](https://gitlab.com/Seirdy/func-analysis/badges/master/pipeline.svg)](https://gitlab.com/Seirdy/func-analysis/commits/master)
 [![coverage report](https://gitlab.com/Seirdy/func-analysis/badges/master/coverage.svg)](https://gitlab.com/Seirdy/func-analysis/commits/master)
+[![License](https://img.shields.io/pypi/l/func-analysis.svg)](https://gitlab.com/Seirdy/func-analysis/blob/master/LICENSE)
+[![PYPI latest release](https://img.shields.io/pypi/pyversions/func-analysis.svg)](https://pypi.org/project/func-analysis/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 This library uses concepts typically taught in an introductory Calculus class to describe properties of continuous, differentiable, single-variable functions.
 
-# Using this library
+## Using this library
 
-`func_analysis.py` defines the class `FuncIntervals`. An instance of this class has several attributes describing the behavior of this function.
+The `func_analysis` module defines the class `FuncIntervals`. An instance of this class has several attributes describing the behavior of this function.
 
 Required data include:
 
@@ -24,6 +26,8 @@ Optional data can be provided to improve precision and performance. Such data in
 - Intervals of concavity, convexity, increase, decrease
 - Any vertical axis of symmetry
 
-# License
+Any of the above data can be calculated by an instance of `FuncIntervals`.
+
+## License
 
 This program is licensed under the GNU Affero General Public License v3 or later.
