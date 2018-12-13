@@ -14,7 +14,7 @@ from typing import Iterable, List
 import mpmath as mp
 import numpy as np
 
-from func_analysis.func_analysis import (
+from func_analysis import (
     FuncIntervals,
     FuncSpecialPts,
     _decreasing_intervals,

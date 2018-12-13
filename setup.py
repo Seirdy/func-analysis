@@ -32,17 +32,16 @@ def get_version() -> str:
 
     Use gitlab pipelines to generate correct version.
     If this isn't a GitLab pipeline, then exract single-source version
-    from func_analysis/func_analysis.py.
+    from func_analysis/__init__.py.
     """
-    func_analysis_py = "func_analysis/func_analysis.py"
+    func_analysis_init = "func_analysis/__init__.py"
     _version_re = re.compile(r"__version__\s+=\s+(?P<version>.*)")
-    with open(func_analysis_py, "r", encoding="utf8") as f:
+    with open(func_analysis_init, "r", encoding="utf8") as f:
         match = _version_re.search(f.read())
         version = match.group("version") if match is not None else '"unknown"'
     return str(ast.literal_eval(version))
 
 
-# pylint: disable=line-too-long
 setup(
     name="func-analysis",
     version=get_version(),
