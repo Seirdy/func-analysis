@@ -10,15 +10,8 @@ envlist = py37
 whitelist_externals =
 	sh
 	rm
-deps =
-	pytest>=4.0.1
-	coverage
-	pytest-cov
-	numpy
-	scipy
-	mpmath
 commands =
-	pytest -v
+	python3 setup.py test
 
 [testenv:format]
 basepython = python3
@@ -120,7 +113,6 @@ skip_install = true
 deps =
 	{[testenv:linters-nopylint]deps}
 	{[testenv:pylint]deps}
-	{[testenv]deps}
 	{[testenv:build]deps}
 commands =
 	{[testenv:linters-nopylint]commands}

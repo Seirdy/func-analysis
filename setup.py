@@ -4,14 +4,37 @@
 
 import ast
 import re
+import sys
 from os import path
-from sys import version_info
 
 from setuptools import setup
+from setuptools.command.test import test as TestCommand  # NOQA: N812
 
-assert version_info >= (3, 7, 0), "func_analysis requires Python 3.7+"
+assert sys.version_info >= (3, 7, 0), "func_analysis requires Python 3.7+"
 
 CURRENT_DIR = path.dirname(__file__)
+
+
+class PyTest(TestCommand):
+    """Class to execute pytest as test suite without.
+
+    Also avoids the need to pre-install pytest on the system.
+    To run tests, just type `python3 setup.py test`.
+    """
+
+    def finalize_options(self):
+        """Finalize pytest options."""
+        TestCommand.finalize_options(self)
+        self.test_args: list = []
+        # pylint: disable = attribute-defined-outside-init
+        self.test_suite = True
+        # pylint: enable = attribute-defined-outside-init
+
+    def run_tests(self):
+        """Run pytest and exit with its exit code."""
+        import pytest
+        errno = pytest.main(self.test_args)
+        sys.exit(errno)
 
 
 def get_long_description() -> str:
@@ -70,4 +93,6 @@ setup(
     keywords=["func-analysis", "calculus", "math"],
     zip_safe=False,
     install_requires=["mpmath", "numpy", "scipy"],
+    tests_require=["pytest>=4.0.1", "pytest-cov"],
+    cmdclass={"pytest": PyTest},
 )
