@@ -51,11 +51,7 @@ commands =
 [testenv:pylint]
 basepython = python3
 skip_install = true
-deps =
-	pylint
-	numpy
-	scipy
-	mpmath
+deps = pylint
 commands =
 	sh -c "pylint -s n *.py */*.py"
 

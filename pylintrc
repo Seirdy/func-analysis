@@ -4,6 +4,7 @@ disable =
     C0330,
     wrong-import-order,
     no-member,
+    import-error,
     invalid-name,
     too-few-public-methods
 max-line-length=79
