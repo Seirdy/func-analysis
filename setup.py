@@ -4,12 +4,12 @@
 
 import ast
 import re
-import sys
-from os import environ, path
+from os import path
+from sys import version_info
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
-assert sys.version_info >= (3, 7, 0), "func_analysis requires Python 3.7+"
+assert version_info >= (3, 7, 0), "func_analysis requires Python 3.7+"
 
 CURRENT_DIR = path.dirname(__file__)
 
@@ -34,10 +34,6 @@ def get_version() -> str:
     If this isn't a GitLab pipeline, then exract single-source version
     from func_analysis/func_analysis.py.
     """
-    if environ.get("CI_COMMIT_TAG"):
-        return environ["CI_COMMIT_TAG"]
-    if environ.get("CI_JOB_ID"):
-        return environ["CI_JOB_ID"]
     func_analysis_py = "func_analysis/func_analysis.py"
     _version_re = re.compile(r"__version__\s+=\s+(?P<version>.*)")
     with open(func_analysis_py, "r", encoding="utf8") as f:
@@ -56,7 +52,7 @@ setup(
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
     url="https://gitlab.com/Seirdy/func-analysis",
-    packages=find_packages(),
+    packages=["func_analysis"],
     classifiers=[
         "License :: OSI Approved :: GNU Affero General Public License "
         "v3 or later (AGPLv3+)",  # NOQA
