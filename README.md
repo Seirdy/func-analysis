@@ -2,6 +2,7 @@
 
 [![pipeline status](https://gitlab.com/Seirdy/func-analysis/badges/master/pipeline.svg)](https://gitlab.com/Seirdy/func-analysis/commits/master)
 [![coverage report](https://gitlab.com/Seirdy/func-analysis/badges/master/coverage.svg)](https://gitlab.com/Seirdy/func-analysis/commits/master)
+[![Code Climate](https://codeclimate.com/github/Seirdy/func-analysis/badges/gpa.svg)](https://codeclimate.com/github/Seirdy/func-analysis)
 [![License](https://img.shields.io/pypi/l/func-analysis.svg)](https://gitlab.com/Seirdy/func-analysis/blob/master/LICENSE)
 [![PYPI latest release](https://img.shields.io/pypi/v/func-analysis.svg)](https://pypi.org/project/func-analysis/)
 [![Python version](https://img.shields.io/pypi/pyversions/func-analysis.svg)](https://pypi.org/project/func-analysis/)
@@ -11,7 +12,7 @@ This library uses concepts typically taught in an introductory Calculus class to
 
 ## Using this library
 
-The `func_analysis` module defines the class `FuncIntervals`. An instance of this class has several attributes describing the behavior of this function.
+The `func_analysis` module defines the class `AnalyzedFunc`. An instance of this class has several attributes describing the behavior of this function.
 
 Required data include:
 
@@ -27,7 +28,7 @@ Optional data can be provided to improve precision and performance. Such data in
 - Intervals of concavity, convexity, increase, decrease
 - Any vertical axis of symmetry
 
-Any of the above data can be calculated by an instance of `FuncIntervals`.
+Any of the above data can be calculated by an instance of `AnalyzedFunc`.
 
 ## License
 
