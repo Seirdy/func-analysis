@@ -361,6 +361,28 @@ def _zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
     ]
 
 
+def items_in_range(
+    items: np.ndarray, interval: Tuple[Real, Real]
+) -> np.ndarray:
+    """Filter items to contain just items in closed interval.
+
+    Args
+    ----
+    items
+        The array to filter
+    interval
+        The closed interval of acceptable values.
+
+    Returns
+    -------
+    filtered_items : np.ndarray
+        A subset of items that includes only values in interval
+
+    """
+    mask = np.logical_and(min(interval) <= items, max(interval) >= items)
+    return items[mask]
+
+
 class FuncZeros(AnalyzedFunc):
     """A function with some of its properties.
 
@@ -386,27 +408,12 @@ class FuncZeros(AnalyzedFunc):
         """
         super().__init__(**kwargs)
         self.zeros_wanted = zeros_wanted
-        if known_zeros:
-            self._known_zeros: np.ndarray = np.array(known_zeros)
-
-    def _zeros_in_range(self) -> np.ndarray:
-        """Filter self._known_zeros to contain just zeros in range.
-
-        Returns
-        -------
-        filtered_zeros : np.ndarray
-            A subset of self._known_zeros that includes only values in
-            self.x_range
-
-        """
-        try:
-            known_zeros = np.array(self._known_zeros)
-            mask = np.logical_and(
-                self.min_x <= known_zeros, self.max_x >= known_zeros
+        if known_zeros is not None:
+            self._zeros: np.ndarray = items_in_range(
+                np.array(known_zeros), self.x_range
             )
-            return known_zeros[mask]
-        except AttributeError:
-            return np.array([])
+        else:
+            self._zeros = None
 
     def _all_zero_intervals(self) -> List[Interval]:
         """Find ALL zero intervals for this object's function.
@@ -428,15 +435,6 @@ class FuncZeros(AnalyzedFunc):
             zero_intervals_found = _zero_intervals(self.plot(points_to_plot))
         return zero_intervals_found
 
-    def _zeros_are_solved(self):
-        """Determine if self._known_zeros is complete."""
-        return (
-            len(self._zeros_in_range())
-            == self.zeros_wanted  # We have enough zeros.
-            and np.sum(self.func(self._zeros_in_range()))
-            == 0  # The zeros are accurate.
-        )
-
     def _solved_intervals(self) -> List[Interval]:
         """Filter zero intervals containing a zero already known.
 
@@ -444,13 +442,13 @@ class FuncZeros(AnalyzedFunc):
         -------
         filtered_intervals : List[Interval]
             A subset of self._all_zero_intervals() containing zeros
-            in self._known_zeros
+            in self._zeros
 
         """
         # There are none if there are no zeros already known.
         intervals_found: List[Tuple[mp.mpf, mp.mpf]] = []
-        zeros_found = self._zeros_in_range()
-        if not zeros_found.size:
+        zeros_found = self._zeros
+        if zeros_found is None or not zeros_found.size:
             return intervals_found
         # We're only looking at what's in the window specified.
         available_zero_intervals = self._all_zero_intervals()
@@ -465,11 +463,11 @@ class FuncZeros(AnalyzedFunc):
         return intervals_found
 
     def _compute_zeros(self):
-        """Compute all zeros wanted and updates self._known_zeros."""
+        """Compute all zeros wanted and updates self._zeros."""
         # starting_points is a list of any zeros already found.
         # These zeros are imprecise starting points for exact
         # computation.
-        starting_points = self._zeros_in_range()
+        starting_points = self._zeros
         # Intervals containing these zeros.
         intervals_with_zero = self._solved_intervals()
         sp_index: int = 0
@@ -486,8 +484,9 @@ class FuncZeros(AnalyzedFunc):
                 sp_index += 1
             # Add the exact zero.
             zeros.append(find_one_zero(self.func, x_interval, starting_pt))
-        self._known_zeros = np.array(zeros)
+        return np.array(zeros)
 
+    @property
     def zeros(self) -> np.ndarray:
         """List all zeros wanted in x_range.
 
@@ -497,9 +496,9 @@ class FuncZeros(AnalyzedFunc):
             An array of precise zeros for self.func.
 
         """
-        if not self._zeros_are_solved():
-            self._compute_zeros()
-        return self._known_zeros
+        if self._zeros is None or len(self._zeros) < self.zeros_wanted:
+            self._zeros = self._compute_zeros()
+        return self._zeros
 
 
 class FuncSpecialPts(FuncZeros):
@@ -550,8 +549,8 @@ class FuncSpecialPts(FuncZeros):
             self.pois_wanted = self.crits_wanted - 1
         else:
             self.pois_wanted = pois_wanted
-        self.known_crits = known_crits
-        self.known_pois = known_pois
+        self._crits = known_crits
+        self._pois = known_pois
 
     # pylint: disable=undefined-variable
     def rooted_first_derivative(
@@ -575,11 +574,11 @@ class FuncSpecialPts(FuncZeros):
         return FuncSpecialPts(
             func=self.nth_derivative(1),
             zeros_wanted=max(self.crits_wanted, 1),
-            known_zeros=self.known_crits,
+            known_zeros=self._crits,
             derivatives=derivatives_of_fprime,
             x_range=self.x_range,
             crits_wanted=self.pois_wanted,
-            known_crits=self.known_pois,
+            known_crits=self._pois,
         )
 
     def rooted_second_derivative(self) -> FuncZeros:
@@ -600,11 +599,12 @@ class FuncSpecialPts(FuncZeros):
         return FuncZeros(
             func=self.nth_derivative(2),
             zeros_wanted=max(self.pois_wanted, 1),
-            known_zeros=self.known_pois,
+            known_zeros=self._pois,
             derivatives=derivatives_of_fprime2,
             x_range=self.x_range,
         )
 
+    @property
     def crits(self) -> np.ndarray:
         """List all critical numbers wanted.
 
@@ -616,8 +616,11 @@ class FuncSpecialPts(FuncZeros):
             An array of precise critical points for self.func.
 
         """
-        return self.rooted_first_derivative().zeros()
+        if self._crits is None or len(self._crits) < self.crits_wanted:
+            self._crits = self.rooted_first_derivative().zeros
+        return self._crits
 
+    @property
     def pois(self) -> np.ndarray:
         """List all points of inflection wanted.
 
@@ -627,10 +630,12 @@ class FuncSpecialPts(FuncZeros):
             An array of precise points of inflection for self.func.
 
         """
-        fp2_zeros = self.rooted_second_derivative().zeros()
-        return fp2_zeros[
-            np.array(self.rooted_first_derivative().func(fp2_zeros)) != 0
-        ]
+        if self._pois is None or len(self._pois) < self.pois_wanted:
+            fp2_zeros = self.rooted_second_derivative().zeros
+            self._pois = fp2_zeros[
+                np.array(self.rooted_first_derivative().func(fp2_zeros)) != 0
+            ]
+        return self._pois
 
     def vertical_axis_of_symmetry(self) -> List[mp.mpf]:
         """Find all vertical axes of symmetry.
@@ -642,7 +647,7 @@ class FuncSpecialPts(FuncZeros):
             has symmetry.
 
         """
-        return [crit for crit in self.crits() if self.has_symmetry(axis=crit)]
+        return [crit for crit in self.crits if self.has_symmetry(axis=crit)]
 
 
 def _make_intervals(points: List[Real]) -> List[Interval]:
@@ -738,7 +743,7 @@ class FuncIntervals(FuncSpecialPts):
 
         """
         return _increasing_intervals(
-            self.func, self._construct_intervals(list(self.crits()))
+            self.func, self._construct_intervals(list(self.crits))
         )
 
     def decreasing(self) -> List[Interval]:
@@ -752,7 +757,7 @@ class FuncIntervals(FuncSpecialPts):
 
         """
         return _decreasing_intervals(
-            self.func, self._construct_intervals(list(self.crits()))
+            self.func, self._construct_intervals(list(self.crits))
         )
 
     def concave(self) -> List[Interval]:
@@ -767,7 +772,7 @@ class FuncIntervals(FuncSpecialPts):
         """
         return _increasing_intervals(
             self.rooted_first_derivative().func,
-            self._construct_intervals(list(self.pois())),
+            self._construct_intervals(list(self.pois)),
         )
 
     def convex(self) -> List[Interval]:
@@ -782,13 +787,13 @@ class FuncIntervals(FuncSpecialPts):
         """
         return _decreasing_intervals(
             self.rooted_first_derivative().func,
-            self._construct_intervals(list(self.pois())),
+            self._construct_intervals(list(self.pois)),
         )
 
     def relative_maxima(self) -> np.ndarray:
         """List all relative maxima of self.func.
 
-        Find the subset of self.crits() that includes critical numbers
+        Find the subset of self.crits that includes critical numbers
         appearing on intervals in which func is convex.
 
         Returns
@@ -798,14 +803,14 @@ class FuncIntervals(FuncSpecialPts):
             x_range.
 
         """
-        crits_found = self.crits()
+        crits_found = self.crits
         mask = np.array(self.rooted_second_derivative().func(crits_found)) < 0
         return crits_found[mask]
 
     def relative_minima(self) -> np.ndarray:
         """List all relative maxima of self.func.
 
-        Find the subset of self.crits() that includes critical numbers
+        Find the subset of self.crits that includes critical numbers
         appearing on intervals in which func is concave.
 
         Returns
@@ -815,7 +820,7 @@ class FuncIntervals(FuncSpecialPts):
             x_range.
 
         """
-        crits_found = self.crits()
+        crits_found = self.crits
         mask = np.array(self.rooted_second_derivative().func(crits_found)) > 0
         return crits_found[mask]
 

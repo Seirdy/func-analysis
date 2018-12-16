@@ -103,9 +103,9 @@ analyzed_trig_func = FuncIntervals(
     crits_wanted=21,
     known_zeros=[-47.038_289_673_236_127, -46.406_755_885_040_056],
 )
-ANALYZED_TRIG_FUNC_ZEROS = analyzed_trig_func.zeros()
-ANALYZED_TRIG_FUNC_CRITS = analyzed_trig_func.crits()
-ANALYZED_TRIG_FUNC_POIS = analyzed_trig_func.pois()
+ANALYZED_TRIG_FUNC_ZEROS = analyzed_trig_func.zeros
+ANALYZED_TRIG_FUNC_CRITS = analyzed_trig_func.crits
+ANALYZED_TRIG_FUNC_POIS = analyzed_trig_func.pois
 
 
 def test_analyzedfunc_has_no_throwaways():
@@ -121,7 +121,7 @@ def test_zeroth_derivative_is_itself():
 def typecheck_zcp(points):
     """Typecheck functions returning arrays of points.
 
-    Such functions include zeros(), crits(), pois(),
+    Such functions include zeros(), crits, pois(),
     relative_maxima(), relative_minima().
     """
     assert isinstance(points, np.ndarray)
@@ -129,7 +129,7 @@ def typecheck_zcp(points):
 
 
 def test_trig_func_has_correct_zeros():
-    """Test the correctness of analyzed_trig_func.zeros()."""
+    """Test the correctness of analyzed_trig_func.zeros."""
     typecheck_zcp(ANALYZED_TRIG_FUNC_ZEROS)
     # approximate accuracy
     np.testing.assert_allclose(
@@ -168,7 +168,7 @@ def test_trig_func_has_correct_zeros():
 
 
 def test_trig_func_has_correct_crits():
-    """Test the correctness of analyzed_trig_func.crits()."""
+    """Test the correctness of analyzed_trig_func.crits."""
     typecheck_zcp(ANALYZED_TRIG_FUNC_CRITS)
     # approximate accuracy
     np.testing.assert_allclose(
@@ -246,7 +246,7 @@ def pois_stay_close_when_given_fp2(fp2_zeros):
     )
     # make sure sec_der() is actually used by tracking its call count
     sec_der_counts_before = sec_der.call_count
-    more_exact_pois = analyzed_trig_func_with_fp2.pois()
+    more_exact_pois = analyzed_trig_func_with_fp2.pois
     assert sec_der.call_count - sec_der_counts_before > 50
 
     typecheck_zcp(more_exact_pois)
@@ -255,7 +255,7 @@ def pois_stay_close_when_given_fp2(fp2_zeros):
 
 
 def test_trig_func_has_correct_pois():
-    """Test the correctness of analyzed_trig_func.pois().
+    """Test the correctness of analyzed_trig_func.pois.
 
     First, compare the output with approximate floating-point values.
     Then, compare the output with the pois found from its exact second
@@ -266,7 +266,7 @@ def test_trig_func_has_correct_pois():
     assert_trig_func_pois_are_accurate(ANALYZED_TRIG_FUNC_POIS)
     fp2_zeros = FuncSpecialPts(
         func=sec_der, x_range=(-47.05, -46.35), zeros_wanted=21
-    ).zeros()
+    ).zeros
     mpf_assert_allclose(fp2_zeros, ANALYZED_TRIG_FUNC_POIS, EPSILON_2)
     pois_stay_close_when_given_fp2(fp2_zeros)
 
@@ -330,26 +330,26 @@ analyzed_parab = FuncIntervals(
 
 
 def test_parabola_has_correct_zeros():
-    """Check that analyzed_parab.zeros() returns correct value."""
-    np.testing.assert_equal(analyzed_parab.zeros(), np.array([-2, 2]))
+    """Check that analyzed_parab.zeros returns correct value."""
+    np.testing.assert_equal(analyzed_parab.zeros, np.array([-2, 2]))
 
 
 def test_parabola_has_correct_crits():
-    """Check that analyzed_parab.crits() returns correct value."""
-    assert analyzed_parab.crits() == [0]
+    """Check that analyzed_parab.crits returns correct value."""
+    assert analyzed_parab.crits == [0]
 
 
 def test_parabola_has_symmetry():
     """Check analyzed_parab's symmetry functions."""
     assert analyzed_parab.has_symmetry(axis=0)
     np.testing.assert_equal(
-        analyzed_parab.vertical_axis_of_symmetry(), analyzed_parab.crits()
+        analyzed_parab.vertical_axis_of_symmetry(), analyzed_parab.crits
     )
     analyzed_parab_new = FuncIntervals(
         func=parab_func, x_range=(-8, 8), zeros_wanted=2
     )
     np.testing.assert_equal(
-        analyzed_parab_new.vertical_axis_of_symmetry(), analyzed_parab.crits()
+        analyzed_parab_new.vertical_axis_of_symmetry(), analyzed_parab.crits
     )
 
 
@@ -448,8 +448,8 @@ def test_analyzed_incdecfunc_has_correct_increasing_decreasing():
 
 
 def test_incdecfunc_has_correct_zeros():
-    """Test analyzed_incdecfunc.zeros() returns correct value."""
-    assert analyzed_incdecfunc.zeros() == [-1]
+    """Test analyzed_incdecfunc.zeros returns correct value."""
+    assert analyzed_incdecfunc.zeros == [-1]
 
 
 def test_call_counting():
