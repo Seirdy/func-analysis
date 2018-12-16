@@ -284,26 +284,7 @@ class AnalyzedFunc:
         except KeyError:
             if nth == 0:
                 return self.func
-
-            def derivative_computed(x_val: Real) -> Callable[[mp.mpf], mp.mpf]:
-                """Evaluate derivatives at an input value.
-
-                Parameters
-                ----------
-                x_val
-                    Input value to the nth-derivative of self.func.
-
-                Returns
-                -------
-                Callable[[mp.mpf], mp.mpf]
-                    The nth-derivative of self.func.
-
-                """
-                return mp.diff(self.func, x_val, n=nth)
-
-            # Add this to the dictionary
-            self._derivatives[nth] = derivative_computed
-            return self._derivatives[nth]
+            return lambda x_val: mp.diff(self.func, x_val, n=nth)
 
     def has_symmetry(self, axis: mp.mpf) -> bool:
         """Determine if func is symmetric about given axis.
