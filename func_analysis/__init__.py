@@ -171,7 +171,7 @@ def assemble_table(
     return np.stack((x_vals, y_vals), axis=-1)
 
 
-class AnalyzedFunc:
+class AnalyzedFuncBase:
     """Parent class of all function analysis."""
 
     def __init__(
@@ -373,7 +373,7 @@ def items_in_range(
     return items[mask]
 
 
-class FuncZeros(AnalyzedFunc):
+class FuncZeros(AnalyzedFuncBase):
     """A function with some of its properties.
 
     This object calculates and saves roots of the function.
@@ -707,7 +707,7 @@ def _decreasing_intervals(
     ]
 
 
-class FuncIntervals(FuncSpecialPts):
+class AnalyzedFunc(FuncSpecialPts):
     """Complete function analysis, with special points and intervals.
 
     Intervals found:

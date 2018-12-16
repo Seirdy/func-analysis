@@ -15,7 +15,7 @@ import mpmath as mp
 import numpy as np
 
 from func_analysis import (
-    FuncIntervals,
+    AnalyzedFunc,
     FuncSpecialPts,
     _decreasing_intervals,
     _increasing_intervals,
@@ -96,7 +96,7 @@ def trig_func(x_val: mp.mpf) -> mp.mpf:
     return mp.cos(x_val ** 2) - mp.sin(x_val) + (x_val / 68)
 
 
-analyzed_trig_func = FuncIntervals(
+analyzed_trig_func = AnalyzedFunc(
     func=trig_func,
     x_range=(-47.05, -46.3499),
     zeros_wanted=21,
@@ -236,7 +236,7 @@ def pois_stay_close_when_given_fp2(fp2_zeros):
     to AnalyzedFunc instances and that it gets used to improve
     accuracy.
     """
-    analyzed_trig_func_with_fp2 = FuncIntervals(
+    analyzed_trig_func_with_fp2 = AnalyzedFunc(
         func=trig_func,
         x_range=(-47.05, -46.3499),
         zeros_wanted=21,
@@ -324,9 +324,7 @@ def parab_func(x_val: Real) -> mp.mpf:
     return mp.power(x_val, 2) - 4
 
 
-analyzed_parab = FuncIntervals(
-    func=parab_func, x_range=(-8, 8), zeros_wanted=2
-)
+analyzed_parab = AnalyzedFunc(func=parab_func, x_range=(-8, 8), zeros_wanted=2)
 
 
 def test_parabola_has_correct_zeros():
@@ -345,7 +343,7 @@ def test_parabola_has_symmetry():
     np.testing.assert_equal(
         analyzed_parab.vertical_axis_of_symmetry(), analyzed_parab.crits
     )
-    analyzed_parab_new = FuncIntervals(
+    analyzed_parab_new = AnalyzedFunc(
         func=parab_func, x_range=(-8, 8), zeros_wanted=2
     )
     np.testing.assert_equal(
@@ -362,7 +360,7 @@ def inc_dec_func(x_val):
     return mp.fdiv(mp.log(mp.power(x_val, 2)), x_val)
 
 
-analyzed_incdecfunc = FuncIntervals(
+analyzed_incdecfunc = AnalyzedFunc(
     func=inc_dec_func, x_range=(-3, -0.001), crits_wanted=0, zeros_wanted=1
 )
 
