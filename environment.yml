@@ -44,6 +44,7 @@ dependencies:
       - flake8-bandit
       - flake8-pytest
       - flake8-isort
+      - flake8-tidy-imports
       - pytest-black
       - pytest-mypy
       - pytest-docstyle

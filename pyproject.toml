@@ -21,7 +21,7 @@ deps =
 	isort
 commands =
 	sh -c "isort *.py */*.py"
-	black --py36 -l 79 .
+	sh -c "black --py36 -l 79 *.py func_analysis/*.py func_analysis/*/*.py"
 
 # Linters
 
@@ -44,6 +44,7 @@ deps =
 	flake8-pytest
 	flake8-self
 	flake8-super-call
+	flake8-tidy-imports
 	flake8-tuple
 commands =
 	sh -c "flake8 *.py */*.py"
@@ -98,23 +99,6 @@ deps =
 commands =
 	python setup.py sdist bdist_wheel
 
-# My poor lappie is running low on disk space, partly because of all
-# my venvs. In an act of mercy, I have chosen to create a testenv to do
-# everything so I only need to download one set of dependencies.
-# It seems easier than getting tox to share deps. This is only useful
-# on local machines, and isn't used in CI/CD.
-[testenv:all]
-basepython = python3
-skip_install = true
-deps =
-	{[testenv:linters-nopylint]deps}
-	{[testenv:pylint]deps}
-	{[testenv:build]deps}
-commands =
-	{[testenv:linters-nopylint]commands}
-	{[testenv:pylint]commands}
-	{[testenv]commands}
-	{[testenv:build]commands}
 """
 
 [tool.isort]
