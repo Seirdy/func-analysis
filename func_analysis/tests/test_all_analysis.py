@@ -233,7 +233,7 @@ def pois_stay_close_when_given_fp2(fp2_zeros):
     """Test pois() when providing second derivative.
 
     This makes sure that it is possible to provide a second derivative
-    to AnalyzedFunnc instances and that it gets used to improve
+    to AnalyzedFunc instances and that it gets used to improve
     accuracy.
     """
     analyzed_trig_func_with_fp2 = FuncIntervals(

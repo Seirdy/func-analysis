@@ -3,7 +3,8 @@
 [![pipeline status](https://gitlab.com/Seirdy/func-analysis/badges/master/pipeline.svg)](https://gitlab.com/Seirdy/func-analysis/commits/master)
 [![coverage report](https://gitlab.com/Seirdy/func-analysis/badges/master/coverage.svg)](https://gitlab.com/Seirdy/func-analysis/commits/master)
 [![License](https://img.shields.io/pypi/l/func-analysis.svg)](https://gitlab.com/Seirdy/func-analysis/blob/master/LICENSE)
-[![PYPI latest release](https://img.shields.io/pypi/pyversions/func-analysis.svg)](https://pypi.org/project/func-analysis/)
+[![PYPI latest release](https://img.shields.io/pypi/v/func-analysis.sv)](https://pypi.org/project/func-analysis/)
+[![Python version](https://img.shields.io/pypi/pyversions/func-analysis.svg)](https://pypi.org/project/func-analysis/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 This library uses concepts typically taught in an introductory Calculus class to describe properties of continuous, differentiable, single-variable functions.

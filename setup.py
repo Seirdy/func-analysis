@@ -33,6 +33,7 @@ class PyTest(TestCommand):
     def run_tests(self):
         """Run pytest and exit with its exit code."""
         import pytest
+
         errno = pytest.main(self.test_args)
         sys.exit(errno)
 
@@ -53,8 +54,8 @@ def get_long_description() -> str:
 def get_version() -> str:
     """Determine correct version.
 
-    Use gitlab pipelines to generate correct version.
-    If this isn't a GitLab pipeline, then exract single-source version
+    Use GitLab pipelines to generate correct version.
+    If this isn't a GitLab pipeline, then extract single-source version
     from func_analysis/__init__.py.
     """
     func_analysis_init = "func_analysis/__init__.py"

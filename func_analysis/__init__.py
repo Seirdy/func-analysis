@@ -314,9 +314,9 @@ class AnalyzedFunc:
             assert len(self._func_plotted.plotted_points) > 50
         except (AssertionError, AttributeError):
             self.plot(50)
-        saved_coords = np.array(self._func_plotted.plotted_points)
-        x_vals = saved_coords[:, 0]
-        y_vals = saved_coords[:, 1]
+        saved_coordinates = np.array(self._func_plotted.plotted_points)
+        x_vals = saved_coordinates[:, 0]
+        y_vals = saved_coordinates[:, 1]
         x_mirror = np.subtract(2 * axis, x_vals)
         y_mirror = self.func(x_mirror)
         return np.array_equal(np.abs(y_vals), np.abs(y_mirror))
@@ -392,7 +392,7 @@ class FuncZeros(AnalyzedFunc):
             List of zeros already known. Used as starting points for
             more exact computation.
         **kwargs
-            Keyward arguments to pass to super. See doc for
+            Keyword arguments to pass to super. See doc for
             AnalyzedFunc.__init__()
 
         """
@@ -543,7 +543,7 @@ class FuncSpecialPts(FuncZeros):
         self._pois = known_pois
 
     # pylint: disable=undefined-variable
-    def rooted_first_derivative(self) -> FuncSpecialPts:  # NOQA: F821
+    def rooted_first_derivative(self) -> FuncSpecialPts:  # noqa: F821
         """Return FuncZeros object for self.func's 1st derivative.
 
         Returns
