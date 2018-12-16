@@ -29,7 +29,16 @@ from __future__ import annotations
 from collections import abc
 from functools import singledispatch, update_wrapper
 from numbers import Real
-from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
+from typing import (
+    Callable,
+    Dict,
+    Iterable,
+    List,
+    MutableSequence,
+    Optional,
+    Tuple,
+    Union,
+)
 
 import mpmath as mp
 import numpy as np
@@ -534,9 +543,7 @@ class FuncSpecialPts(FuncZeros):
         self._pois = known_pois
 
     # pylint: disable=undefined-variable
-    def rooted_first_derivative(
-        self
-    ) -> Union[FuncZeros, FuncSpecialPts]:  # NOQA: F821
+    def rooted_first_derivative(self) -> FuncSpecialPts:  # NOQA: F821
         """Return FuncZeros object for self.func's 1st derivative.
 
         Returns
@@ -631,7 +638,7 @@ class FuncSpecialPts(FuncZeros):
         return [crit for crit in self.crits if self.has_symmetry(axis=crit)]
 
 
-def _make_intervals(points: List[Real]) -> List[Interval]:
+def _make_intervals(points: MutableSequence[Real]) -> List[Interval]:
     """Pair each point to the next.
 
     Parameters
@@ -708,7 +715,7 @@ class FuncIntervals(FuncSpecialPts):
         - Concavity/convexity
     """
 
-    def _construct_intervals(self, points) -> List[Interval]:
+    def _construct_intervals(self, points: List[Real]) -> List[Interval]:
         points.insert(0, self.min_x)
         points.append(self.max_x)
         return _make_intervals(points)
