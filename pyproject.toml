@@ -20,7 +20,7 @@ deps =
 	black
 	isort
 commands =
-	sh -c "isort *.py */*.py"
+	sh -c "isort *.py func_analysis/*.py func_analysis/tests/*.py"
 	sh -c "black --py36 -l 79 *.py func_analysis/*.py func_analysis/*/*.py"
 
 # Linters

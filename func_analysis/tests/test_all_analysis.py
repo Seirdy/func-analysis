@@ -14,13 +14,7 @@ from typing import Iterable, List
 import mpmath as mp
 import numpy as np
 
-from func_analysis import (
-    FuncIntervals,
-    FuncSpecialPts,
-    _decreasing_intervals,
-    _increasing_intervals,
-    _make_intervals,
-)
+from func_analysis import AnalyzedFunc
 
 EPSILON_0 = 1e-20
 EPSILON_1 = 3.05e-15
@@ -96,7 +90,7 @@ def trig_func(x_val: mp.mpf) -> mp.mpf:
     return mp.cos(x_val ** 2) - mp.sin(x_val) + (x_val / 68)
 
 
-analyzed_trig_func = FuncIntervals(
+analyzed_trig_func = AnalyzedFunc(
     func=trig_func,
     x_range=(-47.05, -46.3499),
     zeros_wanted=21,
@@ -236,7 +230,7 @@ def pois_stay_close_when_given_fp2(fp2_zeros):
     to AnalyzedFunc instances and that it gets used to improve
     accuracy.
     """
-    analyzed_trig_func_with_fp2 = FuncIntervals(
+    analyzed_trig_func_with_fp2 = AnalyzedFunc(
         func=trig_func,
         x_range=(-47.05, -46.3499),
         zeros_wanted=21,
@@ -264,7 +258,7 @@ def test_trig_func_has_correct_pois():
     # typechecking
     typecheck_zcp(ANALYZED_TRIG_FUNC_POIS)
     assert_trig_func_pois_are_accurate(ANALYZED_TRIG_FUNC_POIS)
-    fp2_zeros = FuncSpecialPts(
+    fp2_zeros = AnalyzedFunc(
         func=sec_der, x_range=(-47.05, -46.35), zeros_wanted=21
     ).zeros
     mpf_assert_allclose(fp2_zeros, ANALYZED_TRIG_FUNC_POIS, EPSILON_2)
@@ -324,9 +318,7 @@ def parab_func(x_val: Real) -> mp.mpf:
     return mp.power(x_val, 2) - 4
 
 
-analyzed_parab = FuncIntervals(
-    func=parab_func, x_range=(-8, 8), zeros_wanted=2
-)
+analyzed_parab = AnalyzedFunc(func=parab_func, x_range=(-8, 8), zeros_wanted=2)
 
 
 def test_parabola_has_correct_zeros():
@@ -345,7 +337,7 @@ def test_parabola_has_symmetry():
     np.testing.assert_equal(
         analyzed_parab.vertical_axis_of_symmetry(), analyzed_parab.crits
     )
-    analyzed_parab_new = FuncIntervals(
+    analyzed_parab_new = AnalyzedFunc(
         func=parab_func, x_range=(-8, 8), zeros_wanted=2
     )
     np.testing.assert_equal(
@@ -362,50 +354,9 @@ def inc_dec_func(x_val):
     return mp.fdiv(mp.log(mp.power(x_val, 2)), x_val)
 
 
-analyzed_incdecfunc = FuncIntervals(
+analyzed_incdecfunc = AnalyzedFunc(
     func=inc_dec_func, x_range=(-3, -0.001), crits_wanted=0, zeros_wanted=1
 )
-
-
-def test_interval_helpers_work_correctly():
-    """Test many helper functions that FuncIntervals leverages.
-
-    These functions include _make_intervals(), _increasing_intervals(),
-    and _decreasing_intervals()/
-    """
-    points: List = [-2, 8, -3, -4, -9, 12, 18, 4, 0]
-    expected_intervals: List = [
-        (-2, 8),
-        (8, -3),
-        (-3, -4),
-        (-4, -9),
-        (-9, 12),
-        (12, 18),
-        (18, 4),
-        (4, 0),
-    ]
-    assert _make_intervals(points) == expected_intervals
-
-    def dummy_func(x_val):
-        """Return input.
-
-        Used to test _increasing_intervals()
-        and _decreasing_intervals().
-        """
-        return x_val
-
-    assert _increasing_intervals(dummy_func, _make_intervals(points)) == [
-        expected_intervals[0],
-        expected_intervals[4],
-        expected_intervals[5],
-    ]
-    assert _decreasing_intervals(dummy_func, _make_intervals(points)) == [
-        expected_intervals[1],
-        expected_intervals[2],
-        expected_intervals[3],
-        expected_intervals[6],
-        expected_intervals[7],
-    ]
 
 
 def test_analyzed_incdecfunc_has_correct_decreasing():
