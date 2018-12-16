@@ -27,19 +27,18 @@ This code uses the Black formatter.
 from __future__ import annotations
 
 from collections import abc
-from functools import update_wrapper
 from numbers import Real
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
 from ._util import (
     assemble_table,
     find_one_zero,
     items_in_range,
-    singledispatchmethod,
     zero_intervals,
     decreasing_intervals,
     increasing_intervals,
     make_intervals,
 )
+from ._decorators import singledispatchmethod, SaveXY
 
 import mpmath as mp
 import numpy as np
@@ -48,50 +47,6 @@ __version__ = "0.0.1"
 
 Interval = Tuple[mp.mpf, mp.mpf]  # intervals between mp.mpf numbers
 Func = Callable[[Union[Iterable[Real], Real]], Union[Iterable[mp.mpf], mp.mpf]]
-
-
-class SaveXY:
-    """Class decorator for saving X-Y coordinates.
-
-    This is not used for memoization; mp.memoize() serves that purpose
-    better because of how it handles mp.mpf numbers. This only exists
-    to save values to use in AnalyzedFunc.has_symmetry.
-
-    Attributes
-    ----------
-    func: Callable[[Real], mp.mpf]
-        The function to decorate and save values for.
-    plotted_points: List[Tuple[mp.mpf, mp.mpf]]
-        The saved coordinate pairs.
-
-    """
-
-    def __init__(self, func: Callable[[Real], mp.mpf]):
-        """Update wrapper; this is a decorator.
-
-        Parameters
-        ----------
-        func
-            The function to save values for.
-
-        """
-        self.func = func
-        update_wrapper(self, self.func)
-        self.plotted_points: List[Tuple[mp.mpf, mp.mpf]] = []
-
-    def __call__(self, x_val: Real):
-        """Save the x-y coordinate before returning the y-value.
-
-        Parameters
-        ----------
-        x_val
-            The x-value of the coordinate and the input to self.func
-
-        """
-        y_val = self.func(x_val)
-        coordinate = (x_val, y_val)
-        self.plotted_points.append(coordinate)
-        return y_val
 
 
 class AnalyzedFuncBase:

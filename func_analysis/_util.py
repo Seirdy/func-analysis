@@ -1,6 +1,6 @@
 """Utilities for use in AnalyzedFunc."""
 
-from functools import singledispatch, update_wrapper
+
 from numbers import Real
 from typing import Callable, Iterable, List, MutableSequence, Tuple, Union
 
@@ -10,19 +10,6 @@ from scipy.optimize import brentq
 
 Interval = Tuple[mp.mpf, mp.mpf]  # intervals between mp.mpf numbers
 Func = Callable[[Union[Iterable[Real], Real]], Union[Iterable[mp.mpf], mp.mpf]]
-
-
-def singledispatchmethod(func: Callable):
-    """Single-dispatch generic method decorator."""
-    dispatcher = singledispatch(func)
-
-    def wrapper(*args, **kw):
-        """Wrap decorated function."""
-        return dispatcher.dispatch(args[1].__class__)(*args, **kw)
-
-    wrapper.register = dispatcher.register  # type: ignore
-    update_wrapper(wrapper, func)
-    return wrapper
 
 
 def find_one_zero(
