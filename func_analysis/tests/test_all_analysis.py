@@ -16,7 +16,6 @@ import numpy as np
 
 from func_analysis import (
     AnalyzedFunc,
-    FuncSpecialPts,
     _decreasing_intervals,
     _increasing_intervals,
     _make_intervals,
@@ -264,7 +263,7 @@ def test_trig_func_has_correct_pois():
     # typechecking
     typecheck_zcp(ANALYZED_TRIG_FUNC_POIS)
     assert_trig_func_pois_are_accurate(ANALYZED_TRIG_FUNC_POIS)
-    fp2_zeros = FuncSpecialPts(
+    fp2_zeros = AnalyzedFunc(
         func=sec_der, x_range=(-47.05, -46.35), zeros_wanted=21
     ).zeros
     mpf_assert_allclose(fp2_zeros, ANALYZED_TRIG_FUNC_POIS, EPSILON_2)

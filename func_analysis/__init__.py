@@ -27,7 +27,7 @@ This code uses the Black formatter.
 from __future__ import annotations
 
 from collections import abc
-from functools import singledispatch, update_wrapper
+from functools import update_wrapper
 from numbers import Real
 from typing import (
     Callable,
@@ -39,28 +39,21 @@ from typing import (
     Tuple,
     Union,
 )
+from ._util import (
+    assemble_table,
+    find_one_zero,
+    items_in_range,
+    singledispatchmethod,
+    zero_intervals,
+)
 
 import mpmath as mp
 import numpy as np
-from scipy.optimize import brentq
 
 __version__ = "0.0.1"
 
 Interval = Tuple[mp.mpf, mp.mpf]  # intervals between mp.mpf numbers
 Func = Callable[[Union[Iterable[Real], Real]], Union[Iterable[mp.mpf], mp.mpf]]
-
-
-def singledispatchmethod(func: Callable):
-    """Single-dispatch generic method decorator."""
-    dispatcher = singledispatch(func)
-
-    def wrapper(*args, **kw):
-        """Wrap decorated function."""
-        return dispatcher.dispatch(args[1].__class__)(*args, **kw)
-
-    wrapper.register = dispatcher.register  # type: ignore
-    update_wrapper(wrapper, func)
-    return wrapper
 
 
 class SaveXY:
@@ -105,70 +98,6 @@ class SaveXY:
         coordinate = (x_val, y_val)
         self.plotted_points.append(coordinate)
         return y_val
-
-
-def find_one_zero(
-    func: Func, x_range: Tuple[Real, Real], starting_point: Real = None
-) -> mp.mpf:
-    """Find the zero of a function in a given interval.
-
-    mpmath's zero-finding algorithms require a starting "guess" point.
-    `scipy.optimize.brentq` can find an imprecise zero in a given
-    interval. Combining these, this method uses scipy.optimize's output
-    as a starting point for mpmath's more precise root-finding algo.
-
-    If a starting point is provided, the interval argument
-    becomes unnecessary.
-
-    Parameters
-    ----------
-    func
-        The function to find a zero for.
-    x_range
-        The x-interval in which to find a zero.
-    starting_point
-        A guess-point. Can be `None`, in which case
-        use `scipy.optimize.brentq` to calculate one.
-
-    Returns
-    -------
-    mp.mpf
-        A single very precise zero.
-
-    """
-    # If a starting point is not provided, find one.
-    if starting_point is None:
-        starting_point = brentq(
-            f=func, a=x_range[0], b=x_range[1], maxiter=50, disp=False
-        )
-    # Maybe this starting point is good enough.
-    if func(starting_point) == 0:
-        return starting_point
-    return mp.findroot(f=func, x0=starting_point)
-
-
-def assemble_table(
-    func: Callable[[Iterable[mp.mpf]], Iterable[mp.mpf]],
-    x_vals: Iterable[Real],
-) -> np.ndarray:
-    """Make a table of values for the function with the given x-vals.
-
-    Parameters
-    ----------
-    func
-        The function to generate an x-y table for.
-    x_vals
-        The values to put in the x-column of the table.
-
-    Returns
-    -------
-    np.ndarray
-        A 2d numpy array containing a column of x-values (see
-        Args: x_vals) and computed y-values.
-
-    """
-    y_vals = func(x_vals)
-    return np.stack((x_vals, y_vals), axis=-1)
 
 
 class AnalyzedFuncBase:
@@ -322,57 +251,6 @@ class AnalyzedFuncBase:
         return np.array_equal(np.abs(y_vals), np.abs(y_mirror))
 
 
-def _zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
-    """Find open intervals containing zeros.
-
-    Parameters
-    ----------
-    coordinate_pairs
-        An x-y table represented by a 2d ndarray.
-
-    Returns
-    -------
-    List[Interval]
-        A list of x-intervals across which self.func crosses the
-        x-axis
-
-    """
-    y_vals = coordinate_pairs[:, 1]
-    x_vals = coordinate_pairs[:, 0]
-    # First determine if each coordinate is above the x-axis.
-    is_positive = y_vals > 0
-    # Using is_positive, return a list of tuples containing every pair of
-    # consecutive x-values that has corresponding y-values on the opposite
-    # sides of the x-axis
-    return [
-        (x_vals[i], x_vals[i + 1])
-        for i in range(0, len(coordinate_pairs) - 1)
-        if is_positive[i] is not is_positive[i + 1]
-    ]
-
-
-def items_in_range(
-    items: np.ndarray, interval: Tuple[Real, Real]
-) -> np.ndarray:
-    """Filter items to contain just items in closed interval.
-
-    Parameters
-    ----------
-    items
-        The array to filter
-    interval
-        The closed interval of acceptable values.
-
-    Returns
-    -------
-    filtered_items : np.ndarray
-        A subset of items that includes only values in interval
-
-    """
-    mask = np.logical_and(min(interval) <= items, max(interval) >= items)
-    return items[mask]
-
-
 class FuncZeros(AnalyzedFuncBase):
     """A function with some of its properties.
 
@@ -417,12 +295,12 @@ class FuncZeros(AnalyzedFuncBase):
         """
         points_to_plot = self.zeros_wanted + 3
 
-        zero_intervals_found: List[Interval] = _zero_intervals(
+        zero_intervals_found: List[Interval] = zero_intervals(
             self.plot(points_to_plot)
         )
         while len(zero_intervals_found) < self.zeros_wanted:
             points_to_plot += 1
-            zero_intervals_found = _zero_intervals(self.plot(points_to_plot))
+            zero_intervals_found = zero_intervals(self.plot(points_to_plot))
         return zero_intervals_found
 
     def _solved_intervals(self) -> List[Interval]:
