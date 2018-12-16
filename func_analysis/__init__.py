@@ -29,22 +29,16 @@ from __future__ import annotations
 from collections import abc
 from functools import update_wrapper
 from numbers import Real
-from typing import (
-    Callable,
-    Dict,
-    Iterable,
-    List,
-    MutableSequence,
-    Optional,
-    Tuple,
-    Union,
-)
+from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
 from ._util import (
     assemble_table,
     find_one_zero,
     items_in_range,
     singledispatchmethod,
     zero_intervals,
+    decreasing_intervals,
+    increasing_intervals,
+    make_intervals,
 )
 
 import mpmath as mp
@@ -516,75 +510,6 @@ class FuncSpecialPts(FuncZeros):
         return [crit for crit in self.crits if self.has_symmetry(axis=crit)]
 
 
-def _make_intervals(points: MutableSequence[Real]) -> List[Interval]:
-    """Pair each point to the next.
-
-    Parameters
-    ----------
-    points
-        A list of points
-
-    Returns
-    -------
-    List[Interval]
-        A list of intervals in which every two points have been paired.
-
-    """
-    return [(points[i], points[i + 1]) for i in range(0, len(points) - 1)]
-
-
-def _increasing_intervals(
-    func: Callable[[mp.mpf], mp.mpf], intervals: List[Interval]
-) -> List[Interval]:
-    """Return intervals across which func is decreasing.
-
-    Parameters
-    ----------
-    func
-        The function to analyze.
-    intervals
-        List of x-intervals to filter.
-
-    Returns
-    -------
-    List[Interval]
-        Subset of intervals containing only intervals across which
-        self.func is increasing.
-
-    """
-    return [
-        x_interval
-        for x_interval in intervals
-        if func(x_interval[0]) < func(x_interval[1])
-    ]
-
-
-def _decreasing_intervals(
-    func: Callable[[mp.mpf], mp.mpf], intervals: List[Interval]
-) -> List[Interval]:
-    """Return intervals across which func is decreasing.
-
-    Parameters
-    ----------
-    func
-        The function to analyze.
-    intervals
-        List of x-intervals to filter.
-
-    Returns
-    -------
-    List[Interval]
-        Subset of intervals containing only intervals across which
-        self.func is decreasing.
-
-    """
-    return [
-        x_interval
-        for x_interval in intervals
-        if func(x_interval[0]) > func(x_interval[1])
-    ]
-
-
 class AnalyzedFunc(FuncSpecialPts):
     """Complete function analysis, with special points and intervals.
 
@@ -596,7 +521,7 @@ class AnalyzedFunc(FuncSpecialPts):
     def _construct_intervals(self, points: List[Real]) -> List[Interval]:
         points.insert(0, self.min_x)
         points.append(self.max_x)
-        return _make_intervals(points)
+        return make_intervals(points)
 
     def increasing(self) -> List[Interval]:
         """List self.func's intervals of increase.
@@ -608,7 +533,7 @@ class AnalyzedFunc(FuncSpecialPts):
             increasing.
 
         """
-        return _increasing_intervals(
+        return increasing_intervals(
             self.func, self._construct_intervals(list(self.crits))
         )
 
@@ -622,7 +547,7 @@ class AnalyzedFunc(FuncSpecialPts):
             increasing.
 
         """
-        return _decreasing_intervals(
+        return decreasing_intervals(
             self.func, self._construct_intervals(list(self.crits))
         )
 
@@ -636,7 +561,7 @@ class AnalyzedFunc(FuncSpecialPts):
             concave (opening up).
 
         """
-        return _increasing_intervals(
+        return increasing_intervals(
             self.rooted_first_derivative().func,
             self._construct_intervals(list(self.pois)),
         )
@@ -651,7 +576,7 @@ class AnalyzedFunc(FuncSpecialPts):
             convex (opening down).
 
         """
-        return _decreasing_intervals(
+        return decreasing_intervals(
             self.rooted_first_derivative().func,
             self._construct_intervals(list(self.pois)),
         )

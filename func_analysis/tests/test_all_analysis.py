@@ -14,12 +14,7 @@ from typing import Iterable, List
 import mpmath as mp
 import numpy as np
 
-from func_analysis import (
-    AnalyzedFunc,
-    _decreasing_intervals,
-    _increasing_intervals,
-    _make_intervals,
-)
+from func_analysis import AnalyzedFunc
 
 EPSILON_0 = 1e-20
 EPSILON_1 = 3.05e-15
@@ -362,47 +357,6 @@ def inc_dec_func(x_val):
 analyzed_incdecfunc = AnalyzedFunc(
     func=inc_dec_func, x_range=(-3, -0.001), crits_wanted=0, zeros_wanted=1
 )
-
-
-def test_interval_helpers_work_correctly():
-    """Test many helper functions that FuncIntervals leverages.
-
-    These functions include _make_intervals(), _increasing_intervals(),
-    and _decreasing_intervals()/
-    """
-    points: List = [-2, 8, -3, -4, -9, 12, 18, 4, 0]
-    expected_intervals: List = [
-        (-2, 8),
-        (8, -3),
-        (-3, -4),
-        (-4, -9),
-        (-9, 12),
-        (12, 18),
-        (18, 4),
-        (4, 0),
-    ]
-    assert _make_intervals(points) == expected_intervals
-
-    def dummy_func(x_val):
-        """Return input.
-
-        Used to test _increasing_intervals()
-        and _decreasing_intervals().
-        """
-        return x_val
-
-    assert _increasing_intervals(dummy_func, _make_intervals(points)) == [
-        expected_intervals[0],
-        expected_intervals[4],
-        expected_intervals[5],
-    ]
-    assert _decreasing_intervals(dummy_func, _make_intervals(points)) == [
-        expected_intervals[1],
-        expected_intervals[2],
-        expected_intervals[3],
-        expected_intervals[6],
-        expected_intervals[7],
-    ]
 
 
 def test_analyzed_incdecfunc_has_correct_decreasing():

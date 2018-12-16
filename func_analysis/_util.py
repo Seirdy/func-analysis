@@ -2,7 +2,7 @@
 
 from functools import singledispatch, update_wrapper
 from numbers import Real
-from typing import Callable, Iterable, List, Tuple, Union
+from typing import Callable, Iterable, List, MutableSequence, Tuple, Union
 
 import mpmath as mp
 import numpy as np
@@ -138,3 +138,72 @@ def items_in_range(
     """
     mask = np.logical_and(min(interval) <= items, max(interval) >= items)
     return items[mask]
+
+
+def make_intervals(points: MutableSequence[Real]) -> List[Interval]:
+    """Pair each point to the next.
+
+    Parameters
+    ----------
+    points
+        A list of points
+
+    Returns
+    -------
+    List[Interval]
+        A list of intervals in which every two points have been paired.
+
+    """
+    return [(points[i], points[i + 1]) for i in range(0, len(points) - 1)]
+
+
+def increasing_intervals(
+    func: Callable[[mp.mpf], mp.mpf], intervals: List[Interval]
+) -> List[Interval]:
+    """Return intervals across which func is decreasing.
+
+    Parameters
+    ----------
+    func
+        The function to analyze.
+    intervals
+        List of x-intervals to filter.
+
+    Returns
+    -------
+    List[Interval]
+        Subset of intervals containing only intervals across which
+        self.func is increasing.
+
+    """
+    return [
+        x_interval
+        for x_interval in intervals
+        if func(x_interval[0]) < func(x_interval[1])
+    ]
+
+
+def decreasing_intervals(
+    func: Callable[[mp.mpf], mp.mpf], intervals: List[Interval]
+) -> List[Interval]:
+    """Return intervals across which func is decreasing.
+
+    Parameters
+    ----------
+    func
+        The function to analyze.
+    intervals
+        List of x-intervals to filter.
+
+    Returns
+    -------
+    List[Interval]
+        Subset of intervals containing only intervals across which
+        self.func is decreasing.
+
+    """
+    return [
+        x_interval
+        for x_interval in intervals
+        if func(x_interval[0]) > func(x_interval[1])
+    ]
