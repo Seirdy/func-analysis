@@ -366,8 +366,8 @@ def items_in_range(
 ) -> np.ndarray:
     """Filter items to contain just items in closed interval.
 
-    Args
-    ----
+    Parameters
+    ----------
     items
         The array to filter
     interval
