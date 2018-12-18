@@ -24,6 +24,6 @@ These data can be:
 This code uses the Black formatter.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __all__ = ["__version__", "AnalyzedFunc"]
 from ._analysis_classes import AnalyzedFunc

@@ -12,6 +12,13 @@ and this project adheres to
 [Full Changelog]:
 https://gitlab.com/Seirdy/func-analysis/compare/0.1.0...master
 
+## [0.1.1] (2018-12-17)
+
+[Full Changelog](https://gitlab.com/Seirdy/func-analysis/compare/0.1.0...0.1.1)
+
+Hotfix release identical to 0.1.0 because I accidentally uploaded the wrong
+file to PYPI.
+
 ## [0.1.0] (2018-12-17)
 
 [Full Changelog](https://gitlab.com/Seirdy/func-analysis/compare/0.0.1...0.1.0)
@@ -47,5 +54,6 @@ https://gitlab.com/Seirdy/func-analysis/compare/0.1.0...master
 Initial release
 
 [Unreleased]: https://gitlab.com/Seirdy/func-analysis/tree/master
+[0.1.1]: https://gitlab.com/Seirdy/func-analysis/tree/0.1.1
 [0.1.0]: https://gitlab.com/Seirdy/func-analysis/tree/0.1.0
 [0.0.1]: https://gitlab.com/Seirdy/func-analysis/tree/0.0.1
