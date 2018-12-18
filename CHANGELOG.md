@@ -10,7 +10,7 @@ and this project adheres to
 [Full Changelog]
 
 [Full Changelog]:
-https://gitlab.com/Seirdy/func-analysis/compare/0.1.0...master
+https://gitlab.com/Seirdy/func-analysis/compare/0.1.1...master
 
 ## [0.1.1] (2018-12-17)
 
