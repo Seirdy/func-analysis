@@ -21,6 +21,8 @@ pytest:
 
 pytest-cov:
   stage: test
+  variables:
+    CC_TEST_REPORTER_ID: $CC_TEST_REPORTER_ID
   script:
     - apt-get --quiet update -y
     - apt-get --quiet install -y curl git
@@ -30,7 +32,7 @@ pytest-cov:
     - tox -e py37
   after_script:
     - ./cc-test-reporter format-coverage -t coverage.py
-    - ./cc-test-reporter upload-coverage
+    - ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
   only:
     refs:
       - master
