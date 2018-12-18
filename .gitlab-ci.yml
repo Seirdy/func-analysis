@@ -11,14 +11,12 @@ pytest:
   stage: test
   script:
     - tox -e py37
-  except:
-    - merge_requests
-    - tags
-    refs:
-      - master
   artifacts:
     paths:
       - coverage.xml
+  except:
+    refs:
+      - master
 
 pytest-cov:
   stage: test
@@ -32,8 +30,6 @@ pytest-cov:
     - cc-test-reporter format-coverage -t coverage.py
     - cc-test-reporter upload-coverage
   only:
-    - merge_requests
-    - tags
     refs:
       - master
   artifacts:
@@ -70,9 +66,8 @@ build-test:
   image: python:alpine
   script: tox -e build
   except:
-    - tags
     refs:
-      - master
+    - master
 
 build-staging:
   stage: build
