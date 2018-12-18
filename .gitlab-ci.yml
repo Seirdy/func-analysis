@@ -24,6 +24,14 @@ linters-pylint:
   script:
     - tox -e pylint
 
+build-test:
+  stage: build
+  image: python:alpine
+  script: tox -e build
+  except:
+    refs:
+      - master
+
 build-staging:
   stage: build
   image: python:alpine
@@ -32,3 +40,18 @@ build-staging:
     paths:
       - dist/
     expire_in: 1 month
+  only:
+    refs:
+      - master
+  except:
+    - tags
+
+build-release:
+  stage: build
+  image: python:alpine
+  script: tox -e build
+  artifacts:
+    paths:
+      - dist/
+  only:
+    - tags
