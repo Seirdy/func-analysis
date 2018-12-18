@@ -3,6 +3,7 @@ image: python:3-slim
 stages:
   - test
   - build
+  - release
 
 before_script:
   - pip install tox
@@ -21,8 +22,6 @@ pytest:
 
 pytest-cov:
   stage: test
-  variables:
-    CC_TEST_REPORTER_ID: $CC_TEST_REPORTER_ID
   script:
     - apt-get --quiet update -y
     - apt-get --quiet install -y curl git
@@ -32,7 +31,7 @@ pytest-cov:
     - tox -e py37
   after_script:
     - ./cc-test-reporter format-coverage -t coverage.py
-    - ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
+    - ./cc-test-reporter upload-coverage
   only:
     refs:
       - master
@@ -95,5 +94,27 @@ build-release:
   artifacts:
     paths:
       - dist/
+  only:
+    - tags
+
+test-release:
+  stage: release
+  before_script:
+    - pip install twine
+  image: python:alpine
+  script:
+    - twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
+  only:
+    refs:
+      - master
+      - ci-upgrades-post0.1.1
+
+release:
+  stage: release
+  before_script:
+    - pip install twine
+  image: python:alpine
+  script:
+    - twine upload --skip-existing dist/*
   only:
     - tags
