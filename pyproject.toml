@@ -76,20 +76,6 @@ deps = pyroma
 commands =
 	pyroma -n 10 .
 
-[testenv:linters-nopylint]
-basepython = python3
-skip_install = true
-deps =
-	{[testenv:flake8]deps}
-	{[testenv:pydocstyle]deps}
-	{[testenv:mypy]deps}
-	{[testenv:pyroma]deps}
-commands =
-	{[testenv:flake8]commands}
-	{[testenv:pydocstyle]commands}
-	{[testenv:mypy]commands}
-	{[testenv:pyroma]commands}
-
 [testenv:build]
 basepython = python3
 skip_install = true
