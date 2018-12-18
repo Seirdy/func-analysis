@@ -182,7 +182,10 @@ class FuncZeros(AnalyzedFuncBase):
     """
 
     def __init__(
-        self, zeros_wanted: int, known_zeros: Iterable[Real] = None, **kwargs
+        self,
+        zeros_wanted: int = 0,
+        known_zeros: Iterable[Real] = None,
+        **kwargs,
     ):
         """Initialize the object.
 
@@ -254,7 +257,7 @@ class FuncZeros(AnalyzedFuncBase):
                 intervals_found.append(possible_zero_interval)
         return intervals_found
 
-    def _compute_zeros(self):
+    def _compute_zeros(self) -> np.ndarray:
         """Compute all zeros wanted and updates self._zeros."""
         # starting_points is a list of any zeros already found.
         # These zeros are imprecise starting points for exact
@@ -262,7 +265,7 @@ class FuncZeros(AnalyzedFuncBase):
         starting_points = self._zeros
         # Intervals containing these zeros.
         intervals_with_zero = self._solved_intervals()
-        sp_index: int = 0
+        sp_index = 0
         # The list of zeros we'll put together. It starts empty.
         zeros: List[mp.mpf] = []
         for x_interval in self._all_zero_intervals():
