@@ -20,10 +20,10 @@ pytest:
 
 upload-cov:
   stage: build
-  image: python:slim
+  image: python:alpine
   before_script:
-    - apt-get --quiet update -y
-    - apt-get --quiet install -y curl
+    - pip install tox
+    - apk --no-cache add curl
     - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     - chmod +x ./cc-test-reporter
     - ./cc-test-reporter before-build
