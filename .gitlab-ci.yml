@@ -72,6 +72,7 @@ build-test:
   except:
     refs:
     - master
+    - ci-upgrades-post0.1.1
 
 build-staging:
   stage: build
@@ -84,6 +85,7 @@ build-staging:
   only:
     refs:
       - master
+      - ci-upgrades-post0.1.1
   except:
     - tags
 
