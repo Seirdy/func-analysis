@@ -7,22 +7,67 @@ stages:
 before_script:
   - pip install tox
 
-pytest-py37:
+pytest:
   stage: test
   script:
     - tox -e py37
+  artifacts:
+    paths:
+      - coverage.xml
+  except:
+    refs:
+      - master
+
+pytest-cov:
+  stage: test
+  before_script:
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - ./cc-test-reporter before-build
+  script:
+    - tox -e py37
+  after_script:
+    - cc-test-reporter format-coverage -t coverage.py
+    - cc-test-reporter upload-coverage
+  only:
+    refs:
+      - master
+  artifacts:
+    paths:
+      - coverage.xml
 
 # Pylint is hella slow, so it gets its own pipeline.
-linters-nopylint:
+linting 1/4:
   stage: test
+  image: python:alpine
   script:
-    - tox -e linters-nopylint
+    - tox -e pydocstyle,pyroma
 
-linters-pylint:
+linting 2/4:
+  stage: test
+  image: python:3-slim
+  script:
+    - tox -e mypy
+
+linting 3/4:
+  stage: test
+  image: python:3-slim
+  script:
+    tox -e flake8
+
+linting 4/4:
   stage: test
   image: python:alpine
   script:
     - tox -e pylint
+
+build-test:
+  stage: build
+  image: python:alpine
+  script: tox -e build
+  except:
+    refs:
+    - master
 
 build-staging:
   stage: build
@@ -32,3 +77,18 @@ build-staging:
     paths:
       - dist/
     expire_in: 1 month
+  only:
+    refs:
+      - master
+  except:
+    - tags
+
+build-release:
+  stage: build
+  image: python:alpine
+  script: tox -e build
+  artifacts:
+    paths:
+      - dist/
+  only:
+    - tags
