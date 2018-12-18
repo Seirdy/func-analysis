@@ -6,7 +6,7 @@
 [![License]](https://gitlab.com/Seirdy/func-analysis/blob/master/LICENSE)
 [![PYPI latest release]](https://pypi.org/project/func-analysis/)
 [![Python version]](https://pypi.org/project/func-analysis/)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![Code style: black]](https://github.com/ambv/black)
 
 [pipeline status]:
 https://gitlab.com/Seirdy/func-analysis/badges/master/pipeline.svg
@@ -20,6 +20,8 @@ https://img.shields.io/pypi/l/func-analysis.svg
 https://img.shields.io/pypi/v/func-analysis.svg
 [Python version]:
 https://img.shields.io/pypi/pyversions/func-analysis.svg
+[Code style: black]:
+https://img.shields.io/badge/code%20style-black-000000.svg
 
 This library uses concepts typically taught in an introductory Calculus
 class to describe properties of continuous, differentiable, single-variable
@@ -28,7 +30,7 @@ functions.
 ## Using this library
 
 The `func_analysis` module defines the class `AnalyzedFunc`. An instance
-of this class has several attributes describing the behavior of this 
+of this class has several attributes describing the behavior of this
 function.
 
 Required data include:
