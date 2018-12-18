@@ -18,7 +18,6 @@ pytest:
   except:
     refs:
       - master
-      - ci-upgrades-post0.1.1
 
 pytest-cov:
   stage: test
@@ -35,7 +34,6 @@ pytest-cov:
   only:
     refs:
       - master
-      - ci-upgrades-post0.1.1
   artifacts:
     paths:
       - coverage.xml
@@ -72,7 +70,6 @@ build-test:
   except:
     refs:
     - master
-    - ci-upgrades-post0.1.1
 
 build-staging:
   stage: build
@@ -85,7 +82,6 @@ build-staging:
   only:
     refs:
       - master
-      - ci-upgrades-post0.1.1
   except:
     - tags
 
@@ -109,7 +105,6 @@ test-release:
   only:
     refs:
       - master
-      - ci-upgrades-post0.1.1
 
 release:
   stage: release
