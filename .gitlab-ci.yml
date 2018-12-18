@@ -17,19 +17,16 @@ pytest:
   except:
     refs:
       - master
+      - ci-upgrades-post0.1.1
 
-upload-cov:
-  stage: build
-  image: python:slim
-  before_script:
+pytest-cov:
+  stage: test
+  script:
     - apt-get --quiet update -y
     - apt-get --quiet install -y curl
-    - pip install tox
-    - apk --no-cache add curl
     - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     - chmod +x ./cc-test-reporter
     - ./cc-test-reporter before-build
-  script:
     - tox -e py37
   after_script:
     - cc-test-reporter format-coverage -t coverage.py
