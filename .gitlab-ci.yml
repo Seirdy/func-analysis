@@ -105,7 +105,7 @@ test-release:
     - pip install twine
   image: python:alpine
   script:
-    - twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
+    - twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ -u $TWINE_USERNAME -p $TWINE_PASSWORD dist/*
   only:
     refs:
       - master
@@ -117,6 +117,6 @@ release:
     - pip install twine
   image: python:alpine
   script:
-    - twine upload --skip-existing dist/*
+    - twine upload --skip-existing -u $TWINE_USERNAME -p $TWINE_PASSWORD dist/*
   only:
     - tags
