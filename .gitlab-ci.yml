@@ -29,8 +29,8 @@ pytest-cov:
     - ./cc-test-reporter before-build
     - tox -e py37
   after_script:
-    - cc-test-reporter format-coverage -t coverage.py
-    - cc-test-reporter upload-coverage
+    - ./cc-test-reporter format-coverage -t coverage.py
+    - ./cc-test-reporter upload-coverage
   only:
     refs:
       - master
