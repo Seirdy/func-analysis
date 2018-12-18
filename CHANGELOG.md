@@ -5,10 +5,13 @@ The format is based on
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## [Unreleased]
 
-[Full Changelog](https://gitlab.com/Seirdy/func-analysis/compare/0.0.1...master)
+[Full Changelog](https://gitlab.com/Seirdy/func-analysis/compare/0.1.0...master)
+
+## [0.1.0] (2018-12-17)
+
+[Full Changelog](https://gitlab.com/Seirdy/func-analysis/compare/0.0.1...0.1.0)
 
 ### Added
 - This changelog
@@ -37,5 +40,7 @@ anymore!
 
 Initial release
 
+
 [Unreleased]: https://gitlab.com/Seirdy/func-analysis/tree/master
-[0.0.1]: https://gitlab.com/Seirdy/func-analysis/commits/0.0.1
+[0.1.0]: https://gitlab.com/Seirdy/func-analysis/tree/0.1.0
+[0.0.1]: https://gitlab.com/Seirdy/func-analysis/tree/0.0.1
