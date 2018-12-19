@@ -2,7 +2,7 @@
 
 
 from numbers import Real
-from typing import Callable, Iterable, List, MutableSequence, Tuple, Union
+from typing import Callable, Iterable, List, Sequence, Tuple, Union
 
 import mpmath as mp
 import numpy as np
@@ -127,7 +127,7 @@ def items_in_range(
     return items[mask]
 
 
-def make_intervals(points: MutableSequence[Real]) -> List[Interval]:
+def make_intervals(points: Sequence[Real]) -> List[Interval]:
     """Pair each point to the next.
 
     Parameters

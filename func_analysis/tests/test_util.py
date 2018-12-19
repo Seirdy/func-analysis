@@ -13,7 +13,7 @@ from .._util import decreasing_intervals, increasing_intervals, make_intervals
 @pytest.fixture()
 def intervals() -> List:
     """Points for interval functions in _util."""
-    points: List[Real] = [-2, 8, -3, -4, -9, 12, 18, 4, 0]
+    points: List[Real] = list(float64([-2, 8, -3, -4, -9, 12, 18, 4, 0]))
     return make_intervals(points)
 
 
