@@ -2,11 +2,9 @@
 from numbers import Real
 
 import mpmath as mp
-
 import pytest
 
-from .._analysis_classes import AnalyzedFunc
-from .helpers import CountCalls
+from .helpers import AnalyzedFuncSavedInstances, CountCalls
 
 
 @CountCalls
@@ -21,13 +19,14 @@ def trig_func(x_val: mp.mpf) -> mp.mpf:
 @pytest.fixture
 def analyzed_trig_func():
     """Fixture for an AnalyzedFunc describing trig_func."""
-    return AnalyzedFunc(
+    analyzed_func = AnalyzedFuncSavedInstances(
         func=trig_func,
         x_range=(-47.05, -46.3499),
         zeros_wanted=21,
         crits_wanted=21,
         known_zeros=[-47.038_289_673_236_127, -46.406_755_885_040_056],
     )
+    return analyzed_func
 
 
 @CountCalls
@@ -43,8 +42,8 @@ def sec_der(x_val: Real) -> mp.mpf:
 
 @pytest.fixture()
 def fp2_zeros():
-    """Fixture for an AnalyzedFunc describing sec_der."""
-    return AnalyzedFunc(
+    """Fixture for an AnalyzedFuncSavedInstances describing sec_der."""
+    return AnalyzedFuncSavedInstances(
         func=sec_der, x_range=(-47.05, -46.35), zeros_wanted=21
     )
 
@@ -60,8 +59,10 @@ def parab_func(x_val: Real) -> mp.mpf:
 
 @pytest.fixture
 def analyzed_parab():
-    """Fixture for an AnalyzedFunc describing parab_func."""
-    return AnalyzedFunc(func=parab_func, x_range=(-8, 8), zeros_wanted=2)
+    """Fixture for an AnalyzedFuncSavedInstances describing parab_func."""
+    return AnalyzedFuncSavedInstances(
+        func=parab_func, x_range=(-8, 8), zeros_wanted=2
+    )
 
 
 @CountCalls
@@ -76,7 +77,7 @@ def inc_dec_func(x_val):
 
 @pytest.fixture()
 def analyzed_incdecfunc():
-    """Fixture for an AnalyzedFunc describing inc_dec_func."""
-    return AnalyzedFunc(
+    """Fixture for an AnalyzedFuncSavedInstances describing inc_dec_func."""
+    return AnalyzedFuncSavedInstances(
         func=inc_dec_func, x_range=(-3, -0.001), crits_wanted=1, zeros_wanted=1
     )

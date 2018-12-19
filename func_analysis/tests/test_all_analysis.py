@@ -5,18 +5,21 @@
 
 This deliberately uses a function requiring a high degree of precision
 """
+from typing import Dict, Tuple
+
 import mpmath as mp
 import numpy as np
 
-from .._analysis_classes import AnalyzedFunc
-from .._util import make_intervals
 from .helpers import (
-    CountCalls,
     assert_output_lessthan,
     mpf_assert_allclose,
+    total_counts_pre_analysis,
     typecheck_intervals,
     typecheck_zcp,
+    workout_analyzed_func,
 )
+from .._analysis_classes import AnalyzedFunc
+from .._util import make_intervals
 
 EPSILON_0 = 1e-20
 EPSILON_1 = 3.05e-15
@@ -319,10 +322,13 @@ def test_incdecfunc_has_correct_convexity(analyzed_incdecfunc):
     assert analyzed_incdecfunc.convex() == []
 
 
-def test_call_counting():
-    """Check and print call counts for each executed function."""
-    # assert trig_func.call_count < 2000
-    # assert trig_func.call_count > 10
-    print("\ncall counts\n===========")
-    for counted_func in CountCalls.functions:
-        print(counted_func.func.__name__ + ": " + str(counted_func.call_count))
+def test_call_counting(analyzed_trig_func):
+    """Check and print call all_counts for each executed function."""
+    assert total_counts_pre_analysis() == 0
+    counts: Tuple[Dict, Dict] = workout_analyzed_func(analyzed_trig_func)
+    original_vals = tuple(counts[0].values())
+    deduped_vals = tuple(counts[1].values())
+    uniqueness = np.divide(deduped_vals, original_vals)
+    # Ensure that memoized func isn't called again for repeat vals.
+    assert original_vals.count(counts[0]["dupe"]) > 1
+    assert np.amin(uniqueness) > 0.8

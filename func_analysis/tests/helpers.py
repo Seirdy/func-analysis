@@ -2,10 +2,38 @@
 from __future__ import annotations
 
 from functools import update_wrapper
-from typing import Iterable, List
+from typing import Iterable, List, Tuple
 
 import mpmath as mp
 import numpy as np
+
+from .._analysis_classes import AnalyzedFunc
+
+
+# pylint: disable=undefined-variable
+class AnalyzedFuncSavedInstances(AnalyzedFunc):
+    """Saves all instances of an object."""
+
+    instances: List[AnalyzedFuncSavedInstances] = []  # noqa: F821
+
+    def __init__(self, *args, **kwargs):
+        """Intialize the object."""
+        super().__init__(*args, **kwargs)
+        self.instances.append(self)
+        self.func_name = self._func_plotted.__name__
+
+    @property
+    def counts(self):
+        """Count unique calls to self.func."""
+        return len(self.plotted_points)
+
+    @property
+    def deduped_counts(self):
+        """Remove duplicates from self.counts."""
+        return len(np.unique([coord[0] for coord in self.plotted_points]))
+
+
+# pylint: enable=undefined-variable
 
 
 class CountCalls:
@@ -26,6 +54,12 @@ class CountCalls:
         """Increment counter each time func is called."""
         self.call_count += 1
         return self.func(*args)
+
+
+def total_counts_pre_analysis() -> int:
+    """Total calls for analyzed functions."""
+    counts = (counted_func.call_count for counted_func in CountCalls.functions)
+    return sum(counts)
 
 
 def mpf_assert_allclose(actual, desired, atol=1e-3):
@@ -81,3 +115,27 @@ def typecheck_intervals(intervals):
         assert isinstance(interval, tuple)
         typecheck_number(interval[0])
         typecheck_number(interval[1])
+
+
+def workout_analyzed_func(
+    analyzed_func: AnalyzedFuncSavedInstances
+) -> Tuple[dict, dict]:
+    """Track function calls throughout function analysis."""
+    sequential_counts = {}
+    sequential_deduped_counts = {}
+
+    def logged_calculation(arg, key):
+        assert arg is not None
+        sequential_counts[key] = analyzed_func.counts
+        sequential_deduped_counts[key] = analyzed_func.deduped_counts
+
+    logged_calculation(analyzed_func.zeros, "zeros")
+    logged_calculation(analyzed_func.absolute_minimum(), "absmin")
+    logged_calculation(analyzed_func.convex(), "convex")
+    saved_coords = tuple(analyzed_func.plotted_points)
+    saved_points = [coord[0] for coord in saved_coords]
+    logged_calculation(analyzed_func.func(saved_points), "dupe")
+    logged_calculation(
+        analyzed_func.rooted_second_derivative().func(saved_points), "secder"
+    )
+    return sequential_counts, sequential_deduped_counts
