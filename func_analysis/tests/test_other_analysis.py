@@ -9,8 +9,9 @@ from typing import Dict, Tuple
 
 import numpy as np
 
-from .._analysis_classes import AnalyzedFunc
-from .helpers import (
+import pytest
+from func_analysis._analysis_classes import AnalyzedFunc
+from func_analysis.tests.helpers import (
     total_counts_pre_analysis,
     typecheck_zcp,
     workout_analyzed_func,
@@ -19,7 +20,14 @@ from .helpers import (
 
 def test_analyzedfunc_has_no_throwaways(analyzed_trig_func):
     """Ensure that the throwaway overloading functions are removed."""
-    assert not hasattr(analyzed_trig_func, "_")
+    with pytest.raises(AttributeError) as errinfo:
+        error_supplement = analyzed_trig_func.func_iterable
+    if "has no attribute" not in str(errinfo.value):
+        raise AttributeError(
+            "analyzed_trig_func._ should have been deleted, "
+            + "but found it to be "
+            + str(error_supplement)
+        )
 
 
 def test_zeroth_derivative_is_itself(analyzed_trig_func):
@@ -51,7 +59,7 @@ def test_trig_func_has_correct_abs_max(analyzed_trig_func):
     the exact values.
     """
     trig_abs_max = analyzed_trig_func.absolute_maximum()
-    approximate_expected_max = [-46.355_597_936_762_38, 1.013_176_643_861_527]
+    approximate_expected_max = [-46.35559793676238, 1.013176643861527]
     np.testing.assert_allclose(
         np.float128(trig_abs_max), approximate_expected_max
     )
