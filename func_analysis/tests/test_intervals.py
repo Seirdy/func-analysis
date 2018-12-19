@@ -11,9 +11,8 @@ This deliberately uses a function requiring a high degree of precision
 import mpmath as mp
 import numpy as np
 
-from tests import constants
-
 from .._util import make_intervals
+from ..tests import constants
 from .helpers import mpf_assert_allclose, typecheck_intervals
 
 

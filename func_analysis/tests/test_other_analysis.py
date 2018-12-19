@@ -16,10 +16,6 @@ from .helpers import (
     workout_analyzed_func,
 )
 
-EPSILON_0 = 1e-20
-EPSILON_1 = 3.05e-15
-EPSILON_2 = 1.196_789_1e-6
-
 
 def test_analyzedfunc_has_no_throwaways(analyzed_trig_func):
     """Ensure that the throwaway overloading functions are removed."""

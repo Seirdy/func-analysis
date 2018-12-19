@@ -8,9 +8,8 @@ This deliberately uses a function requiring a high degree of precision
 
 import numpy as np
 
-from tests import constants
-
 from .._analysis_classes import AnalyzedFunc
+from ..tests import constants
 from .helpers import assert_output_lessthan, mpf_assert_allclose, typecheck_zcp
 
 
