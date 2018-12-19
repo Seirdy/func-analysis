@@ -11,12 +11,10 @@ This deliberately uses a function requiring a high degree of precision
 import mpmath as mp
 import numpy as np
 
+from tests import constants
+
 from .._util import make_intervals
 from .helpers import mpf_assert_allclose, typecheck_intervals
-
-EPSILON_0 = 1e-20
-EPSILON_1 = 3.05e-15
-EPSILON_2 = 1.196_789_1e-6
 
 
 def test_trig_func_has_correct_concavity_convexity(analyzed_trig_func):
@@ -61,7 +59,9 @@ def test_analyzed_incdecfunc_has_correct_decreasing(analyzed_incdecfunc):
     pushes the boundaries of the precision of func_analysis.
     """
     mpf_assert_allclose(
-        analyzed_incdecfunc.decreasing(), [(-3, mp.fneg(mp.e))], EPSILON_1 / 11
+        analyzed_incdecfunc.decreasing(),
+        [(-3, mp.fneg(mp.e))],
+        constants.EPSILON_1 / 11,
     )
 
 
@@ -81,7 +81,7 @@ def test_analyzed_incdecfunc_has_correct_increasing_decreasing(
     mpf_assert_allclose(
         analyzed_incdecfunc.increasing(),
         [(mp.fneg(mp.e), -0.001)],
-        EPSILON_1 / 10,
+        constants.EPSILON_1 / 10,
     )
 
 
