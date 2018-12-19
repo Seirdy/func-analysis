@@ -5,17 +5,17 @@
 
 This deliberately uses a function requiring a high degree of precision
 """
-from typing import Dict, Tuple
+from typing import Tuple
 
 import numpy as np
 
 import pytest
 from func_analysis._analysis_classes import AnalyzedFunc
-from func_analysis.tests.helpers import (
+from func_analysis.tests.call_counting import (
     total_counts_pre_analysis,
-    typecheck_zcp,
     workout_analyzed_func,
 )
+from tests import testing_utils
 
 
 def test_analyzedfunc_has_no_throwaways(analyzed_trig_func):
@@ -46,8 +46,8 @@ def test_trig_func_has_correct_relative_extrema(analyzed_trig_func):
     """
     maxima = analyzed_trig_func.relative_maxima()
     minima = analyzed_trig_func.relative_minima()
-    typecheck_zcp(maxima)
-    typecheck_zcp(minima)
+    testing_utils.typecheck_zcp(maxima)
+    testing_utils.typecheck_zcp(minima)
     np.testing.assert_equal(maxima, analyzed_trig_func.crits[::2])
     np.testing.assert_equal(minima, analyzed_trig_func.crits[1::2])
 
@@ -96,10 +96,12 @@ def test_parabola_has_symmetry(analyzed_parab):
 def test_call_counting(analyzed_trig_func):
     """Check and print call all_counts for each executed function."""
     assert total_counts_pre_analysis() == 0
-    counts: Tuple[Dict, Dict] = workout_analyzed_func(analyzed_trig_func)
-    original_vals = tuple(counts[0].values())
-    deduped_vals = tuple(counts[1].values())
+    counts = workout_analyzed_func(analyzed_trig_func)
+    original_vals: Tuple[int, ...] = tuple(counts[0].values())
+    deduped_vals: Tuple[int, ...] = tuple(counts[1].values())
     uniqueness = np.divide(deduped_vals, original_vals)
     # Ensure that memoized func isn't called again for repeat vals.
-    assert original_vals.count(counts[0]["dupe"]) > 1
+    counts_after_repeat = counts[0]["dupe"]
+    assert original_vals.count(counts_after_repeat) > 1
+    assert counts_after_repeat < 1700
     assert np.amin(uniqueness) > 0.8

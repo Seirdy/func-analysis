@@ -10,16 +10,12 @@ import numpy as np
 
 from func_analysis._analysis_classes import AnalyzedFunc
 from func_analysis.tests import constants
-from func_analysis.tests.helpers import (
-    assert_output_lessthan,
-    mpf_assert_allclose,
-    typecheck_zcp,
-)
+from tests import testing_utils
 
 
 def test_trig_func_has_correct_zeros(analyzed_trig_func):
     """Test the correctness of analyzed_trig_func.zeros."""
-    typecheck_zcp(analyzed_trig_func.zeros)
+    testing_utils.typecheck_zcp(analyzed_trig_func.zeros)
     # approximate accuracy
     np.testing.assert_allclose(
         np.float64(analyzed_trig_func.zeros),
@@ -27,7 +23,7 @@ def test_trig_func_has_correct_zeros(analyzed_trig_func):
         rtol=constants.EPSILON1,
     )
     # Does the function evaluate to 0 at its zeros?
-    assert_output_lessthan(
+    testing_utils.assert_output_lessthan(
         func=analyzed_trig_func.func,
         x_vals=analyzed_trig_func.zeros,
         max_y=3.5692e-19,
@@ -46,14 +42,14 @@ def test_incdecfunc_has_correct_zeros(analyzed_incdecfunc):
 
 def test_trig_func_has_correct_crits(analyzed_trig_func):
     """Test the correctness of analyzed_trig_func.crits."""
-    typecheck_zcp(analyzed_trig_func.crits)
+    testing_utils.typecheck_zcp(analyzed_trig_func.crits)
     # approximate accuracy
     np.testing.assert_allclose(
         np.float64(analyzed_trig_func.crits),
         constants.TRIG_FUNC_CRITS,
         rtol=constants.EPSILON1,
     )
-    assert_output_lessthan(
+    testing_utils.assert_output_lessthan(
         func=analyzed_trig_func.rooted_first_derivative().func,
         x_vals=analyzed_trig_func.crits,
         max_y=constants.EPSILON1,
@@ -66,7 +62,7 @@ def assert_trig_func_pois_are_accurate(analyzedfunc, pois_found: np.ndarray):
         np.float128(pois_found[3] + 46.94494065583221224827409198522)
         < constants.EPSILON1
     )
-    assert_output_lessthan(
+    testing_utils.assert_output_lessthan(
         func=analyzedfunc.rooted_second_derivative().func,
         x_vals=analyzedfunc.pois,
         max_y=constants.EPSILON1,
@@ -95,9 +91,13 @@ def pois_stay_close_when_given_fp2(analyzedfunc, fp2_zeros):
     fp2_zeros_func_counts_after = len(fp2_zeros.plotted_points)
     assert fp2_zeros_func_counts_after - fp2_zeros_func_counts_before > 50
 
-    typecheck_zcp(more_exact_pois)
-    mpf_assert_allclose(fp2_zeros.zeros, more_exact_pois, constants.EPSILON0)
-    mpf_assert_allclose(more_exact_pois, analyzedfunc.pois, constants.EPSILON2)
+    testing_utils.typecheck_zcp(more_exact_pois)
+    testing_utils.mpf_assert_allclose(
+        fp2_zeros.zeros, more_exact_pois, constants.EPSILON0
+    )
+    testing_utils.mpf_assert_allclose(
+        more_exact_pois, analyzedfunc.pois, constants.EPSILON2
+    )
 
 
 def test_trig_func_has_correct_pois(analyzed_trig_func, fp2_zeros):
@@ -108,11 +108,11 @@ def test_trig_func_has_correct_pois(analyzed_trig_func, fp2_zeros):
     derivative.
     """
     # typechecking
-    typecheck_zcp(analyzed_trig_func.pois)
+    testing_utils.typecheck_zcp(analyzed_trig_func.pois)
     assert_trig_func_pois_are_accurate(
         analyzed_trig_func, analyzed_trig_func.pois
     )
-    mpf_assert_allclose(
+    testing_utils.mpf_assert_allclose(
         fp2_zeros.zeros, analyzed_trig_func.pois, constants.EPSILON2
     )
     pois_stay_close_when_given_fp2(analyzed_trig_func, fp2_zeros)

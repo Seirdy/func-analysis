@@ -13,10 +13,7 @@ import numpy as np
 
 from func_analysis._util import make_intervals
 from func_analysis.tests import constants
-from func_analysis.tests.helpers import (
-    mpf_assert_allclose,
-    typecheck_intervals,
-)
+from tests import testing_utils
 
 
 def test_trig_func_has_correct_concavity_convexity(analyzed_trig_func):
@@ -60,7 +57,7 @@ def test_analyzed_incdecfunc_has_correct_decreasing(analyzed_incdecfunc):
     across (-3, -e). Comparing with an irrational constant really
     pushes the boundaries of the precision of func_analysis.
     """
-    mpf_assert_allclose(
+    testing_utils.mpf_assert_allclose(
         analyzed_incdecfunc.decreasing(),
         [(-3, mp.fneg(mp.e))],
         constants.EPSILON1 / 11,
@@ -74,13 +71,13 @@ def test_analyzed_incdecfunc_has_correct_increasing_decreasing(
     analyzed_incdecfunc_increasing = analyzed_incdecfunc.increasing()
     analyzed_incdecfunc_decreasing = analyzed_incdecfunc.decreasing()
 
-    typecheck_intervals(analyzed_incdecfunc_increasing)
-    typecheck_intervals(analyzed_incdecfunc_decreasing)
+    testing_utils.typecheck_intervals(analyzed_incdecfunc_increasing)
+    testing_utils.typecheck_intervals(analyzed_incdecfunc_decreasing)
     assert (
         analyzed_incdecfunc_increasing[0][0]
         == analyzed_incdecfunc_decreasing[0][1]
     )
-    mpf_assert_allclose(
+    testing_utils.mpf_assert_allclose(
         analyzed_incdecfunc.increasing(),
         [(mp.fneg(mp.e), -0.001)],
         constants.EPSILON1 / 10,
