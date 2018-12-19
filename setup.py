@@ -8,14 +8,14 @@ import sys
 from os import path
 
 from setuptools import setup
-from setuptools.command.test import test as TestCommand  # NOQA: N812
+from setuptools.command.test import test
 
 assert sys.version_info >= (3, 7, 0), "func_analysis requires Python 3.7+"
 
 CURRENT_DIR = path.dirname(__file__)
 
 
-class PyTest(TestCommand):
+class PyTest(test):
     """Class to execute pytest as test suite without.
 
     Also avoids the need to pre-install pytest on the system.
@@ -24,7 +24,7 @@ class PyTest(TestCommand):
 
     def finalize_options(self):
         """Finalize pytest options."""
-        TestCommand.finalize_options(self)
+        test.finalize_options(self)
         self.test_args: list = []
         # pylint: disable = attribute-defined-outside-init
         self.test_suite = True
@@ -60,7 +60,7 @@ def get_version() -> str:
     """
     func_analysis_init = "func_analysis/__init__.py"
     _version_re = re.compile(r"__version__\s+=\s+(?P<version>.*)")
-    with open(func_analysis_init, "r", encoding="utf8") as f:
+    with open(func_analysis_init, encoding="utf8") as f:
         match = _version_re.search(f.read())
         version = match.group("version") if match is not None else '"unknown"'
     return str(ast.literal_eval(version))
@@ -78,7 +78,7 @@ setup(
     packages=["func_analysis"],
     classifiers=[
         "License :: OSI Approved :: GNU Affero General Public License "
-        "v3 or later (AGPLv3+)",  # NOQA
+        "v3 or later (AGPLv3+)",
         "Operating System :: OS Independent",
         "Development Status :: 2 - Pre-Alpha",
         "Programming Language :: Python",
