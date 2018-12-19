@@ -5,57 +5,22 @@
 
 This deliberately uses a function requiring a high degree of precision
 """
-from __future__ import annotations
-
-from numbers import Real
-from typing import Iterable, List
-
 import mpmath as mp
 import numpy as np
 
-from .conftest import CountCalls
 from .._analysis_classes import AnalyzedFunc
 from .._util import make_intervals
+from .helpers import (
+    CountCalls,
+    assert_output_lessthan,
+    mpf_assert_allclose,
+    typecheck_intervals,
+    typecheck_zcp,
+)
 
 EPSILON_0 = 1e-20
 EPSILON_1 = 3.05e-15
 EPSILON_2 = 1.196_789_1e-6
-
-
-def mpf_assert_allclose(actual, desired, atol=1e-3):
-    """Assert that the two arrays are close enough.
-
-    Similar to numpy.testing.assert_allclose().
-    """
-    assert np.amax(np.abs(np.subtract(actual, desired))) < atol
-
-
-def assert_output_lessthan(func, x_vals, max_y):
-    """Assert that func(x) < max_y for all x_vals."""
-    y_vals = func(x_vals)
-    assert np.amax(np.abs(y_vals)) < max_y
-
-
-def typecheck_multi(item, *args) -> bool:
-    """Check if item is instance of anything in *args."""
-    return any(isinstance(item, allowed_type) for allowed_type in args)
-
-
-def typecheck_number(num):
-    """Assert that item is a Real."""
-    assert typecheck_multi(num, mp.mpf, float, np.float64, int)
-
-
-def typecheck_iterable(items: Iterable, *args):
-    """Typecheck items in an Iterable.
-
-    Assert each item in items is an instance of something in *args.
-    Since all items in numpy arrays share the same type, only the first
-    item needs to be checked if items is an array.
-    """
-    if isinstance(items, np.ndarray):
-        assert typecheck_multi(items[0], args)
-    assert all(typecheck_multi(item, args) for item in items)
 
 
 def test_analyzedfunc_has_no_throwaways(analyzed_trig_func):
@@ -66,16 +31,6 @@ def test_analyzedfunc_has_no_throwaways(analyzed_trig_func):
 def test_zeroth_derivative_is_itself(analyzed_trig_func):
     """Check that nth_derivative(0) returns the unaltered function."""
     assert analyzed_trig_func.nth_derivative(0) == analyzed_trig_func.func
-
-
-def typecheck_zcp(points):
-    """Typecheck functions returning arrays of points.
-
-    Such functions include zeros(), crits, pois(),
-    relative_maxima(), relative_minima().
-    """
-    assert isinstance(points, np.ndarray)
-    typecheck_iterable(points, mp.mpf)
 
 
 def test_trig_func_has_correct_zeros(analyzed_trig_func):
@@ -153,17 +108,6 @@ def test_trig_func_has_correct_crits(analyzed_trig_func):
     )
 
 
-@CountCalls
-def sec_der(x_val: Real) -> mp.mpf:
-    """Define the actual second derivative."""
-    return (
-        mp.cos(x_val)
-        + (-4 * (mp.power(x_val, 2))) * mp.cos(mp.power(x_val, 2))
-        + -2 * mp.sin(mp.power(x_val, 2))
-        + mp.sin(x_val)
-    )
-
-
 def assert_trig_func_pois_are_accurate(analyzedfunc, pois_found: np.ndarray):
     """Test pois() accuracy."""
     assert (
@@ -190,20 +134,21 @@ def pois_stay_close_when_given_fp2(analyzedfunc, fp2_zeros):
         zeros_wanted=21,
         crits_wanted=21,
         known_zeros=[-47.038_289_673_236_127, -46.406_755_885_040_056],
-        derivatives={2: sec_der},
+        derivatives={2: fp2_zeros.func},
     )
-    # make sure sec_der() is actually used by tracking its call count
-    sec_der_counts_before = sec_der.call_count
+    # make sure fp2_zeros.func() is actually used by tracking its call count
+    fp2_zeros_func_counts_before = len(fp2_zeros.plotted_points)
 
     more_exact_pois = analyzed_trig_func_with_fp2.pois
-    assert sec_der.call_count - sec_der_counts_before > 50
+    fp2_zeros_func_counts_after = len(fp2_zeros.plotted_points)
+    assert fp2_zeros_func_counts_after - fp2_zeros_func_counts_before > 50
 
     typecheck_zcp(more_exact_pois)
-    mpf_assert_allclose(fp2_zeros, more_exact_pois, EPSILON_0)
+    mpf_assert_allclose(fp2_zeros.zeros, more_exact_pois, EPSILON_0)
     mpf_assert_allclose(more_exact_pois, analyzedfunc.pois, EPSILON_2)
 
 
-def test_trig_func_has_correct_pois(analyzed_trig_func):
+def test_trig_func_has_correct_pois(analyzed_trig_func, fp2_zeros):
     """Test the correctness of analyzed_trig_func.pois.
 
     First, compare the output with approximate floating-point values.
@@ -215,10 +160,7 @@ def test_trig_func_has_correct_pois(analyzed_trig_func):
     assert_trig_func_pois_are_accurate(
         analyzed_trig_func, analyzed_trig_func.pois
     )
-    fp2_zeros = AnalyzedFunc(
-        func=sec_der, x_range=(-47.05, -46.35), zeros_wanted=21
-    ).zeros
-    mpf_assert_allclose(fp2_zeros, analyzed_trig_func.pois, EPSILON_2)
+    mpf_assert_allclose(fp2_zeros.zeros, analyzed_trig_func.pois, EPSILON_2)
     pois_stay_close_when_given_fp2(analyzed_trig_func, fp2_zeros)
 
 
@@ -334,15 +276,6 @@ def test_analyzed_incdecfunc_has_correct_decreasing(analyzed_incdecfunc):
     mpf_assert_allclose(
         analyzed_incdecfunc.decreasing(), [(-3, mp.fneg(mp.e))], EPSILON_1 / 11
     )
-
-
-def typecheck_intervals(intervals):
-    """Typecheck of all functions with return type List[Interval]."""
-    assert isinstance(intervals, List)
-    for interval in intervals:
-        assert isinstance(interval, tuple)
-        typecheck_number(interval[0])
-        typecheck_number(interval[1])
 
 
 def test_analyzed_incdecfunc_has_correct_increasing_decreasing(

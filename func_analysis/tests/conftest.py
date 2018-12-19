@@ -1,34 +1,12 @@
 """Fixtures to represent sample AnalyzedFunc instances."""
-from __future__ import annotations
-
-from functools import update_wrapper
 from numbers import Real
-from typing import List
 
 import mpmath as mp
+
 import pytest
 
 from .._analysis_classes import AnalyzedFunc
-
-
-class CountCalls:
-    """Class decorator for tracking state."""
-
-    # pylint: disable=undefined-variable
-    functions: List[CountCalls] = []  # NOQA: F821
-    # pylint: enable=undefined-variable
-
-    def __init__(self, func):
-        """Initialize the object."""
-        update_wrapper(self, func)
-        self.func = func
-        CountCalls.functions.append(self)
-        self.call_count = 0
-
-    def __call__(self, *args):
-        """Increment counter each time func is called."""
-        self.call_count += 1
-        return self.func(*args)
+from .helpers import CountCalls
 
 
 @CountCalls
@@ -49,6 +27,25 @@ def analyzed_trig_func():
         zeros_wanted=21,
         crits_wanted=21,
         known_zeros=[-47.038_289_673_236_127, -46.406_755_885_040_056],
+    )
+
+
+@CountCalls
+def sec_der(x_val: Real) -> mp.mpf:
+    """Define the actual second derivative."""
+    return (
+        mp.cos(x_val)
+        + (-4 * (mp.power(x_val, 2))) * mp.cos(mp.power(x_val, 2))
+        + -2 * mp.sin(mp.power(x_val, 2))
+        + mp.sin(x_val)
+    )
+
+
+@pytest.fixture()
+def fp2_zeros():
+    """Fixture for an AnalyzedFunc describing sec_der."""
+    return AnalyzedFunc(
+        func=sec_der, x_range=(-47.05, -46.35), zeros_wanted=21
     )
 
 
