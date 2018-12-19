@@ -14,8 +14,9 @@ from typing import Iterable, List
 import mpmath as mp
 import numpy as np
 
-from _util import make_intervals
 from func_analysis import AnalyzedFunc
+
+from .._util import make_intervals
 
 EPSILON_0 = 1e-20
 EPSILON_1 = 3.05e-15
