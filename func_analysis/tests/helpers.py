@@ -95,7 +95,8 @@ def typecheck_iterable(items: Iterable, *args):
     """
     if isinstance(items, np.ndarray):
         assert typecheck_multi(items[0], args)
-    assert all(typecheck_multi(item, args) for item in items)
+    else:
+        assert all(typecheck_multi(item, args) for item in items)
 
 
 def typecheck_zcp(points):
