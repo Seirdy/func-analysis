@@ -24,7 +24,7 @@ Interval = Tuple[mp.mpf, mp.mpf]  # intervals between mp.mpf numbers
 Func = Callable[[Union[Iterable[Real], Real]], Union[Iterable[mp.mpf], mp.mpf]]
 
 
-class AnalyzedFuncBase:
+class AnalyzedFuncBase(object):
     """Parent class of all function analysis."""
 
     def __init__(
@@ -278,7 +278,7 @@ class FuncZeros(AnalyzedFuncBase):
         zeros: List[mp.mpf] = []
         for x_interval in self._all_zero_intervals():
             # mpmath's root-finders can take an imprecise starting point.
-            # If this interval has an already-found zero,
+            # If this interval has an already-found zero
             # use that as the starting point. Otherwise, let
             # find_one_zero() use the interval's bounds to find a zero.
             starting_pt: Optional[Real] = None
