@@ -347,6 +347,14 @@ def test_parabola_has_correct_crits():
     assert analyzed_parab.crits == [0]
 
 
+def test_parabola_has_correct_concavity():
+    assert analyzed_parab.concave() == [analyzed_parab.x_range]
+
+
+def test_parabola_has_correct_convexity():
+    assert analyzed_parab.convex() == []
+
+
 def test_parabola_has_symmetry():
     """Check analyzed_parab's symmetry functions."""
     assert analyzed_parab.has_symmetry(axis=0)
@@ -365,13 +373,14 @@ def test_parabola_has_symmetry():
 def inc_dec_func(x_val):
     """Define a function to test increasing/decreasing intervals.
 
-    ln(x^2)/x subtly switches from decreasing to increasing at x=-e
+    ln(x^2)/x subtly switches from decreasing to increasing at x=-e.
+    It is concave across (-inf, 0) and convex across (0, inf).
     """
     return mp.fdiv(mp.log(mp.power(x_val, 2)), x_val)
 
 
 analyzed_incdecfunc = AnalyzedFunc(
-    func=inc_dec_func, x_range=(-3, -0.001), crits_wanted=0, zeros_wanted=1
+    func=inc_dec_func, x_range=(-3, -0.001), crits_wanted=1, zeros_wanted=1
 )
 
 
@@ -417,6 +426,14 @@ def test_analyzed_incdecfunc_has_correct_increasing_decreasing():
 def test_incdecfunc_has_correct_zeros():
     """Test analyzed_incdecfunc.zeros returns correct value."""
     assert analyzed_incdecfunc.zeros == [-1]
+
+
+def test_incdecfunc_has_correct_concavity():
+    assert analyzed_incdecfunc.concave() == [analyzed_incdecfunc.x_range]
+
+
+def test_incdecfunc_has_correct_convexity():
+    assert analyzed_incdecfunc.convex() == []
 
 
 def test_call_counting():
