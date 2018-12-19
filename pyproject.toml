@@ -20,8 +20,8 @@ deps =
 	black
 	isort
 commands =
-	sh -c "isort *.py func_analysis/*.py func_analysis/tests/*.py"
-	sh -c "black --py36 -l 79 *.py func_analysis/*.py func_analysis/*/*.py"
+	sh -c "isort *.py func_analysis/**/*.py"
+	sh -c "black --py36 -l 79 *.py func_analysis/**/*.py"
 
 # Linters
 
@@ -47,20 +47,20 @@ deps =
 	flake8-tidy-imports
 	flake8-tuple
 commands =
-	sh -c "flake8 *.py */*.py"
+	sh -c "flake8 *.py func_analysis/**/*.py"
 
 [testenv:pylint]
 basepython = python3
 skip_install = true
 deps = pylint
 commands =
-	sh -c "pylint -s n *.py */*.py"
+	sh -c "pylint -s n *.py func_analysis/**/*.py"
 
 [testenv:pydocstyle]
 basepython = python3
 skip_install = true
 deps = pydocstyle
-commands = pydocstyle
+commands = sh -c "pydocstyle *.py func_analysis/**/*.py"
 
 [testenv:mypy]
 basepython = python3
