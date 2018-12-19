@@ -10,7 +10,7 @@ from typing import Tuple
 import numpy as np
 
 import pytest
-from func_analysis._analysis_classes import AnalyzedFunc
+from func_analysis.analysis_classes import AnalyzedFunc
 from func_analysis.tests.call_counting import (
     total_counts_pre_analysis,
     workout_analyzed_func,

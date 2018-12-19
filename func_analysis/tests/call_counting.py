@@ -6,7 +6,7 @@ from typing import Dict, List, Tuple
 
 import numpy as np
 
-from func_analysis._analysis_classes import AnalyzedFunc
+from func_analysis.analysis_classes import AnalyzedFunc
 
 
 # pylint: disable=undefined-variable
@@ -81,7 +81,9 @@ def workout_analyzed_func(
     logged_calculation(analyzed_func.convex(), "convex")
     saved_coords = tuple(analyzed_func.plotted_points)
     saved_points = [coord[0] for coord in saved_coords]
+    # noinspection PyTypeChecker
     logged_calculation(analyzed_func.func(saved_points), "dupe")
+    # noinspection PyTypeChecker
     logged_calculation(
         analyzed_func.rooted_second_derivative().func(saved_points), "sec_der"
     )

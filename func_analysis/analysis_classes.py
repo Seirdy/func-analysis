@@ -9,8 +9,8 @@ from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
 import mpmath as mp
 import numpy as np
 
-from func_analysis._decorators import SaveXY, singledispatchmethod
-from func_analysis._util import (
+from func_analysis.decorators import SaveXY, singledispatchmethod
+from func_analysis.util import (
     assemble_table,
     decreasing_intervals,
     find_one_zero,

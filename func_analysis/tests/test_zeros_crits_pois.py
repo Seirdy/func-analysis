@@ -8,9 +8,8 @@ This deliberately uses a function requiring a high degree of precision
 
 import numpy as np
 
-from func_analysis._analysis_classes import AnalyzedFunc
-from func_analysis.tests import constants
-from tests import testing_utils
+from func_analysis.analysis_classes import AnalyzedFunc
+from func_analysis.tests import constants, testing_utils
 
 
 def test_trig_func_has_correct_zeros(analyzed_trig_func):
