@@ -14,6 +14,7 @@ from typing import Iterable, List
 import mpmath as mp
 import numpy as np
 
+from _util import make_intervals
 from func_analysis import AnalyzedFunc
 
 EPSILON_0 = 1e-20
@@ -306,6 +307,20 @@ def test_trig_func_has_correct_abs_min():
     np.testing.assert_equal(
         analyzed_trig_func.absolute_minimum(),
         [expected_min, analyzed_trig_func.func(expected_min)],
+    )
+
+
+def test_trig_func_has_correct_concavity_convexity():
+    all_pts = list(analyzed_trig_func.pois)
+    all_pts.insert(0, analyzed_trig_func.min_x)
+    all_pts.append(analyzed_trig_func.max_x)
+    all_intervals = make_intervals(all_pts)
+
+    np.testing.assert_array_equal(
+        np.array(analyzed_trig_func.concave()), all_intervals[::2]
+    )
+    np.testing.assert_array_equal(
+        np.array(analyzed_trig_func.convex()), all_intervals[1::2]
     )
 
 
