@@ -7,16 +7,14 @@ This deliberately uses a function requiring a high degree of precision
 """
 from __future__ import annotations
 
-from functools import update_wrapper
 from numbers import Real
 from typing import Iterable, List
 
 import mpmath as mp
 import numpy as np
 
-import pytest
-from func_analysis import AnalyzedFunc
-
+from .conftest import CountCalls
+from .._analysis_classes import AnalyzedFunc
 from .._util import make_intervals
 
 EPSILON_0 = 1e-20
@@ -36,30 +34,6 @@ def assert_output_lessthan(func, x_vals, max_y):
     """Assert that func(x) < max_y for all x_vals."""
     y_vals = func(x_vals)
     assert np.amax(np.abs(y_vals)) < max_y
-
-
-# pylint: disable = too-few-public-methods
-class CountCalls:
-    """Class decorator for tracking state."""
-
-    # pylint: disable=undefined-variable
-    functions: List[CountCalls] = []  # NOQA: F821
-    # pylint: enable=undefined-variable
-
-    def __init__(self, func):
-        """Initialize the object."""
-        update_wrapper(self, func)
-        self.func = func
-        CountCalls.functions.append(self)
-        self.call_count = 0
-
-    def __call__(self, *args):
-        """Increment counter each time func is called."""
-        self.call_count += 1
-        return self.func(*args)
-
-
-# pylint: enable = too-few-public-methods
 
 
 def typecheck_multi(item, *args) -> bool:
@@ -82,27 +56,6 @@ def typecheck_iterable(items: Iterable, *args):
     if isinstance(items, np.ndarray):
         assert typecheck_multi(items[0], args)
     assert all(typecheck_multi(item, args) for item in items)
-
-
-@CountCalls
-def trig_func(x_val: mp.mpf) -> mp.mpf:
-    """Define a test function requiring high precision for analysis.
-
-    cos(x^2)-sin(x)+x/68
-    """
-    return mp.cos(x_val ** 2) - mp.sin(x_val) + (x_val / 68)
-
-
-@pytest.fixture
-def analyzed_trig_func():
-    """Fixture for an AnalyzedFunc describing trig_func."""
-    return AnalyzedFunc(
-        func=trig_func,
-        x_range=(-47.05, -46.3499),
-        zeros_wanted=21,
-        crits_wanted=21,
-        known_zeros=[-47.038_289_673_236_127, -46.406_755_885_040_056],
-    )
 
 
 def test_analyzedfunc_has_no_throwaways(analyzed_trig_func):
@@ -232,7 +185,7 @@ def pois_stay_close_when_given_fp2(analyzedfunc, fp2_zeros):
     accuracy.
     """
     analyzed_trig_func_with_fp2 = AnalyzedFunc(
-        func=trig_func,
+        func=analyzedfunc.func,
         x_range=(-47.05, -46.3499),
         zeros_wanted=21,
         crits_wanted=21,
@@ -331,21 +284,6 @@ def test_trig_func_has_correct_concavity_convexity(analyzed_trig_func):
     )
 
 
-@CountCalls
-def parab_func(x_val: Real) -> mp.mpf:
-    """Define a simple parabola.
-
-    It is concave and symmetric about the y-axis.
-    """
-    return mp.power(x_val, 2) - 4
-
-
-@pytest.fixture
-def analyzed_parab():
-    """Fixture for an AnalyzedFunc describing parab_func."""
-    return AnalyzedFunc(func=parab_func, x_range=(-8, 8), zeros_wanted=2)
-
-
 def test_parabola_has_correct_zeros(analyzed_parab):
     """Check that analyzed_parab.zeros returns correct value."""
     np.testing.assert_equal(analyzed_parab.zeros, np.array([-2, 2]))
@@ -379,28 +317,10 @@ def test_parabola_has_symmetry(analyzed_parab):
         analyzed_parab.vertical_axis_of_symmetry(), analyzed_parab.crits
     )
     analyzed_parab_new = AnalyzedFunc(
-        func=parab_func, x_range=(-8, 8), zeros_wanted=2
+        func=analyzed_parab.func, x_range=(-8, 8), zeros_wanted=2
     )
     np.testing.assert_equal(
         analyzed_parab_new.vertical_axis_of_symmetry(), analyzed_parab.crits
-    )
-
-
-@CountCalls
-def inc_dec_func(x_val):
-    """Define a function to test increasing/decreasing intervals.
-
-    ln(x^2)/x subtly switches from decreasing to increasing at x=-e.
-    It is concave across (-inf, 0) and convex across (0, inf).
-    """
-    return mp.fdiv(mp.log(mp.power(x_val, 2)), x_val)
-
-
-@pytest.fixture()
-def analyzed_incdecfunc():
-    """Fixture for an AnalyzedFunc describing inc_dec_func."""
-    return AnalyzedFunc(
-        func=inc_dec_func, x_range=(-3, -0.001), crits_wanted=1, zeros_wanted=1
     )
 
 
