@@ -6,7 +6,7 @@ from typing import List
 from numpy import float64
 
 import pytest
-from func_analysis._util import (
+from func_analysis.util import (
     decreasing_intervals,
     increasing_intervals,
     make_intervals,

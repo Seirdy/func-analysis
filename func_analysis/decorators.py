@@ -20,7 +20,7 @@ def singledispatchmethod(func: Callable):
     return wrapper
 
 
-class SaveXY:
+class SaveXY(object):
     """Class decorator for saving X-Y coordinates.
 
     This is not used for memoization; mp.memoize() serves that purpose
