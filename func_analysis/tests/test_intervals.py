@@ -16,7 +16,7 @@ from func_analysis.tests import constants
 from tests import testing_utils
 
 
-def test_trig_func_has_correct_concavity_convexity(analyzed_trig_func):
+def test_trig_func_concavity_convexity(analyzed_trig_func):
     """Test analyzed_trig_func.concave() and .convex().
 
     It alternates between intervals of concavity and convexity.
@@ -50,13 +50,16 @@ def test_parabola_has_correct_convexity(analyzed_parab):
     assert analyzed_parab.convex() == []
 
 
-def test_analyzed_incdecfunc_has_correct_decreasing(analyzed_incdecfunc):
+def test_analyzed_incdecfunc_decreasing(analyzed_incdecfunc):
     """Test accuracy of analyzed_incdecfunc.decreasing().
 
     This works really well because in x_range, incdecfunc decreases
     across (-3, -e). Comparing with an irrational constant really
     pushes the boundaries of the precision of func_analysis.
     """
+    analyzed_incdecfunc_decreasing = analyzed_incdecfunc.decreasing()
+
+    testing_utils.typecheck_intervals(analyzed_incdecfunc_decreasing)
     testing_utils.mpf_assert_allclose(
         analyzed_incdecfunc.decreasing(),
         [(-3, mp.fneg(mp.e))],
@@ -64,21 +67,13 @@ def test_analyzed_incdecfunc_has_correct_decreasing(analyzed_incdecfunc):
     )
 
 
-def test_analyzed_incdecfunc_has_correct_increasing_decreasing(
-    analyzed_incdecfunc
-):
+def test_analyzed_incdecfunc_increasing(analyzed_incdecfunc):
     """Test FuncIntervals' increasing() and decreasing() methods."""
     analyzed_incdecfunc_increasing = analyzed_incdecfunc.increasing()
-    analyzed_incdecfunc_decreasing = analyzed_incdecfunc.decreasing()
 
     testing_utils.typecheck_intervals(analyzed_incdecfunc_increasing)
-    testing_utils.typecheck_intervals(analyzed_incdecfunc_decreasing)
-    assert (
-        analyzed_incdecfunc_increasing[0][0]
-        == analyzed_incdecfunc_decreasing[0][1]
-    )
     testing_utils.mpf_assert_allclose(
-        analyzed_incdecfunc.increasing(),
+        analyzed_incdecfunc_increasing,
         [(mp.fneg(mp.e), -0.001)],
         constants.EPSILON1 / 10,
     )
