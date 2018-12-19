@@ -54,10 +54,9 @@ class CountCalls(object):
         return self.func(*args)
 
 
-def total_counts_pre_analysis() -> int:
-    """Total calls for analyzed functions."""
-    counts = (counted_func.call_count for counted_func in CountCalls.functions)
-    return sum(counts)
+def counts_pre_analysis() -> List[int]:
+    """All calls for analyzed functions."""
+    return [counted_func.call_count for counted_func in CountCalls.functions]
 
 
 SavedCounts = Dict[str, int]

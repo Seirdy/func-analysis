@@ -141,7 +141,7 @@ class AnalyzedFuncBase(object):
         try:
             return self._derivatives[nth]
         except KeyError:
-            if nth == 0:
+            if not nth:
                 return self.func
             return lambda x_val: mp.diff(self.func, x_val, n=nth)
 
@@ -299,7 +299,7 @@ class FuncZeros(AnalyzedFuncBase):
             An array of precise zeros for self.func.
 
         """
-        if self.zeros_wanted == 0:
+        if not self.zeros_wanted:
             return np.array([])
         if self._zeros is None or len(self._zeros) < self.zeros_wanted:
             self._zeros = self._compute_zeros()
@@ -419,7 +419,7 @@ class FuncSpecialPts(FuncZeros):
             An array of precise critical points for self.func.
 
         """
-        if self.crits_wanted == 0:
+        if not self.crits_wanted:
             return np.array([])
         if self._crits is None or len(self._crits) < self.crits_wanted:
             self._crits = self.rooted_first_derivative().zeros
@@ -435,12 +435,12 @@ class FuncSpecialPts(FuncZeros):
             An array of precise points of inflection for self.func.
 
         """
-        if self.pois_wanted == 0:
+        if not self.pois_wanted:
             return np.array([])
         if self._pois is None or len(self._pois) < self.pois_wanted:
             fp2_zeros = self.rooted_second_derivative().zeros
             self._pois = fp2_zeros[
-                np.array(self.rooted_first_derivative().func(fp2_zeros)) != 0
+                np.nonzero(self.rooted_first_derivative().func(fp2_zeros))
             ]
         return self._pois
 
@@ -541,9 +541,9 @@ class AnalyzedFunc(FuncSpecialPts):
             x_range.
 
         """
-        crits_found = self.crits
-        mask = np.array(self.rooted_second_derivative().func(crits_found)) < 0
-        return crits_found[mask]
+        fp2_of_crits = self.rooted_second_derivative().func(self.crits)
+        mask = np.less(fp2_of_crits, 0)
+        return self.crits[mask]
 
     def relative_minima(self) -> np.ndarray:
         """List all relative maxima of self.func.
@@ -558,9 +558,9 @@ class AnalyzedFunc(FuncSpecialPts):
             x_range.
 
         """
-        crits_found = self.crits
-        mask = np.array(self.rooted_second_derivative().func(crits_found)) > 0
-        return crits_found[mask]
+        fp2_of_crits = self.rooted_second_derivative().func(self.crits)
+        mask = np.greater(fp2_of_crits, 0)
+        return self.crits[mask]
 
     def absolute_maximum(self) -> np.ndarray:
         """Find the absolute maximum of self.simple_func.
