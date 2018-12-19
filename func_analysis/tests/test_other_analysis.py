@@ -11,11 +11,11 @@ import numpy as np
 
 import pytest
 from func_analysis._analysis_classes import AnalyzedFunc
+from func_analysis.tests import testing_utils
 from func_analysis.tests.call_counting import (
     total_counts_pre_analysis,
     workout_analyzed_func,
 )
-from tests import testing_utils
 
 
 def test_analyzedfunc_has_no_throwaways(analyzed_trig_func):

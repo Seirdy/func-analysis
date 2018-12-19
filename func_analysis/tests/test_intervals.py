@@ -12,8 +12,7 @@ import mpmath as mp
 import numpy as np
 
 from func_analysis._util import make_intervals
-from func_analysis.tests import constants
-from tests import testing_utils
+from func_analysis.tests import constants, testing_utils
 
 
 def test_trig_func_concavity_convexity(analyzed_trig_func):
