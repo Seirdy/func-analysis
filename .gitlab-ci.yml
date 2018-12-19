@@ -42,7 +42,7 @@ linting 1/4:
   stage: test
   image: python:alpine
   script:
-    - tox -e pydocstyle,pyroma
+    - tox -e pydocstyle,pyroma,xenon
 
 linting 2/4:
   stage: test
