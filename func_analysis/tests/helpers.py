@@ -20,7 +20,6 @@ class AnalyzedFuncSavedInstances(AnalyzedFunc):
         """Intialize the object."""
         super().__init__(*args, **kwargs)
         self.instances.append(self)
-        self.func_name = self._func_plotted.__name__
 
     @property
     def counts(self):
