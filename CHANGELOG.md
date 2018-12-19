@@ -9,6 +9,13 @@ and this project adheres to
 
 [Full Changelog]
 
+### Changed
+
+- CI/CD improvements
+  - Upload coverage to Code Climate
+  - Group linting jobs
+  - Add xenon job to monitor code complexity
+
 [Full Changelog]:
 https://gitlab.com/Seirdy/func-analysis/compare/0.1.1...master
 
