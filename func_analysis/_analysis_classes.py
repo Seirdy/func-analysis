@@ -9,8 +9,8 @@ from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
 import mpmath as mp
 import numpy as np
 
-from ._decorators import SaveXY, singledispatchmethod
-from ._util import (
+from func_analysis._decorators import SaveXY, singledispatchmethod
+from func_analysis._util import (
     assemble_table,
     decreasing_intervals,
     find_one_zero,
@@ -79,7 +79,7 @@ class AnalyzedFuncBase:
         return self._func(x_val)
 
     @func.register(abc.Iterable)
-    def _(self, x_vals: Iterable[Real]) -> Iterable[mp.mpf]:
+    def func_iterable(self, x_vals: Iterable[Real]) -> Iterable[mp.mpf]:
         """Register an iterable type as the parameter for self.func.
 
         Map self._func over iterable input.
@@ -99,7 +99,7 @@ class AnalyzedFuncBase:
         """
         return [self.func(x_val) for x_val in x_vals]
 
-    del _
+    del func_iterable
 
     def plot(self, points_to_plot: int) -> np.ndarray:
         """Produce x,y pairs for self.func in range.

@@ -6,15 +6,19 @@ from typing import List
 from numpy import float64
 
 import pytest
-
-from .._util import decreasing_intervals, increasing_intervals, make_intervals
+from func_analysis._util import (
+    decreasing_intervals,
+    increasing_intervals,
+    make_intervals,
+)
 
 
 @pytest.fixture()
 def intervals() -> List:
     """Points for interval functions in _util."""
-    points: List[Real] = list(float64([-2, 8, -3, -4, -9, 12, 18, 4, 0]))
-    return make_intervals(points)
+    sample_numbers = [-2, 8, -3, -4, -9, 12, 18, 4, 0]
+    float_numbers: List[Real] = list(float64(sample_numbers))
+    return make_intervals(float_numbers)
 
 
 def test_make_intervals(intervals):
@@ -41,7 +45,7 @@ def test_make_intervals(intervals):
 def test_increasing_intervals(intervals):
     """Test increasing_intervals on a sample set of intervals."""
     expected = [intervals[0], intervals[4], intervals[5]]
-    actual = increasing_intervals(lambda x: x, intervals)
+    actual = increasing_intervals(lambda anything: anything, intervals)
 
     assert expected == actual
 
@@ -55,5 +59,5 @@ def test_decreasing_intervals(intervals):
         intervals[6],
         intervals[7],
     ]
-    actual = decreasing_intervals(lambda x: x, intervals)
+    actual = decreasing_intervals(lambda anything: anything, intervals)
     assert expected == actual

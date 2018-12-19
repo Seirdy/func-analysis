@@ -4,8 +4,7 @@ from numbers import Real
 import mpmath as mp
 
 import pytest
-
-from .helpers import AnalyzedFuncSavedInstances, CountCalls
+from func_analysis.tests.helpers import AnalyzedFuncSavedInstances, CountCalls
 
 
 @CountCalls
@@ -25,7 +24,7 @@ def analyzed_trig_func():
         x_range=(-47.05, -46.3499),
         zeros_wanted=21,
         crits_wanted=21,
-        known_zeros=[-47.038_289_673_236_127, -46.406_755_885_040_056],
+        known_zeros=[-47.038289673236127, -46.406755885040056],
     )
     return analyzed_func
 
@@ -33,10 +32,11 @@ def analyzed_trig_func():
 @CountCalls
 def sec_der(x_val: Real) -> mp.mpf:
     """Define the actual second derivative."""
+    x_squared = mp.power(x_val, 2)
     return (
         mp.cos(x_val)
-        + (-4 * (mp.power(x_val, 2))) * mp.cos(mp.power(x_val, 2))
-        + -2 * mp.sin(mp.power(x_val, 2))
+        + (-4 * x_squared) * mp.cos(x_squared)
+        + -2 * mp.sin(x_squared)
         + mp.sin(x_val)
     )
 

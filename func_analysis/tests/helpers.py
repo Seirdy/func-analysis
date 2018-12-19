@@ -7,7 +7,7 @@ from typing import Iterable, List, Tuple
 import mpmath as mp
 import numpy as np
 
-from .._analysis_classes import AnalyzedFunc
+from func_analysis._analysis_classes import AnalyzedFunc
 
 
 # pylint: disable=undefined-variable
@@ -17,7 +17,7 @@ class AnalyzedFuncSavedInstances(AnalyzedFunc):
     instances: List[AnalyzedFuncSavedInstances] = []  # noqa: F821
 
     def __init__(self, *args, **kwargs):
-        """Intialize the object."""
+        """Initialize the object."""
         super().__init__(*args, **kwargs)
         self.instances.append(self)
 
@@ -35,7 +35,7 @@ class AnalyzedFuncSavedInstances(AnalyzedFunc):
 # pylint: enable=undefined-variable
 
 
-class CountCalls:
+class CountCalls(object):
     """Class decorator for tracking state."""
 
     # pylint: disable=undefined-variable
@@ -75,27 +75,32 @@ def assert_output_lessthan(func, x_vals, max_y):
     assert np.amax(np.abs(y_vals)) < max_y
 
 
-def typecheck_multi(item, *args) -> bool:
-    """Check if item is instance of anything in *args."""
-    return any(isinstance(item, allowed_type) for allowed_type in args)
+def typecheck_multi(item_to_check, *args) -> bool:
+    """Check if item_to_check is instance of anything in *args."""
+    return any(
+        isinstance(item_to_check, allowed_type) for allowed_type in args
+    )
 
 
-def typecheck_number(num):
+def typecheck_number(number_to_check):
     """Assert that item is a Real."""
-    assert typecheck_multi(num, mp.mpf, float, np.float64, int)
+    assert typecheck_multi(number_to_check, mp.mpf, float, np.float64, int)
 
 
-def typecheck_iterable(items: Iterable, *args):
-    """Typecheck items in an Iterable.
+def typecheck_iterable(items_to_check: Iterable, *args):
+    """Typecheck items_to_check in an Iterable.
 
-    Assert each item in items is an instance of something in *args.
-    Since all items in numpy arrays share the same type, only the first
-    item needs to be checked if items is an array.
+    Assert each item in items_to_check is an instance of something
+    in *args. Since all items_to_check in numpy arrays share the same
+    type, only the first item needs to be checked if items_to_check
+    is an array.
     """
-    if isinstance(items, np.ndarray):
-        assert typecheck_multi(items[0], args)
+    if isinstance(items_to_check, np.ndarray):
+        assert typecheck_multi(items_to_check[0], args)
     else:
-        assert all(typecheck_multi(item, args) for item in items)
+        assert all(
+            typecheck_multi(each_item, args) for each_item in items_to_check
+        )
 
 
 def typecheck_zcp(points):
@@ -131,12 +136,12 @@ def workout_analyzed_func(
         sequential_deduped_counts[key] = analyzed_func.deduped_counts
 
     logged_calculation(analyzed_func.zeros, "zeros")
-    logged_calculation(analyzed_func.absolute_minimum(), "absmin")
+    logged_calculation(analyzed_func.absolute_minimum(), "abs_min")
     logged_calculation(analyzed_func.convex(), "convex")
     saved_coords = tuple(analyzed_func.plotted_points)
     saved_points = [coord[0] for coord in saved_coords]
     logged_calculation(analyzed_func.func(saved_points), "dupe")
     logged_calculation(
-        analyzed_func.rooted_second_derivative().func(saved_points), "secder"
+        analyzed_func.rooted_second_derivative().func(saved_points), "sec_der"
     )
     return sequential_counts, sequential_deduped_counts

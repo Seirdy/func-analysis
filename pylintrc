@@ -6,7 +6,8 @@ disable =
     no-member,
     import-error,
     invalid-name,
-    too-few-public-methods
+    too-few-public-methods,
+    useless-object-inheritance
 max-line-length=79
 score=yes
 ignore=.ropeproject

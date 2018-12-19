@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 # pylint: disable=comparison-with-callable
-"""Tests interval-finding algos in func_analysis.
+"""Tests interval-finding algorithms in func_analysis.
 
 These include intervals of increase/decrease and concavity/convexity.
 
@@ -11,9 +11,12 @@ This deliberately uses a function requiring a high degree of precision
 import mpmath as mp
 import numpy as np
 
-from .._util import make_intervals
-from ..tests import constants
-from .helpers import mpf_assert_allclose, typecheck_intervals
+from func_analysis._util import make_intervals
+from func_analysis.tests import constants
+from func_analysis.tests.helpers import (
+    mpf_assert_allclose,
+    typecheck_intervals,
+)
 
 
 def test_trig_func_has_correct_concavity_convexity(analyzed_trig_func):
@@ -60,7 +63,7 @@ def test_analyzed_incdecfunc_has_correct_decreasing(analyzed_incdecfunc):
     mpf_assert_allclose(
         analyzed_incdecfunc.decreasing(),
         [(-3, mp.fneg(mp.e))],
-        constants.EPSILON_1 / 11,
+        constants.EPSILON1 / 11,
     )
 
 
@@ -80,7 +83,7 @@ def test_analyzed_incdecfunc_has_correct_increasing_decreasing(
     mpf_assert_allclose(
         analyzed_incdecfunc.increasing(),
         [(mp.fneg(mp.e), -0.001)],
-        constants.EPSILON_1 / 10,
+        constants.EPSILON1 / 10,
     )
 
 
