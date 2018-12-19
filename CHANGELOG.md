@@ -9,13 +9,19 @@ and this project adheres to
 
 [Full Changelog]
 
+### Summary
+
+A bugfix in `AnalyzedFunc` and a ton of testing and pipeline improvements.
+
 ### Fixed
 
-- Special point properties work correctly when no special points are wanted. 
+- Special point properties work correctly when no special points are wanted.
 
 ### Added
 
-- Tests for `AnalyzedFunc.concave` and `AnalyzedFunc.convex`
+- More tests
+  - Tests for `AnalyzedFunc.concave` and `AnalyzedFunc.convex`
+  - Tests for memoization of `AnalyzedFunc.func` by monitoring call counts.
 - Pipeline additions
   - Upload coverage to Code Climate
   - Add xenon job to monitor code complexity
@@ -25,6 +31,11 @@ and this project adheres to
 - Testing improvements
   - Use fixtures to make all tests independent.
   - Massive cleanup of `testing.test_util`
+  - More files covered by linters (fixed glob patterns).
+  - Move helping functions and constants to `tests.helpers` and
+    `tests.constants`.
+  - Replace `tests.test_all_analysis` with `tests.test_zeros_crits_pois`,
+    `tests.test_intervals`, and `tests.test_other_analysis`.
 
 [Full Changelog]:
 https://gitlab.com/Seirdy/func-analysis/compare/0.1.1...master

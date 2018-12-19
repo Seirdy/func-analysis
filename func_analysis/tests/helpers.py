@@ -125,6 +125,7 @@ def workout_analyzed_func(
     sequential_deduped_counts = {}
 
     def logged_calculation(arg, key):
+        """Save call counts and evaluate arg."""
         assert arg is not None
         sequential_counts[key] = analyzed_func.counts
         sequential_deduped_counts[key] = analyzed_func.deduped_counts
