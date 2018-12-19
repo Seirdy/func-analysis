@@ -14,7 +14,10 @@ from typing import Iterable, List
 import mpmath as mp
 import numpy as np
 
+import pytest
 from func_analysis import AnalyzedFunc
+
+from .._util import make_intervals
 
 EPSILON_0 = 1e-20
 EPSILON_1 = 3.05e-15
@@ -90,24 +93,23 @@ def trig_func(x_val: mp.mpf) -> mp.mpf:
     return mp.cos(x_val ** 2) - mp.sin(x_val) + (x_val / 68)
 
 
-analyzed_trig_func = AnalyzedFunc(
-    func=trig_func,
-    x_range=(-47.05, -46.3499),
-    zeros_wanted=21,
-    crits_wanted=21,
-    known_zeros=[-47.038_289_673_236_127, -46.406_755_885_040_056],
-)
-ANALYZED_TRIG_FUNC_ZEROS = analyzed_trig_func.zeros
-ANALYZED_TRIG_FUNC_CRITS = analyzed_trig_func.crits
-ANALYZED_TRIG_FUNC_POIS = analyzed_trig_func.pois
+@pytest.fixture
+def analyzed_trig_func():
+    return AnalyzedFunc(
+        func=trig_func,
+        x_range=(-47.05, -46.3499),
+        zeros_wanted=21,
+        crits_wanted=21,
+        known_zeros=[-47.038_289_673_236_127, -46.406_755_885_040_056],
+    )
 
 
-def test_analyzedfunc_has_no_throwaways():
+def test_analyzedfunc_has_no_throwaways(analyzed_trig_func):
     """Ensure that the throwaway overloading functions are removed."""
     assert not hasattr(analyzed_trig_func, "_")
 
 
-def test_zeroth_derivative_is_itself():
+def test_zeroth_derivative_is_itself(analyzed_trig_func):
     """Check that nth_derivative(0) returns the unaltered function."""
     assert analyzed_trig_func.nth_derivative(0) == analyzed_trig_func.func
 
@@ -122,12 +124,12 @@ def typecheck_zcp(points):
     typecheck_iterable(points, mp.mpf)
 
 
-def test_trig_func_has_correct_zeros():
+def test_trig_func_has_correct_zeros(analyzed_trig_func):
     """Test the correctness of analyzed_trig_func.zeros."""
-    typecheck_zcp(ANALYZED_TRIG_FUNC_ZEROS)
+    typecheck_zcp(analyzed_trig_func.zeros)
     # approximate accuracy
     np.testing.assert_allclose(
-        np.float128(ANALYZED_TRIG_FUNC_ZEROS),
+        np.float128(analyzed_trig_func.zeros),
         [
             -47.038_289_673_236_13,
             -47.018_473_233_395_28,
@@ -156,17 +158,17 @@ def test_trig_func_has_correct_zeros():
     # Does the function evaluate to 0 at its zeros?
     assert_output_lessthan(
         func=analyzed_trig_func.func,
-        x_vals=ANALYZED_TRIG_FUNC_ZEROS,
+        x_vals=analyzed_trig_func.zeros,
         max_y=3.5692e-19,
     )
 
 
-def test_trig_func_has_correct_crits():
+def test_trig_func_has_correct_crits(analyzed_trig_func):
     """Test the correctness of analyzed_trig_func.crits."""
-    typecheck_zcp(ANALYZED_TRIG_FUNC_CRITS)
+    typecheck_zcp(analyzed_trig_func.crits)
     # approximate accuracy
     np.testing.assert_allclose(
-        np.float128(ANALYZED_TRIG_FUNC_CRITS),
+        np.float128(analyzed_trig_func.crits),
         [
             -47.028_400_867_252_13,
             -46.995_216_177_440_79,
@@ -194,7 +196,7 @@ def test_trig_func_has_correct_crits():
     )
     assert_output_lessthan(
         func=analyzed_trig_func.rooted_first_derivative().func,
-        x_vals=ANALYZED_TRIG_FUNC_CRITS,
+        x_vals=analyzed_trig_func.crits,
         max_y=EPSILON_1,
     )
 
@@ -210,20 +212,20 @@ def sec_der(x_val: Real) -> mp.mpf:
     )
 
 
-def assert_trig_func_pois_are_accurate(pois_found: np.ndarray):
+def assert_trig_func_pois_are_accurate(analyzedfunc, pois_found: np.ndarray):
     """Test pois() accuracy."""
     assert (
         np.float128(pois_found[3] + 46.944_940_655_832_212_248_274_091_985_22)
         < EPSILON_1
     )
     assert_output_lessthan(
-        func=analyzed_trig_func.rooted_second_derivative().func,
-        x_vals=ANALYZED_TRIG_FUNC_POIS,
+        func=analyzedfunc.rooted_second_derivative().func,
+        x_vals=analyzedfunc.pois,
         max_y=EPSILON_1,
     )
 
 
-def pois_stay_close_when_given_fp2(fp2_zeros):
+def pois_stay_close_when_given_fp2(analyzedfunc, fp2_zeros):
     """Test pois() when providing second derivative.
 
     This makes sure that it is possible to provide a second derivative
@@ -240,15 +242,16 @@ def pois_stay_close_when_given_fp2(fp2_zeros):
     )
     # make sure sec_der() is actually used by tracking its call count
     sec_der_counts_before = sec_der.call_count
+
     more_exact_pois = analyzed_trig_func_with_fp2.pois
     assert sec_der.call_count - sec_der_counts_before > 50
 
     typecheck_zcp(more_exact_pois)
     mpf_assert_allclose(fp2_zeros, more_exact_pois, EPSILON_0)
-    mpf_assert_allclose(more_exact_pois, ANALYZED_TRIG_FUNC_POIS, EPSILON_2)
+    mpf_assert_allclose(more_exact_pois, analyzedfunc.pois, EPSILON_2)
 
 
-def test_trig_func_has_correct_pois():
+def test_trig_func_has_correct_pois(analyzed_trig_func):
     """Test the correctness of analyzed_trig_func.pois.
 
     First, compare the output with approximate floating-point values.
@@ -256,16 +259,18 @@ def test_trig_func_has_correct_pois():
     derivative.
     """
     # typechecking
-    typecheck_zcp(ANALYZED_TRIG_FUNC_POIS)
-    assert_trig_func_pois_are_accurate(ANALYZED_TRIG_FUNC_POIS)
+    typecheck_zcp(analyzed_trig_func.pois)
+    assert_trig_func_pois_are_accurate(
+        analyzed_trig_func, analyzed_trig_func.pois
+    )
     fp2_zeros = AnalyzedFunc(
         func=sec_der, x_range=(-47.05, -46.35), zeros_wanted=21
     ).zeros
-    mpf_assert_allclose(fp2_zeros, ANALYZED_TRIG_FUNC_POIS, EPSILON_2)
-    pois_stay_close_when_given_fp2(fp2_zeros)
+    mpf_assert_allclose(fp2_zeros, analyzed_trig_func.pois, EPSILON_2)
+    pois_stay_close_when_given_fp2(analyzed_trig_func, fp2_zeros)
 
 
-def test_trig_func_has_correct_relative_extrema():
+def test_trig_func_has_correct_relative_extrema(analyzed_trig_func):
     """Test correctness of analyzed_trig_func's relative extrema.
 
     More specifically, test correctness of
@@ -278,11 +283,11 @@ def test_trig_func_has_correct_relative_extrema():
     minima = analyzed_trig_func.relative_minima()
     typecheck_zcp(maxima)
     typecheck_zcp(minima)
-    np.testing.assert_equal(maxima, ANALYZED_TRIG_FUNC_CRITS[::2])
-    np.testing.assert_equal(minima, ANALYZED_TRIG_FUNC_CRITS[1::2])
+    np.testing.assert_equal(maxima, analyzed_trig_func.crits[::2])
+    np.testing.assert_equal(minima, analyzed_trig_func.crits[1::2])
 
 
-def test_trig_func_has_correct_abs_max():
+def test_trig_func_has_correct_abs_max(analyzed_trig_func):
     """Test that absolute_maximum() returns correct value.
 
     First, make sure that its approximation is correct. Then, compare
@@ -300,12 +305,26 @@ def test_trig_func_has_correct_abs_max():
     )
 
 
-def test_trig_func_has_correct_abs_min():
+def test_trig_func_has_correct_abs_min(analyzed_trig_func):
     """Test that absolute_minimum() returns correct value."""
     expected_min = analyzed_trig_func.relative_minima()[0]
     np.testing.assert_equal(
         analyzed_trig_func.absolute_minimum(),
         [expected_min, analyzed_trig_func.func(expected_min)],
+    )
+
+
+def test_trig_func_has_correct_concavity_convexity(analyzed_trig_func):
+    all_pts = list(analyzed_trig_func.pois)
+    all_pts.insert(0, analyzed_trig_func.min_x)
+    all_pts.append(analyzed_trig_func.max_x)
+    all_intervals = make_intervals(all_pts)
+
+    np.testing.assert_array_equal(
+        np.array(analyzed_trig_func.concave()), all_intervals[::2]
+    )
+    np.testing.assert_array_equal(
+        np.array(analyzed_trig_func.convex()), all_intervals[1::2]
     )
 
 
@@ -318,20 +337,30 @@ def parab_func(x_val: Real) -> mp.mpf:
     return mp.power(x_val, 2) - 4
 
 
-analyzed_parab = AnalyzedFunc(func=parab_func, x_range=(-8, 8), zeros_wanted=2)
+@pytest.fixture
+def analyzed_parab():
+    return AnalyzedFunc(func=parab_func, x_range=(-8, 8), zeros_wanted=2)
 
 
-def test_parabola_has_correct_zeros():
+def test_parabola_has_correct_zeros(analyzed_parab):
     """Check that analyzed_parab.zeros returns correct value."""
     np.testing.assert_equal(analyzed_parab.zeros, np.array([-2, 2]))
 
 
-def test_parabola_has_correct_crits():
+def test_parabola_has_correct_crits(analyzed_parab):
     """Check that analyzed_parab.crits returns correct value."""
     assert analyzed_parab.crits == [0]
 
 
-def test_parabola_has_symmetry():
+def test_parabola_has_correct_concavity(analyzed_parab):
+    assert analyzed_parab.concave() == [analyzed_parab.x_range]
+
+
+def test_parabola_has_correct_convexity(analyzed_parab):
+    assert analyzed_parab.convex() == []
+
+
+def test_parabola_has_symmetry(analyzed_parab):
     """Check analyzed_parab's symmetry functions."""
     assert analyzed_parab.has_symmetry(axis=0)
     np.testing.assert_equal(
@@ -349,17 +378,21 @@ def test_parabola_has_symmetry():
 def inc_dec_func(x_val):
     """Define a function to test increasing/decreasing intervals.
 
-    ln(x^2)/x subtly switches from decreasing to increasing at x=-e
+    ln(x^2)/x subtly switches from decreasing to increasing at x=-e.
+    It is concave across (-inf, 0) and convex across (0, inf).
     """
     return mp.fdiv(mp.log(mp.power(x_val, 2)), x_val)
 
 
-analyzed_incdecfunc = AnalyzedFunc(
-    func=inc_dec_func, x_range=(-3, -0.001), crits_wanted=0, zeros_wanted=1
-)
+@pytest.fixture()
+def analyzed_incdecfunc():
+    """Analysis of inc_dec_func."""
+    return AnalyzedFunc(
+        func=inc_dec_func, x_range=(-3, -0.001), crits_wanted=1, zeros_wanted=1
+    )
 
 
-def test_analyzed_incdecfunc_has_correct_decreasing():
+def test_analyzed_incdecfunc_has_correct_decreasing(analyzed_incdecfunc):
     """Test accuracy of analyzed_incdecfunc.decreasing().
 
     This works really well because in x_range, incdecfunc decreases
@@ -380,7 +413,9 @@ def typecheck_intervals(intervals):
         typecheck_number(interval[1])
 
 
-def test_analyzed_incdecfunc_has_correct_increasing_decreasing():
+def test_analyzed_incdecfunc_has_correct_increasing_decreasing(
+    analyzed_incdecfunc
+):
     """Test FuncIntervals' increasing() and decreasing() methods."""
     analyzed_incdecfunc_increasing = analyzed_incdecfunc.increasing()
     analyzed_incdecfunc_decreasing = analyzed_incdecfunc.decreasing()
@@ -398,9 +433,17 @@ def test_analyzed_incdecfunc_has_correct_increasing_decreasing():
     )
 
 
-def test_incdecfunc_has_correct_zeros():
+def test_incdecfunc_has_correct_zeros(analyzed_incdecfunc):
     """Test analyzed_incdecfunc.zeros returns correct value."""
     assert analyzed_incdecfunc.zeros == [-1]
+
+
+def test_incdecfunc_has_correct_concavity(analyzed_incdecfunc):
+    assert analyzed_incdecfunc.concave() == [analyzed_incdecfunc.x_range]
+
+
+def test_incdecfunc_has_correct_convexity(analyzed_incdecfunc):
+    assert analyzed_incdecfunc.convex() == []
 
 
 def test_call_counting():
