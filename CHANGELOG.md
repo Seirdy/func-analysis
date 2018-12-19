@@ -9,6 +9,13 @@ and this project adheres to
 
 [Full Changelog]
 
+[Full Changelog]:
+https://gitlab.com/Seirdy/func-analysis/compare/0.1.1...master
+
+## [0.1.2] (2018-12-19)
+
+[Full Changelog](https://gitlab.com/Seirdy/func-analysis/compare/0.1.1...0.1.2)
+
 ### Summary
 
 A bugfix in `AnalyzedFunc` and a ton of testing and pipeline improvements.
@@ -36,9 +43,7 @@ A bugfix in `AnalyzedFunc` and a ton of testing and pipeline improvements.
     `tests.constants`.
   - Replace `tests.test_all_analysis` with `tests.test_zeros_crits_pois`,
     `tests.test_intervals`, and `tests.test_other_analysis`.
-
-[Full Changelog]:
-https://gitlab.com/Seirdy/func-analysis/compare/0.1.1...master
+- More consistent formatting.
 
 ## [0.1.1] (2018-12-17)
 
@@ -82,6 +87,7 @@ file to PYPI.
 Initial release
 
 [Unreleased]: https://gitlab.com/Seirdy/func-analysis/tree/master
+[0.1.2]: https://gitlab.com/Seirdy/func-analysis/tree/0.1.2
 [0.1.1]: https://gitlab.com/Seirdy/func-analysis/tree/0.1.1
 [0.1.0]: https://gitlab.com/Seirdy/func-analysis/tree/0.1.0
 [0.0.1]: https://gitlab.com/Seirdy/func-analysis/tree/0.0.1
