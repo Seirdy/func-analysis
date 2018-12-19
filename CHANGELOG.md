@@ -9,12 +9,22 @@ and this project adheres to
 
 [Full Changelog]
 
+### Fixed
+
+- Special point properties work correctly when no special points are wanted. 
+
+### Added
+
+- Tests for `AnalyzedFunc.concave` and `AnalyzedFunc.convex`
+- Pipeline additions
+  - Upload coverage to Code Climate
+  - Add xenon job to monitor code complexity
+
 ### Changed
 
-- CI/CD improvements
-  - Upload coverage to Code Climate
-  - Group linting jobs
-  - Add xenon job to monitor code complexity
+- Testing improvements
+  - Use fixtures to make all tests independent.
+  - Massive cleanup of `testing.test_util`
 
 [Full Changelog]:
 https://gitlab.com/Seirdy/func-analysis/compare/0.1.1...master
