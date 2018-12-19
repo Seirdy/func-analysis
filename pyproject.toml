@@ -8,20 +8,20 @@ envlist = py37
 
 [testenv]
 whitelist_externals =
-	sh
-	rm
+  sh
+  rm
 commands =
-	python3 setup.py test
+  python3 setup.py test
 
 [testenv:format]
 basepython = python3
 skip_install = true
 deps =
-	black
-	isort
+  black
+  isort
 commands =
-	sh -c "isort *.py func_analysis/**/*.py"
-	sh -c "black --py36 -l 79 *.py func_analysis/**/*.py"
+  sh -c "isort *.py func_analysis/**/*.py"
+  sh -c "black --py36 -l 79 *.py func_analysis/**/*.py"
 
 # Linters
 
@@ -29,33 +29,33 @@ commands =
 basepython = python3
 skip_install = true
 deps =
-	flake8
-	pep8-naming
-	flake8-bandit
-	flake8-blind-except
-	flake8-builtins
-	flake8-comprehensions
-	flake8-deprecated
-	flake8-eradicate
-	flake8-isort
-	flake8-mutable
-	flake8-pep3101
-	flake8-polyfill
-	flake8-pytest
-	flake8-self
-	flake8-super-call
-	flake8-tidy-imports
-	flake8-tuple
+  flake8
+  pep8-naming
+  flake8-bandit
+  flake8-blind-except
+  flake8-builtins
+  flake8-comprehensions
+  flake8-deprecated
+  flake8-eradicate
+  flake8-isort
+  flake8-mutable
+  flake8-pep3101
+  flake8-polyfill
+  flake8-pytest
+  flake8-self
+  flake8-super-call
+  flake8-tidy-imports
+  flake8-tuple
 commands =
-	sh -c "flake8 *.py func_analysis/**/*.py"
+  sh -c "flake8 *.py func_analysis/**/*.py"
 
 [testenv:pylint]
 basepython = python3
 skip_install = true
 deps = pylint
 commands =
-	sh -c "pylint -s n *.py func_analysis/*.py"
-	sh -c "pylint -s n -d redefined-outer-name func_analysis/tests/*.py"
+  sh -c "pylint -s n *.py func_analysis/*.py"
+  sh -c "pylint -s n -d redefined-outer-name func_analysis/tests/*.py"
 
 [testenv:pydocstyle]
 basepython = python3
@@ -68,14 +68,14 @@ basepython = python3
 skip_install = true
 deps = mypy
 commands =
-	mypy .
+  mypy .
 
 [testenv:pyroma]
 basepython = python3
 skip_install = true
 deps = pyroma
 commands =
-	pyroma -n 10 .
+  pyroma -n 10 .
 
 [testenv:xenon]
 basepython = python3
@@ -88,10 +88,10 @@ commands =
 basepython = python3
 skip_install = true
 deps =
-	wheel
-	setuptools
+  wheel
+  setuptools
 commands =
-	python setup.py sdist bdist_wheel
+  python setup.py sdist bdist_wheel
 
 """
 

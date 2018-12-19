@@ -2,6 +2,7 @@
 from numbers import Real
 
 import mpmath as mp
+
 import pytest
 
 from .helpers import AnalyzedFuncSavedInstances, CountCalls

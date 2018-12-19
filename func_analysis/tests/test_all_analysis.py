@@ -10,6 +10,8 @@ from typing import Dict, Tuple
 import mpmath as mp
 import numpy as np
 
+from .._analysis_classes import AnalyzedFunc
+from .._util import make_intervals
 from .helpers import (
     assert_output_lessthan,
     mpf_assert_allclose,
@@ -18,8 +20,6 @@ from .helpers import (
     typecheck_zcp,
     workout_analyzed_func,
 )
-from .._analysis_classes import AnalyzedFunc
-from .._util import make_intervals
 
 EPSILON_0 = 1e-20
 EPSILON_1 = 3.05e-15
