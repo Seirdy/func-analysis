@@ -1,18 +1,29 @@
 """Tests for func_analysis._util."""
 
+from numbers import Real
 from typing import List
+
+from numpy import float64
+
+import pytest
 
 from .._util import decreasing_intervals, increasing_intervals, make_intervals
 
 
-def test_interval_helpers_work_correctly():
+@pytest.fixture()
+def intervals() -> List:
+    """Points for interval functions in _util."""
+    points: List[Real] = list(float64([-2, 8, -3, -4, -9, 12, 18, 4, 0]))
+    return make_intervals(points)
+
+
+def test_make_intervals(intervals):
     """Test many helper functions that FuncIntervals leverages.
 
     These functions include _make_intervals(), _increasing_intervals(),
     and _decreasing_intervals()/
     """
-    points: List = [-2, 8, -3, -4, -9, 12, 18, 4, 0]
-    expected_intervals: List = [
+    expected: List = [
         (-2, 8),
         (8, -3),
         (-3, -4),
@@ -22,25 +33,25 @@ def test_interval_helpers_work_correctly():
         (18, 4),
         (4, 0),
     ]
-    assert make_intervals(points) == expected_intervals
+    actual = intervals
 
-    def dummy_func(x_val):
-        """Return input.
+    assert expected == actual
 
-        Used to test _increasing_intervals()
-        and _decreasing_intervals().
-        """
-        return x_val
 
-    assert increasing_intervals(dummy_func, make_intervals(points)) == [
-        expected_intervals[0],
-        expected_intervals[4],
-        expected_intervals[5],
+def test_increasing_intervals(intervals):
+    expected = [intervals[0], intervals[4], intervals[5]]
+    actual = increasing_intervals(lambda x: x, intervals)
+
+    assert expected == actual
+
+
+def test_decreasing_intervals(intervals):
+    expected = [
+        intervals[1],
+        intervals[2],
+        intervals[3],
+        intervals[6],
+        intervals[7],
     ]
-    assert decreasing_intervals(dummy_func, make_intervals(points)) == [
-        expected_intervals[1],
-        expected_intervals[2],
-        expected_intervals[3],
-        expected_intervals[6],
-        expected_intervals[7],
-    ]
+    actual = decreasing_intervals(lambda x: x, intervals)
+    assert expected == actual
