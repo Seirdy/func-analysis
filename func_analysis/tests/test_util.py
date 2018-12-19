@@ -39,6 +39,7 @@ def test_make_intervals(intervals):
 
 
 def test_increasing_intervals(intervals):
+    """Test increasing_intervals on a sample set of intervals."""
     expected = [intervals[0], intervals[4], intervals[5]]
     actual = increasing_intervals(lambda x: x, intervals)
 
@@ -46,6 +47,7 @@ def test_increasing_intervals(intervals):
 
 
 def test_decreasing_intervals(intervals):
+    """Test decreasing_intervals on a sample set of intervals."""
     expected = [
         intervals[1],
         intervals[2],

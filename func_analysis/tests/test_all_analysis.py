@@ -95,6 +95,7 @@ def trig_func(x_val: mp.mpf) -> mp.mpf:
 
 @pytest.fixture
 def analyzed_trig_func():
+    """Fixture for an AnalyzedFunc describing trig_func."""
     return AnalyzedFunc(
         func=trig_func,
         x_range=(-47.05, -46.3499),
@@ -313,6 +314,10 @@ def test_trig_func_has_correct_abs_min(analyzed_trig_func):
 
 
 def test_trig_func_has_correct_concavity_convexity(analyzed_trig_func):
+    """Test analyzed_trig_func.concave() and .convex().
+
+    It alternates between intervals of concavity and convexity.
+    """
     all_pts = list(analyzed_trig_func.pois)
     all_pts.insert(0, analyzed_trig_func.min_x)
     all_pts.append(analyzed_trig_func.max_x)
@@ -337,6 +342,7 @@ def parab_func(x_val: Real) -> mp.mpf:
 
 @pytest.fixture
 def analyzed_parab():
+    """Fixture for an AnalyzedFunc describing parab_func."""
     return AnalyzedFunc(func=parab_func, x_range=(-8, 8), zeros_wanted=2)
 
 
@@ -351,10 +357,18 @@ def test_parabola_has_correct_crits(analyzed_parab):
 
 
 def test_parabola_has_correct_concavity(analyzed_parab):
+    """Test analyzed_parab.concave() returns correct value.
+
+    parab_func is concave across its entire x_range.
+    """
     assert analyzed_parab.concave() == [analyzed_parab.x_range]
 
 
 def test_parabola_has_correct_convexity(analyzed_parab):
+    """Test analyzed_parab.convex() returns correct value.
+
+    parab_func is concave across its entire x_range.
+    """
     assert analyzed_parab.convex() == []
 
 
@@ -384,7 +398,7 @@ def inc_dec_func(x_val):
 
 @pytest.fixture()
 def analyzed_incdecfunc():
-    """Analysis of inc_dec_func."""
+    """Fixture for an AnalyzedFunc describing inc_dec_func."""
     return AnalyzedFunc(
         func=inc_dec_func, x_range=(-3, -0.001), crits_wanted=1, zeros_wanted=1
     )
@@ -437,10 +451,18 @@ def test_incdecfunc_has_correct_zeros(analyzed_incdecfunc):
 
 
 def test_incdecfunc_has_correct_concavity(analyzed_incdecfunc):
+    """Test analyzed_incdecfunc.concave() returns correct value.
+
+    inc_dec_func is concave across its entire x_range.
+    """
     assert analyzed_incdecfunc.concave() == [analyzed_incdecfunc.x_range]
 
 
 def test_incdecfunc_has_correct_convexity(analyzed_incdecfunc):
+    """Test analyzed_incdecfunc.convex() returns correct value.
+
+    inc_dec_func is concave across its entire x_range.
+    """
     assert analyzed_incdecfunc.convex() == []
 
 
