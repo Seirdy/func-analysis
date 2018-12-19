@@ -76,6 +76,13 @@ deps = pyroma
 commands =
 	pyroma -n 10 .
 
+[testenv:xenon]
+basepython = python3
+skip_install = true
+deps = xenon
+commands =
+    xenon -b A -a A -m A .
+
 [testenv:build]
 basepython = python3
 skip_install = true
