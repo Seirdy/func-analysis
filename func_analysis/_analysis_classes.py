@@ -61,9 +61,6 @@ class AnalyzedFuncBase:
         else:
             self._derivatives = {}
 
-        # A table of x- and y-values saved as an np.ndarray.
-        self.func(self.x_range)
-
     @singledispatchmethod
     def func(self, x_val: Real) -> mp.mpf:
         """Define the function to be analyzed.
@@ -148,6 +145,17 @@ class AnalyzedFuncBase:
                 return self.func
             return lambda x_val: mp.diff(self.func, x_val, n=nth)
 
+    @property
+    def plotted_points(self) -> List[Tuple[mp.mpf, mp.mpf]]:
+        """A list of all the coordinates calculated.
+
+        Returns
+        -------
+        List[Tuple[mp.mpf, mp.mpf]]
+            A list of x-y coordinate pairs that have been found.
+        """
+        return self._func_plotted.plotted_points
+
     def has_symmetry(self, axis: mp.mpf) -> bool:
         """Determine if func is symmetric about given axis.
 
@@ -164,10 +172,10 @@ class AnalyzedFuncBase:
 
         """
         try:
-            assert len(self._func_plotted.plotted_points) > 50
+            assert len(self.plotted_points) > 50
         except (AssertionError, AttributeError):
             self.plot(50)
-        saved_coordinates = np.array(self._func_plotted.plotted_points)
+        saved_coordinates = np.array(self.plotted_points)
         x_vals = saved_coordinates[:, 0]
         y_vals = saved_coordinates[:, 1]
         x_mirror = np.subtract(2 * axis, x_vals)
