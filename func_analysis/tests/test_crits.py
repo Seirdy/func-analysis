@@ -22,7 +22,7 @@ def test_trig_func_has_correct_crits(analyzed_trig_func):
         rtol=constants.EPSILON1,
     )
     testing_utils.assert_output_lessthan(
-        func=analyzed_trig_func.rooted_first_derivative().func,
+        func=analyzed_trig_func.rooted_first_derivative.func,
         x_vals=analyzed_trig_func.crits,
         max_y=constants.EPSILON1,
     )

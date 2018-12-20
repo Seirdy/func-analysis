@@ -358,6 +358,7 @@ class FuncSpecialPts(FuncZeros):
         self._pois = known_pois
 
     # pylint: disable=undefined-variable
+    @property
     def rooted_first_derivative(self) -> FuncSpecialPts:  # noqa: F821
         """Return FuncZeros object for self.func's 1st derivative.
 
@@ -384,6 +385,7 @@ class FuncSpecialPts(FuncZeros):
             known_crits=self._pois,
         )
 
+    @property
     def rooted_second_derivative(self) -> FuncZeros:
         """Return FuncZeros object for self.func's 2nd derivative.
 
@@ -422,7 +424,7 @@ class FuncSpecialPts(FuncZeros):
         if not self.crits_wanted:
             return np.array([])
         if self._crits is None or len(self._crits) < self.crits_wanted:
-            self._crits = self.rooted_first_derivative().zeros
+            self._crits = self.rooted_first_derivative.zeros
         return self._crits
 
     @property
@@ -438,12 +440,13 @@ class FuncSpecialPts(FuncZeros):
         if not self.pois_wanted:
             return np.array([])
         if self._pois is None or len(self._pois) < self.pois_wanted:
-            fp2_zeros = self.rooted_second_derivative().zeros
+            fp2_zeros = self.rooted_second_derivative.zeros
             self._pois = fp2_zeros[
-                np.nonzero(self.rooted_first_derivative().func(fp2_zeros))
+                np.nonzero(self.rooted_first_derivative.func(fp2_zeros))
             ]
         return self._pois
 
+    @property
     def vertical_axis_of_symmetry(self) -> List[mp.mpf]:
         """Find all vertical axes of symmetry.
 
@@ -484,6 +487,7 @@ class AnalyzedFunc(FuncSpecialPts):
             self.func, self._construct_intervals(list(self.crits))
         )
 
+    @property
     def decreasing(self) -> List[Interval]:
         """List self.func's intervals of decrease.
 
@@ -498,6 +502,7 @@ class AnalyzedFunc(FuncSpecialPts):
             self.func, self._construct_intervals(list(self.crits))
         )
 
+    @property
     def concave(self) -> List[Interval]:
         """List self.func's intervals of concavity (opening up).
 
@@ -509,10 +514,11 @@ class AnalyzedFunc(FuncSpecialPts):
 
         """
         return increasing_intervals(
-            self.rooted_first_derivative().func,
+            self.rooted_first_derivative.func,
             self._construct_intervals(list(self.pois)),
         )
 
+    @property
     def convex(self) -> List[Interval]:
         """List self.func's intervals of convexity. (opening down).
 
@@ -524,10 +530,11 @@ class AnalyzedFunc(FuncSpecialPts):
 
         """
         return decreasing_intervals(
-            self.rooted_first_derivative().func,
+            self.rooted_first_derivative.func,
             self._construct_intervals(list(self.pois)),
         )
 
+    @property
     def relative_maxima(self) -> np.ndarray:
         """List all relative maxima of self.func.
 
@@ -541,10 +548,11 @@ class AnalyzedFunc(FuncSpecialPts):
             x_range.
 
         """
-        fp2_of_crits = self.rooted_second_derivative().func(self.crits)
+        fp2_of_crits = self.rooted_second_derivative.func(self.crits)
         mask = np.less(fp2_of_crits, 0)
         return self.crits[mask]
 
+    @property
     def relative_minima(self) -> np.ndarray:
         """List all relative maxima of self.func.
 
@@ -558,10 +566,11 @@ class AnalyzedFunc(FuncSpecialPts):
             x_range.
 
         """
-        fp2_of_crits = self.rooted_second_derivative().func(self.crits)
+        fp2_of_crits = self.rooted_second_derivative.func(self.crits)
         mask = np.greater(fp2_of_crits, 0)
         return self.crits[mask]
 
+    @property
     def absolute_maximum(self) -> np.ndarray:
         """Find the absolute maximum of self.simple_func.
 
@@ -576,11 +585,12 @@ class AnalyzedFunc(FuncSpecialPts):
 
         """
         x_vals: List[mp.mpf] = np.concatenate(
-            (self.relative_maxima(), self.x_range)
+            (self.relative_maxima, self.x_range)
         )
         pairs: np.ndarray = assemble_table(self.func, x_vals)
         return pairs[np.argmax(pairs[:, 1])]
 
+    @property
     def absolute_minimum(self) -> np.ndarray:
         """Find the absolute minimum of self.simple_func.
 
@@ -595,7 +605,7 @@ class AnalyzedFunc(FuncSpecialPts):
 
         """
         x_vals: List[mp.mpf] = np.concatenate(
-            (self.relative_minima(), self.x_range)
+            (self.relative_minima, self.x_range)
         )
         pairs: np.ndarray = assemble_table(self.func, x_vals)
         return pairs[np.argmin(pairs[:, 1])]

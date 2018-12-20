@@ -19,7 +19,7 @@ def assert_trig_func_pois_are_accurate(analyzedfunc, pois_found: np.ndarray):
         < constants.EPSILON1
     )
     testing_utils.assert_output_lessthan(
-        func=analyzedfunc.rooted_second_derivative().func,
+        func=analyzedfunc.rooted_second_derivative.func,
         x_vals=analyzedfunc.pois,
         max_y=constants.EPSILON1,
     )

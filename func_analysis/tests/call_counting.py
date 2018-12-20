@@ -76,14 +76,14 @@ def workout_analyzed_func(
         sequential_deduped_counts[key] = analyzed_func.deduped_counts
 
     logged_calculation(analyzed_func.zeros, "zeros")
-    logged_calculation(analyzed_func.absolute_minimum(), "abs_min")
-    logged_calculation(analyzed_func.convex(), "convex")
+    logged_calculation(analyzed_func.absolute_minimum, "abs_min")
+    logged_calculation(analyzed_func.convex, "convex")
     saved_coords = tuple(analyzed_func.plotted_points)
     saved_points = [coord[0] for coord in saved_coords]
     # noinspection PyTypeChecker
     logged_calculation(analyzed_func.func(saved_points), "dupe")
     # noinspection PyTypeChecker
     logged_calculation(
-        analyzed_func.rooted_second_derivative().func(saved_points), "sec_der"
+        analyzed_func.rooted_second_derivative.func(saved_points), "sec_der"
     )
     return sequential_counts, sequential_deduped_counts

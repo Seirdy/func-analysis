@@ -26,10 +26,10 @@ def test_trig_func_concavity_convexity(analyzed_trig_func):
     all_intervals = make_intervals(all_pts)
 
     np.testing.assert_array_equal(
-        np.array(analyzed_trig_func.concave()), all_intervals[::2]
+        np.array(analyzed_trig_func.concave), all_intervals[::2]
     )
     np.testing.assert_array_equal(
-        np.array(analyzed_trig_func.convex()), all_intervals[1::2]
+        np.array(analyzed_trig_func.convex), all_intervals[1::2]
     )
 
 
@@ -38,7 +38,7 @@ def test_parabola_has_correct_concavity(analyzed_parab):
 
     parab_func is concave across its entire x_range.
     """
-    assert analyzed_parab.concave() == [analyzed_parab.x_range]
+    assert analyzed_parab.concave == [analyzed_parab.x_range]
 
 
 def test_parabola_has_correct_convexity(analyzed_parab):
@@ -46,7 +46,7 @@ def test_parabola_has_correct_convexity(analyzed_parab):
 
     parab_func is concave across its entire x_range.
     """
-    assert analyzed_parab.convex() == []
+    assert analyzed_parab.convex == []
 
 
 def test_analyzed_incdecfunc_decreasing(analyzed_incdecfunc):
@@ -56,11 +56,11 @@ def test_analyzed_incdecfunc_decreasing(analyzed_incdecfunc):
     across (-3, -e). Comparing with an irrational constant really
     pushes the boundaries of the precision of func_analysis.
     """
-    analyzed_incdecfunc_decreasing = analyzed_incdecfunc.decreasing()
+    analyzed_incdecfunc_decreasing = analyzed_incdecfunc.decreasing
 
     testing_utils.typecheck_intervals(analyzed_incdecfunc_decreasing)
     testing_utils.mpf_assert_allclose(
-        analyzed_incdecfunc.decreasing(),
+        analyzed_incdecfunc.decreasing,
         [(-3, mp.fneg(mp.e))],
         constants.EPSILON1 / 11,
     )
@@ -83,7 +83,7 @@ def test_incdecfunc_has_correct_concavity(analyzed_incdecfunc):
 
     inc_dec_func is concave across its entire x_range.
     """
-    assert analyzed_incdecfunc.concave() == [analyzed_incdecfunc.x_range]
+    assert analyzed_incdecfunc.concave == [analyzed_incdecfunc.x_range]
 
 
 def test_incdecfunc_has_correct_convexity(analyzed_incdecfunc):
@@ -91,4 +91,4 @@ def test_incdecfunc_has_correct_convexity(analyzed_incdecfunc):
 
     inc_dec_func is concave across its entire x_range.
     """
-    assert analyzed_incdecfunc.convex() == []
+    assert analyzed_incdecfunc.convex == []
