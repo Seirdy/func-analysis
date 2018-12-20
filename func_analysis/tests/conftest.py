@@ -23,7 +23,7 @@ def analyzed_trig_func():
     return analyzed_func
 
 
-@pytest.fixture()
+@pytest.fixture
 def fp2_zeros():
     """Fixture for an AnalyzedFuncCounted describing sec_der."""
     return AnalyzedFuncCounted(
@@ -39,7 +39,7 @@ def analyzed_parab():
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def analyzed_incdecfunc():
     """Fixture for an AnalyzedFuncCounted describing inc_dec_func."""
     return AnalyzedFuncCounted(

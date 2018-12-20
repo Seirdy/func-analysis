@@ -23,6 +23,7 @@ def test_call_counting(analyzed_trig_func):
     uniqueness = np.divide(deduped_vals, original_vals)
     # Ensure that memoized func isn't called again for repeat vals.
     counts_after_repeat = counts[0]["dupe"]
+
     assert original_vals.count(counts_after_repeat) > 1
     assert counts_after_repeat < 1700
     assert np.amin(uniqueness) > 0.8
