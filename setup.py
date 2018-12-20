@@ -10,8 +10,6 @@ from os import path
 from setuptools import setup
 from setuptools.command.test import test
 
-assert sys.version_info >= (3, 7, 0), "func_analysis requires Python 3.7+"
-
 CURRENT_DIR = path.dirname(__file__)
 
 
@@ -60,8 +58,8 @@ def get_version() -> str:
     """
     func_analysis_init = "func_analysis/__init__.py"
     _version_re = re.compile(r"__version__\s+=\s+(?P<version>.*)")
-    with open(func_analysis_init, encoding="utf8") as f:
-        match = _version_re.search(f.read())
+    with open(func_analysis_init, encoding="utf8") as file_contents:
+        match = _version_re.search(file_contents.read())
         version = match.group("version") if match is not None else '"unknown"'
     return str(ast.literal_eval(version))
 

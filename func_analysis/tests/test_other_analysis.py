@@ -5,21 +5,24 @@
 
 This deliberately uses a function requiring a high degree of precision
 """
-from typing import Dict, Tuple
 
 import numpy as np
 
-from .._analysis_classes import AnalyzedFunc
-from .helpers import (
-    total_counts_pre_analysis,
-    typecheck_zcp,
-    workout_analyzed_func,
-)
+import pytest
+from func_analysis.analysis_classes import AnalyzedFunc
+from func_analysis.tests import testing_utils
 
 
 def test_analyzedfunc_has_no_throwaways(analyzed_trig_func):
     """Ensure that the throwaway overloading functions are removed."""
-    assert not hasattr(analyzed_trig_func, "_")
+    with pytest.raises(AttributeError) as errinfo:
+        error_supplement = analyzed_trig_func.func_iterable
+    if "has no attribute" not in str(errinfo.value):
+        raise AttributeError(
+            "analyzed_trig_func._ should have been deleted, "
+            + "but found it to be "
+            + str(error_supplement)
+        )
 
 
 def test_zeroth_derivative_is_itself(analyzed_trig_func):
@@ -38,8 +41,8 @@ def test_trig_func_has_correct_relative_extrema(analyzed_trig_func):
     """
     maxima = analyzed_trig_func.relative_maxima()
     minima = analyzed_trig_func.relative_minima()
-    typecheck_zcp(maxima)
-    typecheck_zcp(minima)
+    testing_utils.typecheck_zcp(maxima)
+    testing_utils.typecheck_zcp(minima)
     np.testing.assert_equal(maxima, analyzed_trig_func.crits[::2])
     np.testing.assert_equal(minima, analyzed_trig_func.crits[1::2])
 
@@ -51,7 +54,7 @@ def test_trig_func_has_correct_abs_max(analyzed_trig_func):
     the exact values.
     """
     trig_abs_max = analyzed_trig_func.absolute_maximum()
-    approximate_expected_max = [-46.355_597_936_762_38, 1.013_176_643_861_527]
+    approximate_expected_max = [-46.35559793676238, 1.013176643861527]
     np.testing.assert_allclose(
         np.float128(trig_abs_max), approximate_expected_max
     )
@@ -83,15 +86,3 @@ def test_parabola_has_symmetry(analyzed_parab):
     np.testing.assert_equal(
         analyzed_parab_new.vertical_axis_of_symmetry(), analyzed_parab.crits
     )
-
-
-def test_call_counting(analyzed_trig_func):
-    """Check and print call all_counts for each executed function."""
-    assert total_counts_pre_analysis() == 0
-    counts: Tuple[Dict, Dict] = workout_analyzed_func(analyzed_trig_func)
-    original_vals = tuple(counts[0].values())
-    deduped_vals = tuple(counts[1].values())
-    uniqueness = np.divide(deduped_vals, original_vals)
-    # Ensure that memoized func isn't called again for repeat vals.
-    assert original_vals.count(counts[0]["dupe"]) > 1
-    assert np.amin(uniqueness) > 0.8

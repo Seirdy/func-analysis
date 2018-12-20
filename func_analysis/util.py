@@ -48,7 +48,7 @@ def find_one_zero(
             f=func, a=x_range[0], b=x_range[1], maxiter=50, disp=False
         )
     # Maybe this starting point is good enough.
-    if func(starting_point) == 0:
+    if not func(starting_point):
         return starting_point
     return mp.findroot(f=func, x0=starting_point)
 
@@ -95,7 +95,7 @@ def zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
     y_vals = coordinate_pairs[:, 1]
     x_vals = coordinate_pairs[:, 0]
     # First determine if each coordinate is above the x-axis.
-    is_positive = y_vals > 0
+    is_positive = np.greater(y_vals, 0)
     # Using is_positive, return a list of tuples containing every pair of
     # consecutive x-values that has corresponding y-values on the opposite
     # sides of the x-axis

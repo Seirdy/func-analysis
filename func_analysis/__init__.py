@@ -26,4 +26,4 @@ This code uses the Black formatter.
 
 __version__ = "0.1.2"
 __all__ = ["__version__", "AnalyzedFunc"]
-from ._analysis_classes import AnalyzedFunc
+from .analysis_classes import AnalyzedFunc

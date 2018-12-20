@@ -25,22 +25,25 @@ commands =
 
 # Linters
 
+# wemake-python-styleguide includes the following:
+# flake8-pep3101
+# flake8-eradicate
+# flake8-isort
+# flake8-builtins
+# flake8-comprehensions
+# pep8-naming
+# flake8-bandit
+# flake8-per-file-ignores
+
 [testenv:flake8]
 basepython = python3
 skip_install = true
 deps =
   flake8
-  pep8-naming
-  flake8-bandit
+  wemake-python-styleguide
   flake8-blind-except
-  flake8-builtins
-  flake8-comprehensions
   flake8-deprecated
-  flake8-eradicate
-  flake8-isort
   flake8-mutable
-  flake8-pep3101
-  flake8-polyfill
   flake8-pytest
   flake8-self
   flake8-super-call
@@ -108,3 +111,4 @@ known_future_library="annotations"
 line-length = 79
 py36 = true
 quiet = true
+skip-numeric-underscore-normalization = true
