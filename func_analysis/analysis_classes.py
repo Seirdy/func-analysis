@@ -52,14 +52,7 @@ class AnalyzedFuncBase(object):
         self.x_range = x_range
         self.min_x: Real = min(self.x_range)
         self.max_x: Real = max(self.x_range)
-
-        self._derivatives: Dict[int, Callable[[mp.mpf], mp.mpf]]
-        if derivatives:
-            self._derivatives = {
-                k: mp.memoize(v) for k, v in derivatives.items()
-            }
-        else:
-            self._derivatives = {}
+        self._derivatives = derivatives
 
     @singledispatchmethod
     def func(self, x_val: Real) -> mp.mpf:
@@ -120,6 +113,13 @@ class AnalyzedFuncBase(object):
         y_vals = self.func(x_vals)
         return np.stack((x_vals, y_vals), axis=-1)
 
+    @property
+    def derivatives(self):
+        """Return all known derivatives of self.func."""
+        if self._derivatives:
+            return {k: mp.memoize(v) for k, v in self._derivatives.items()}
+        return {}
+
     def nth_derivative(self, nth: int) -> Callable[[mp.mpf], mp.mpf]:
         """Create the nth-derivative of a function.
 
@@ -139,7 +139,7 @@ class AnalyzedFuncBase(object):
 
         """
         try:
-            return self._derivatives[nth]
+            return self.derivatives[nth]
         except KeyError:
             if not nth:
                 return self.func
@@ -372,9 +372,7 @@ class FuncSpecialPts(FuncZeros):
         # pylint: enable=undefined-variable
         derivatives_of_fprime: Optional[
             Dict[int, Callable[[mp.mpf], mp.mpf]]
-        ] = {
-            nth - 1: self._derivatives[nth] for nth in self._derivatives.keys()
-        }
+        ] = {nth - 1: self.derivatives[nth] for nth in self.derivatives.keys()}
         return FuncSpecialPts(
             func=self.nth_derivative(1),
             zeros_wanted=max(self.crits_wanted, 1),
@@ -398,9 +396,7 @@ class FuncSpecialPts(FuncZeros):
         """
         derivatives_of_fprime2: Optional[
             Dict[int, Callable[[mp.mpf], mp.mpf]]
-        ] = {
-            nth - 2: self._derivatives[nth] for nth in self._derivatives.keys()
-        }
+        ] = {nth - 2: self.derivatives[nth] for nth in self.derivatives.keys()}
         return FuncZeros(
             func=self.nth_derivative(2),
             zeros_wanted=max(self.pois_wanted, 1),
