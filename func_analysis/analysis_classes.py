@@ -11,6 +11,7 @@ import numpy as np
 
 from func_analysis.decorators import SaveXY, singledispatchmethod
 from func_analysis.util import (
+    Interval,
     assemble_table,
     decreasing_intervals,
     find_one_zero,
@@ -20,7 +21,6 @@ from func_analysis.util import (
     zero_intervals,
 )
 
-Interval = Tuple[mp.mpf, mp.mpf]  # intervals between mp.mpf numbers
 Func = Callable[[Union[Iterable[Real], Real]], Union[Iterable[mp.mpf], mp.mpf]]
 
 
@@ -146,12 +146,12 @@ class AnalyzedFuncBase(object):
             return lambda x_val: mp.diff(self.func, x_val, n=nth)
 
     @property
-    def plotted_points(self) -> List[Tuple[mp.mpf, mp.mpf]]:
+    def plotted_points(self) -> List[Interval]:
         """A list of all the coordinates calculated.
 
         Returns
         -------
-        List[Tuple[mp.mpf, mp.mpf]]
+        List[Interval]
             A list of x-y coordinate pairs that have been found.
         """
         return self._func_plotted.plotted_points
@@ -249,7 +249,7 @@ class FuncZeros(AnalyzedFuncBase):
 
         """
         # There are none if there are no zeros already known.
-        intervals_found: List[Tuple[mp.mpf, mp.mpf]] = []
+        intervals_found: List[Interval] = []
         zeros_found = self._zeros
         if zeros_found is None or not zeros_found.size:
             return intervals_found
@@ -465,8 +465,8 @@ class AnalyzedFunc(FuncSpecialPts):
     """
 
     def _construct_intervals(self, points: List[Real]) -> List[Interval]:
-        points.insert(0, self.min_x)
-        points.append(self.max_x)
+        points.insert(0, self.x_range[0])
+        points.append(self.x_range[1])
         return make_intervals(points)
 
     def increasing(self) -> List[Interval]:

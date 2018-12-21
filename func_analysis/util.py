@@ -2,14 +2,20 @@
 
 
 from numbers import Real
-from typing import Callable, Iterable, List, Sequence, Tuple, Union
+from typing import Callable, Iterable, List, NamedTuple, Sequence, Tuple, Union
 
 import mpmath as mp
 import numpy as np
 from scipy.optimize import brentq
 
-Interval = Tuple[mp.mpf, mp.mpf]  # intervals between mp.mpf numbers
 Func = Callable[[Union[Iterable[Real], Real]], Union[Iterable[mp.mpf], mp.mpf]]
+
+
+class Interval(NamedTuple):
+    """Type annotation for interval between two numbers."""
+
+    start: Real
+    stop: Real
 
 
 def find_one_zero(
@@ -100,7 +106,7 @@ def zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
     # consecutive x-values that has corresponding y-values on the opposite
     # sides of the x-axis
     return [
-        (x_vals[i], x_vals[i + 1])
+        Interval(x_vals[i], x_vals[i + 1])
         for i in range(0, len(coordinate_pairs) - 1)
         if is_positive[i] is not is_positive[i + 1]
     ]
@@ -142,7 +148,9 @@ def make_intervals(points: Sequence[Real]) -> List[Interval]:
         A list of intervals in which every two points have been paired.
 
     """
-    return [(points[i], points[i + 1]) for i in range(0, len(points) - 1)]
+    return [
+        Interval(points[i], points[i + 1]) for i in range(0, len(points) - 1)
+    ]
 
 
 def increasing_intervals(
