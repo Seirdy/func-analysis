@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import abc
 from numbers import Real
-from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
+from typing import Callable, Dict, Iterable, List, Optional, Tuple
 
 import mpmath as mp
 import numpy as np
@@ -21,7 +21,7 @@ from func_analysis.util import (
     zero_intervals,
 )
 
-Func = Callable[[Union[Iterable[Real], Real]], Union[Iterable[mp.mpf], mp.mpf]]
+Func = Callable[[Real], Real]
 
 
 class AnalyzedFuncBase(object):
@@ -54,8 +54,16 @@ class AnalyzedFuncBase(object):
         self.max_x: Real = max(self.x_range)
         self._derivatives = derivatives
 
+    # pylint: disable=no-self-use
     @singledispatchmethod
-    def func(self, x_val: Real) -> mp.mpf:
+    def func(self, *args) -> None:
+        """Abstract dispatched function to be analyzed."""
+        raise TypeError("Unsupported type '{}'".format(type(*args)))
+
+    # pylint: enable=no-self-use
+
+    @func.register
+    def func_real(self, x_val: Real) -> Real:
         """Define the function to be analyzed.
 
         Parameters
@@ -70,6 +78,8 @@ class AnalyzedFuncBase(object):
 
         """
         return self._func(x_val)
+
+    del func_real
 
     @func.register(abc.Iterable)
     def func_iterable(self, x_vals: Iterable[Real]) -> Iterable[mp.mpf]:

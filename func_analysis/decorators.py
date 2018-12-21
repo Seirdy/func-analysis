@@ -59,6 +59,6 @@ class SaveXY(object):
 
         """
         y_val = self.func(x_val)
-        coordinate = (x_val, y_val)
+        coordinate = Interval(x_val, y_val)
         self.plotted_points.append(coordinate)
         return y_val

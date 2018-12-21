@@ -2,13 +2,13 @@
 
 
 from numbers import Real
-from typing import Callable, Iterable, List, NamedTuple, Sequence, Tuple, Union
+from typing import Callable, Iterable, List, NamedTuple, Sequence, Tuple
 
 import mpmath as mp
 import numpy as np
 from scipy.optimize import brentq
 
-Func = Callable[[Union[Iterable[Real], Real]], Union[Iterable[mp.mpf], mp.mpf]]
+Func = Callable[[Real], Real]
 
 
 class Interval(NamedTuple):
