@@ -474,10 +474,11 @@ class AnalyzedFunc(FuncSpecialPts):
     """
 
     def _construct_intervals(self, points: List[Real]) -> List[Interval]:
-        points.insert(0, self.x_range[0])
-        points.append(self.x_range[1])
+        points.insert(0, self.x_range.start)
+        points.append(self.x_range.stop)
         return make_intervals(points)
 
+    @property
     def increasing(self) -> List[Interval]:
         """List self.func's intervals of increase.
 
