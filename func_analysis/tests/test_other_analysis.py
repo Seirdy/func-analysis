@@ -7,22 +7,9 @@ This deliberately uses a function requiring a high degree of precision
 """
 
 import numpy as np
-import pytest
 
 from func_analysis.analysis_classes import AnalyzedFunc
 from func_analysis.tests import testing_utils
-
-
-def test_analyzedfunc_has_no_throwaways(analyzed_trig_func):
-    """Ensure that the throwaway overloading functions are removed."""
-    with pytest.raises(AttributeError) as errinfo:
-        error_supplement = analyzed_trig_func.func_iterable
-    if "has no attribute" not in str(errinfo.value):
-        raise AttributeError(
-            "analyzed_trig_func._ should have been deleted, "
-            + "but found it to be "
-            + str(error_supplement)
-        )
 
 
 def test_zeroth_derivative_is_itself(analyzed_trig_func):

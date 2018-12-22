@@ -79,10 +79,8 @@ class AnalyzedFuncBase(object):
         """
         return self._func(x_val)
 
-    del func_real
-
     @func.register(abc.Iterable)
-    def func_iterable(self, x_vals: Iterable[Real]) -> Iterable[mp.mpf]:
+    def func_iterable(self, x_vals: Iterable[Real]) -> Iterable[Real]:
         """Register an iterable type as the parameter for self.func.
 
         Map self._func over iterable input.
@@ -100,9 +98,7 @@ class AnalyzedFuncBase(object):
             return type is mp.mpf.
 
         """
-        return [self.func(x_val) for x_val in x_vals]
-
-    del func_iterable
+        return [self.func_real(x_val) for x_val in x_vals]
 
     def plot(self, points_to_plot: int) -> np.ndarray:
         """Produce x,y pairs for self.func in range.
@@ -120,7 +116,7 @@ class AnalyzedFuncBase(object):
 
         """
         x_vals = np.linspace(*self.x_range, points_to_plot)
-        y_vals = self.func(x_vals)
+        y_vals = self.func_iterable(x_vals)
         return np.stack((x_vals, y_vals), axis=-1)
 
     @property
@@ -189,7 +185,7 @@ class AnalyzedFuncBase(object):
         x_vals = saved_coordinates[:, 0]
         y_vals = saved_coordinates[:, 1]
         x_mirror = np.subtract(2 * axis, x_vals)
-        y_mirror = self.func(x_mirror)
+        y_mirror = self.func_iterable(x_mirror)
         return np.array_equal(np.abs(y_vals), np.abs(y_mirror))
 
 
