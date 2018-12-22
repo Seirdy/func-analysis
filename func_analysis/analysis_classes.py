@@ -11,6 +11,7 @@ import numpy as np
 
 from func_analysis.decorators import SaveXY, singledispatchmethod
 from func_analysis.util import (
+    Coordinate,
     Interval,
     assemble_table,
     decreasing_intervals,
@@ -155,12 +156,12 @@ class AnalyzedFuncBase(object):
             return lambda x_val: mp.diff(self.func, x_val, n=nth)
 
     @property
-    def plotted_points(self) -> List[Interval]:
+    def plotted_points(self) -> List[Coordinate]:
         """A list of all the coordinates calculated.
 
         Returns
         -------
-        List[Interval]
+        List[Coordinate]
             A list of x-y coordinate pairs that have been found.
         """
         return self._func_plotted.plotted_points

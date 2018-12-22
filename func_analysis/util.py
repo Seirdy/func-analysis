@@ -18,6 +18,13 @@ class Interval(NamedTuple):
     stop: Real
 
 
+class Coordinate(NamedTuple):
+    """Type for x-y coordinate"""
+
+    x_val: Real
+    y_val: Real
+
+
 def find_one_zero(
     func: Func, x_range: Tuple[Real, Real], starting_point: Real = None
 ) -> mp.mpf:
