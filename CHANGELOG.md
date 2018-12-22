@@ -9,6 +9,55 @@ and this project adheres to
 
 [Full Changelog]
 
+### Summary
+
+With adoption of [wemake-python-styleguide] came many stylistic improvements.
+Much of the logic in `__init__()` methods now resides in properties.
+
+[wemake-python-styleguide]: https://wemake-python-styleguide.readthedocs.io
+
+### Added
+
+- AnalyzedFunc.func_real and AnalyzedFunc.func_iterable are limited versions
+  of AnalyzedFunc.func.
+
+### Changed
+
+- Use more `@property` decorators.
+  - Convert some attrs to properties in `AnalyzedFunc`:
+    - `x_range`
+    - `derivatives`
+  - Convert some methods to properties in `AnalyzedFunc`. These no longer need
+    empty double-parens:
+    - `rooted_first_derivative` and `rooted_second_derivative`
+    - `vertical_axis_of_symmetry`
+    - `increasing` and `decreasing`
+    - `concave` and `convex`
+    - `relative_maxima` and `relative_minima`
+    - `absolute_maximum` and `absolute_minimum`
+- The base version of `AnalyzedFunc.func` throws an error for unsupported
+  types.
+- Better typing by subclassing `NamedTuple`:
+  - Class `Interval` has fields `start` and `stop`. It's the return type of:
+    - x-range
+    - increasing and decreasing
+    - concave and convex
+  - Class `Coordinate` has fields `x_val` and `y_val`. It will be used more in
+    a future update.
+- Testing improvements
+  - Splitting large modules
+    - Split tests.helper into tests.call_counting and tests.testing_utils.
+    - Split test_zeros_crits_pois into test_zeros, test_pois, test_crits
+  - Move all functions to analyze from conftest to funcs_to_analyze.
+  - Rename long test methods
+- Minor changes:
+  - Switch from relative imports to absolue imports.
+  - Stop numeric underscore normalization
+  - Stop un-pythonic comparisons with zero
+  - Naming: Stop separating numerals from letters with underscores.
+  - Explicit object inheritance
+  - Spelling
+
 [Full Changelog]:
 https://gitlab.com/Seirdy/func-analysis/compare/0.1.1...master
 
