@@ -3,21 +3,12 @@ from typing import Tuple
 
 import numpy as np
 
-from func_analysis.tests.call_counting import (
-    counts_pre_analysis,
-    workout_analyzed_func,
-)
+from func_analysis.tests.call_counting import workout_analyzed_func
 
 
-def test_original_funcs_never_called():
-    """Ensure that funcs to be analyzed never get called directly."""
-    counts = counts_pre_analysis()
-    assert not np.count_nonzero(counts)
-
-
-def test_call_counting(analyzed_trig_func):
+def test_call_counting(analyzed_trig_func_counted):
     """Check and print call all_counts for each executed function."""
-    counts = workout_analyzed_func(analyzed_trig_func)
+    counts = workout_analyzed_func(analyzed_trig_func_counted)
     original_vals: Tuple[int, ...] = tuple(counts[0].values())
     deduped_vals: Tuple[int, ...] = tuple(counts[1].values())
     uniqueness = np.divide(deduped_vals, original_vals)

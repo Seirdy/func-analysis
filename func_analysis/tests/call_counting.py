@@ -34,29 +34,24 @@ class AnalyzedFuncCounted(AnalyzedFunc):
 # pylint: enable=undefined-variable
 
 
-class CountCalls(object):
+class ForbidCalling(object):
     """Class decorator for tracking state."""
 
     # pylint: disable=undefined-variable
-    functions: List[CountCalls] = []  # NOQA: F821
+    functions: List[ForbidCalling] = []  # NOQA: F821
     # pylint: enable=undefined-variable
 
     def __init__(self, func):
         """Initialize the object."""
         update_wrapper(self, func)
         self.func = func
-        CountCalls.functions.append(self)
-        self.call_count = 0
 
     def __call__(self, *args):
         """Increment counter each time func is called."""
-        self.call_count += 1
-        return self.func(*args)
-
-
-def counts_pre_analysis() -> List[int]:
-    """All calls for analyzed functions."""
-    return [counted_func.call_count for counted_func in CountCalls.functions]
+        raise RuntimeError(
+            "AnalyzedFunc.func is supposed to be an altered copy of the func "
+            "supplied to the constructor, but the original func was accessed."
+        )
 
 
 SavedCounts = Dict[str, int]

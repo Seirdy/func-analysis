@@ -3,10 +3,10 @@ from numbers import Real
 
 import mpmath as mp
 
-from func_analysis.tests.call_counting import CountCalls
+from func_analysis.tests.call_counting import ForbidCalling
 
 
-@CountCalls
+@ForbidCalling
 def trig_func(x_val: mp.mpf) -> mp.mpf:
     """Define a test function requiring high precision for analysis.
 
@@ -15,7 +15,7 @@ def trig_func(x_val: mp.mpf) -> mp.mpf:
     return mp.cos(x_val ** 2) - mp.sin(x_val) + (x_val / 68)
 
 
-@CountCalls
+@ForbidCalling
 def sec_der(x_val: Real) -> mp.mpf:
     """Define the actual second derivative."""
     x_squared = mp.power(x_val, 2)
@@ -27,7 +27,7 @@ def sec_der(x_val: Real) -> mp.mpf:
     )
 
 
-@CountCalls
+@ForbidCalling
 def parab_func(x_val: Real) -> mp.mpf:
     """Define a simple parabola.
 
@@ -36,7 +36,7 @@ def parab_func(x_val: Real) -> mp.mpf:
     return mp.power(x_val, 2) - 4
 
 
-@CountCalls
+@ForbidCalling
 def inc_dec_func(x_val):
     """Define a function to test increasing/decreasing intervals.
 

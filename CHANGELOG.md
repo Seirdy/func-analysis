@@ -11,15 +11,17 @@ and this project adheres to
 
 ### Summary
 
+This update contains many breaking changes.
+
 With adoption of [wemake-python-styleguide] came many stylistic improvements.
 Much of the logic in `__init__()` methods now resides in properties.
 
-[wemake-python-styleguide]: https://wemake-python-styleguide.readthedocs.io
+[wemake-python-styleguide]: https://wemake-python-styleguide.rtfd.io
 
 ### Added
 
-- AnalyzedFunc.func_real and AnalyzedFunc.func_iterable are limited versions
-  of AnalyzedFunc.func.
+- `AnalyzedFunc.func_real` and `AnalyzedFunc.func_iterable` are limited
+  versions of AnalyzedFunc.func.
 
 ### Changed
 
@@ -39,27 +41,32 @@ Much of the logic in `__init__()` methods now resides in properties.
   types.
 - Better typing by subclassing `NamedTuple`:
   - Class `Interval` has fields `start` and `stop`. It's the return type of:
-    - x-range
-    - increasing and decreasing
-    - concave and convex
+    - `x-range`
+    - `increasing` and `decreasing`
+    - `concave` and `convex`
   - Class `Coordinate` has fields `x_val` and `y_val`. It will be used more in
     a future update.
 - Testing improvements
   - Splitting large modules
-    - Split tests.helper into tests.call_counting and tests.testing_utils.
-    - Split test_zeros_crits_pois into test_zeros, test_pois, test_crits
-  - Move all functions to analyze from conftest to funcs_to_analyze.
+    - Split `tests.helper` into `tests.call_counting` and
+      `tests.testing_utils`.
+    - Split `test_zeros_crits_pois` into `test_zeros`, `test_pois`,
+      `test_crits`
+    - Move extrema-testing from `test_other_analysis` to `test_extrema`.
+  - Move all functions to analyze from `conftest` to `funcs_to_analyze`.
   - Rename long test methods
-- Minor changes:
-  - Switch from relative imports to absolue imports.
+  - Count-calling that existed only to ensure that a call-count never went
+    past 0 has been replaced by tests that forbid calling altogether.
+- Stylistic changes
+  - Switch from relative imports to absolute imports.
   - Stop numeric underscore normalization
   - Stop un-pythonic comparisons with zero
-  - Naming: Stop separating numerals from letters with underscores.
+  - Stop separating numerals from letters with underscores.
   - Explicit object inheritance
   - Spelling
 
 [Full Changelog]:
-https://gitlab.com/Seirdy/func-analysis/compare/0.1.1...master
+https://gitlab.com/Seirdy/func-analysis/compare/0.1.2...master
 
 ## [0.1.2] (2018-12-19)
 
@@ -120,7 +127,7 @@ file to PYPI.
   anymore!
 - Project structure
   - `func_analysis.func_analysis` is now just `func_analysis`.
-  - Predefined unit tests are in the submodoule
+  - Predefined unit tests are in the submodule
    `func_analysis.tests.test_all_analysis`. More testing submodules under
    `func_analysis.tests` will come soon.
 
