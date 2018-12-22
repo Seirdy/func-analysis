@@ -380,9 +380,9 @@ class FuncSpecialPts(FuncZeros):
 
         """
         # pylint: enable=undefined-variable
-        derivatives_of_fprime: Optional[
-            Dict[int, Callable[[mp.mpf], mp.mpf]]
-        ] = {nth - 1: self.derivatives[nth] for nth in self.derivatives.keys()}
+        derivatives_of_fprime: Optional[Dict[int, Func]] = {
+            nth - 1: self.derivatives[nth] for nth in self.derivatives.keys()
+        }
         return FuncSpecialPts(
             func=self.nth_derivative(1),
             zeros_wanted=max(self.crits_wanted, 1),
@@ -404,9 +404,9 @@ class FuncSpecialPts(FuncZeros):
             and an iterable func.
 
         """
-        derivatives_of_fprime2: Optional[
-            Dict[int, Callable[[mp.mpf], mp.mpf]]
-        ] = {nth - 2: self.derivatives[nth] for nth in self.derivatives.keys()}
+        derivatives_of_fprime2: Optional[Dict[int, Func]] = {
+            nth - 2: self.derivatives[nth] for nth in self.derivatives.keys()
+        }
         return FuncZeros(
             func=self.nth_derivative(2),
             zeros_wanted=max(self.pois_wanted, 1),
