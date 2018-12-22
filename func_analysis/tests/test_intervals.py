@@ -21,8 +21,8 @@ def test_trig_func_concavity_convexity(analyzed_trig_func):
     It alternates between intervals of concavity and convexity.
     """
     all_pts = list(analyzed_trig_func.pois)
-    all_pts.insert(0, analyzed_trig_func.min_x)
-    all_pts.append(analyzed_trig_func.max_x)
+    all_pts.insert(0, analyzed_trig_func.x_range.start)
+    all_pts.append(analyzed_trig_func.x_range.stop)
     all_intervals = make_intervals(all_pts)
 
     np.testing.assert_array_equal(

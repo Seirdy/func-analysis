@@ -2,9 +2,9 @@
 
 from functools import singledispatch, update_wrapper
 from numbers import Real
-from typing import Callable, List, Tuple
+from typing import Callable, List
 
-import mpmath as mp
+from func_analysis.util import Func, Interval
 
 
 def singledispatchmethod(func: Callable):
@@ -36,7 +36,7 @@ class SaveXY(object):
 
     """
 
-    def __init__(self, func: Callable[[Real], mp.mpf]):
+    def __init__(self, func: Func):
         """Update wrapper; this is a decorator.
 
         Parameters
@@ -47,7 +47,7 @@ class SaveXY(object):
         """
         self.func = func
         update_wrapper(self, self.func)
-        self.plotted_points: List[Tuple[mp.mpf, mp.mpf]] = []
+        self.plotted_points: List[Interval] = []
 
     def __call__(self, x_val: Real):
         """Save the x-y coordinate before returning the y-value.
@@ -59,6 +59,6 @@ class SaveXY(object):
 
         """
         y_val = self.func(x_val)
-        coordinate = (x_val, y_val)
+        coordinate = Interval(x_val, y_val)
         self.plotted_points.append(coordinate)
         return y_val

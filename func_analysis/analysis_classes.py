@@ -4,13 +4,14 @@ from __future__ import annotations
 
 from collections import abc
 from numbers import Real
-from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
+from typing import Callable, Dict, Iterable, List, Optional, Tuple
 
 import mpmath as mp
 import numpy as np
 
 from func_analysis.decorators import SaveXY, singledispatchmethod
 from func_analysis.util import (
+    Interval,
     assemble_table,
     decreasing_intervals,
     find_one_zero,
@@ -20,8 +21,7 @@ from func_analysis.util import (
     zero_intervals,
 )
 
-Interval = Tuple[mp.mpf, mp.mpf]  # intervals between mp.mpf numbers
-Func = Callable[[Union[Iterable[Real], Real]], Union[Iterable[mp.mpf], mp.mpf]]
+Func = Callable[[Real], Real]
 
 
 class AnalyzedFuncBase(object):
@@ -49,13 +49,24 @@ class AnalyzedFuncBase(object):
         """
         self._func_plotted = SaveXY(func)
         self._func = mp.memoize(self._func_plotted)
-        self.x_range = x_range
-        self.min_x: Real = min(self.x_range)
-        self.max_x: Real = max(self.x_range)
+        self._x_range = x_range
         self._derivatives = derivatives
 
+    @property
+    def x_range(self) -> Interval:
+        """Make self._x_range an Interval object."""
+        return Interval(*self._x_range)
+
+    # pylint: disable=no-self-use
     @singledispatchmethod
-    def func(self, x_val: Real) -> mp.mpf:
+    def func(self, *args) -> None:
+        """Abstract dispatched function to be analyzed."""
+        raise TypeError("Unsupported type '{}'".format(type(*args)))
+
+    # pylint: enable=no-self-use
+
+    @func.register
+    def func_real(self, x_val: Real) -> Real:
         """Define the function to be analyzed.
 
         Parameters
@@ -72,7 +83,7 @@ class AnalyzedFuncBase(object):
         return self._func(x_val)
 
     @func.register(abc.Iterable)
-    def func_iterable(self, x_vals: Iterable[Real]) -> Iterable[mp.mpf]:
+    def func_iterable(self, x_vals: Iterable[Real]) -> Iterable[Real]:
         """Register an iterable type as the parameter for self.func.
 
         Map self._func over iterable input.
@@ -90,9 +101,7 @@ class AnalyzedFuncBase(object):
             return type is mp.mpf.
 
         """
-        return [self.func(x_val) for x_val in x_vals]
-
-    del func_iterable
+        return [self.func_real(x_val) for x_val in x_vals]
 
     def plot(self, points_to_plot: int) -> np.ndarray:
         """Produce x,y pairs for self.func in range.
@@ -110,7 +119,7 @@ class AnalyzedFuncBase(object):
 
         """
         x_vals = np.linspace(*self.x_range, points_to_plot)
-        y_vals = self.func(x_vals)
+        y_vals = self.func_iterable(x_vals)
         return np.stack((x_vals, y_vals), axis=-1)
 
     @property
@@ -146,12 +155,12 @@ class AnalyzedFuncBase(object):
             return lambda x_val: mp.diff(self.func, x_val, n=nth)
 
     @property
-    def plotted_points(self) -> List[Tuple[mp.mpf, mp.mpf]]:
+    def plotted_points(self) -> List[Interval]:
         """A list of all the coordinates calculated.
 
         Returns
         -------
-        List[Tuple[mp.mpf, mp.mpf]]
+        List[Interval]
             A list of x-y coordinate pairs that have been found.
         """
         return self._func_plotted.plotted_points
@@ -179,7 +188,7 @@ class AnalyzedFuncBase(object):
         x_vals = saved_coordinates[:, 0]
         y_vals = saved_coordinates[:, 1]
         x_mirror = np.subtract(2 * axis, x_vals)
-        y_mirror = self.func(x_mirror)
+        y_mirror = self.func_iterable(x_mirror)
         return np.array_equal(np.abs(y_vals), np.abs(y_mirror))
 
 
@@ -249,7 +258,7 @@ class FuncZeros(AnalyzedFuncBase):
 
         """
         # There are none if there are no zeros already known.
-        intervals_found: List[Tuple[mp.mpf, mp.mpf]] = []
+        intervals_found: List[Interval] = []
         zeros_found = self._zeros
         if zeros_found is None or not zeros_found.size:
             return intervals_found
@@ -465,8 +474,8 @@ class AnalyzedFunc(FuncSpecialPts):
     """
 
     def _construct_intervals(self, points: List[Real]) -> List[Interval]:
-        points.insert(0, self.min_x)
-        points.append(self.max_x)
+        points.insert(0, self.x_range[0])
+        points.append(self.x_range[1])
         return make_intervals(points)
 
     def increasing(self) -> List[Interval]:
