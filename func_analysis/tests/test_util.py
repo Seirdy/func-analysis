@@ -13,7 +13,7 @@ from func_analysis.util import (
 )
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def intervals() -> List:
     """Points for interval functions in _util."""
     sample_numbers = [-2, 8, -3, -4, -9, 12, 18, 4, 0]

@@ -4,13 +4,15 @@ from __future__ import annotations
 
 from collections import abc
 from numbers import Real
-from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
+from typing import Callable, Dict, Iterable, List, Optional, Tuple
 
 import mpmath as mp
 import numpy as np
 
 from func_analysis.decorators import SaveXY, singledispatchmethod
 from func_analysis.util import (
+    Coordinate,
+    Interval,
     assemble_table,
     decreasing_intervals,
     find_one_zero,
@@ -20,8 +22,7 @@ from func_analysis.util import (
     zero_intervals,
 )
 
-Interval = Tuple[mp.mpf, mp.mpf]  # intervals between mp.mpf numbers
-Func = Callable[[Union[Iterable[Real], Real]], Union[Iterable[mp.mpf], mp.mpf]]
+Func = Callable[[Real], Real]
 
 
 class AnalyzedFuncBase(object):
@@ -49,20 +50,24 @@ class AnalyzedFuncBase(object):
         """
         self._func_plotted = SaveXY(func)
         self._func = mp.memoize(self._func_plotted)
-        self.x_range = x_range
-        self.min_x: Real = min(self.x_range)
-        self.max_x: Real = max(self.x_range)
+        self._x_range = x_range
+        self._derivatives = derivatives
 
-        self._derivatives: Dict[int, Callable[[mp.mpf], mp.mpf]]
-        if derivatives:
-            self._derivatives = {
-                k: mp.memoize(v) for k, v in derivatives.items()
-            }
-        else:
-            self._derivatives = {}
+    @property
+    def x_range(self) -> Interval:
+        """Make self._x_range an Interval object."""
+        return Interval(*self._x_range)
 
+    # pylint: disable=no-self-use
     @singledispatchmethod
-    def func(self, x_val: Real) -> mp.mpf:
+    def func(self, *args) -> None:
+        """Abstract dispatched function to be analyzed."""
+        raise TypeError("Unsupported type '{}'".format(type(*args)))
+
+    # pylint: enable=no-self-use
+
+    @func.register
+    def func_real(self, x_val: Real) -> Real:
         """Define the function to be analyzed.
 
         Parameters
@@ -79,7 +84,7 @@ class AnalyzedFuncBase(object):
         return self._func(x_val)
 
     @func.register(abc.Iterable)
-    def func_iterable(self, x_vals: Iterable[Real]) -> Iterable[mp.mpf]:
+    def func_iterable(self, x_vals: Iterable[Real]) -> Iterable[Real]:
         """Register an iterable type as the parameter for self.func.
 
         Map self._func over iterable input.
@@ -97,9 +102,7 @@ class AnalyzedFuncBase(object):
             return type is mp.mpf.
 
         """
-        return [self.func(x_val) for x_val in x_vals]
-
-    del func_iterable
+        return [self.func_real(x_val) for x_val in x_vals]
 
     def plot(self, points_to_plot: int) -> np.ndarray:
         """Produce x,y pairs for self.func in range.
@@ -117,8 +120,15 @@ class AnalyzedFuncBase(object):
 
         """
         x_vals = np.linspace(*self.x_range, points_to_plot)
-        y_vals = self.func(x_vals)
+        y_vals = self.func_iterable(x_vals)
         return np.stack((x_vals, y_vals), axis=-1)
+
+    @property
+    def derivatives(self):
+        """Return all known derivatives of self.func."""
+        if self._derivatives:
+            return {k: mp.memoize(v) for k, v in self._derivatives.items()}
+        return {}
 
     def nth_derivative(self, nth: int) -> Callable[[mp.mpf], mp.mpf]:
         """Create the nth-derivative of a function.
@@ -139,19 +149,19 @@ class AnalyzedFuncBase(object):
 
         """
         try:
-            return self._derivatives[nth]
+            return self.derivatives[nth]
         except KeyError:
             if not nth:
                 return self.func
             return lambda x_val: mp.diff(self.func, x_val, n=nth)
 
     @property
-    def plotted_points(self) -> List[Tuple[mp.mpf, mp.mpf]]:
+    def plotted_points(self) -> List[Coordinate]:
         """A list of all the coordinates calculated.
 
         Returns
         -------
-        List[Tuple[mp.mpf, mp.mpf]]
+        List[Coordinate]
             A list of x-y coordinate pairs that have been found.
         """
         return self._func_plotted.plotted_points
@@ -179,7 +189,7 @@ class AnalyzedFuncBase(object):
         x_vals = saved_coordinates[:, 0]
         y_vals = saved_coordinates[:, 1]
         x_mirror = np.subtract(2 * axis, x_vals)
-        y_mirror = self.func(x_mirror)
+        y_mirror = self.func_iterable(x_mirror)
         return np.array_equal(np.abs(y_vals), np.abs(y_mirror))
 
 
@@ -249,7 +259,7 @@ class FuncZeros(AnalyzedFuncBase):
 
         """
         # There are none if there are no zeros already known.
-        intervals_found: List[Tuple[mp.mpf, mp.mpf]] = []
+        intervals_found: List[Interval] = []
         zeros_found = self._zeros
         if zeros_found is None or not zeros_found.size:
             return intervals_found
@@ -358,6 +368,7 @@ class FuncSpecialPts(FuncZeros):
         self._pois = known_pois
 
     # pylint: disable=undefined-variable
+    @property
     def rooted_first_derivative(self) -> FuncSpecialPts:  # noqa: F821
         """Return FuncZeros object for self.func's 1st derivative.
 
@@ -369,10 +380,8 @@ class FuncSpecialPts(FuncZeros):
 
         """
         # pylint: enable=undefined-variable
-        derivatives_of_fprime: Optional[
-            Dict[int, Callable[[mp.mpf], mp.mpf]]
-        ] = {
-            nth - 1: self._derivatives[nth] for nth in self._derivatives.keys()
+        derivatives_of_fprime: Optional[Dict[int, Func]] = {
+            nth - 1: self.derivatives[nth] for nth in self.derivatives.keys()
         }
         return FuncSpecialPts(
             func=self.nth_derivative(1),
@@ -384,6 +393,7 @@ class FuncSpecialPts(FuncZeros):
             known_crits=self._pois,
         )
 
+    @property
     def rooted_second_derivative(self) -> FuncZeros:
         """Return FuncZeros object for self.func's 2nd derivative.
 
@@ -394,10 +404,8 @@ class FuncSpecialPts(FuncZeros):
             and an iterable func.
 
         """
-        derivatives_of_fprime2: Optional[
-            Dict[int, Callable[[mp.mpf], mp.mpf]]
-        ] = {
-            nth - 2: self._derivatives[nth] for nth in self._derivatives.keys()
+        derivatives_of_fprime2: Optional[Dict[int, Func]] = {
+            nth - 2: self.derivatives[nth] for nth in self.derivatives.keys()
         }
         return FuncZeros(
             func=self.nth_derivative(2),
@@ -422,7 +430,7 @@ class FuncSpecialPts(FuncZeros):
         if not self.crits_wanted:
             return np.array([])
         if self._crits is None or len(self._crits) < self.crits_wanted:
-            self._crits = self.rooted_first_derivative().zeros
+            self._crits = self.rooted_first_derivative.zeros
         return self._crits
 
     @property
@@ -438,12 +446,13 @@ class FuncSpecialPts(FuncZeros):
         if not self.pois_wanted:
             return np.array([])
         if self._pois is None or len(self._pois) < self.pois_wanted:
-            fp2_zeros = self.rooted_second_derivative().zeros
+            fp2_zeros = self.rooted_second_derivative.zeros
             self._pois = fp2_zeros[
-                np.nonzero(self.rooted_first_derivative().func(fp2_zeros))
+                np.nonzero(self.rooted_first_derivative.func(fp2_zeros))
             ]
         return self._pois
 
+    @property
     def vertical_axis_of_symmetry(self) -> List[mp.mpf]:
         """Find all vertical axes of symmetry.
 
@@ -466,10 +475,11 @@ class AnalyzedFunc(FuncSpecialPts):
     """
 
     def _construct_intervals(self, points: List[Real]) -> List[Interval]:
-        points.insert(0, self.min_x)
-        points.append(self.max_x)
+        points.insert(0, self.x_range.start)
+        points.append(self.x_range.stop)
         return make_intervals(points)
 
+    @property
     def increasing(self) -> List[Interval]:
         """List self.func's intervals of increase.
 
@@ -484,6 +494,7 @@ class AnalyzedFunc(FuncSpecialPts):
             self.func, self._construct_intervals(list(self.crits))
         )
 
+    @property
     def decreasing(self) -> List[Interval]:
         """List self.func's intervals of decrease.
 
@@ -498,6 +509,7 @@ class AnalyzedFunc(FuncSpecialPts):
             self.func, self._construct_intervals(list(self.crits))
         )
 
+    @property
     def concave(self) -> List[Interval]:
         """List self.func's intervals of concavity (opening up).
 
@@ -509,10 +521,11 @@ class AnalyzedFunc(FuncSpecialPts):
 
         """
         return increasing_intervals(
-            self.rooted_first_derivative().func,
+            self.rooted_first_derivative.func,
             self._construct_intervals(list(self.pois)),
         )
 
+    @property
     def convex(self) -> List[Interval]:
         """List self.func's intervals of convexity. (opening down).
 
@@ -524,10 +537,11 @@ class AnalyzedFunc(FuncSpecialPts):
 
         """
         return decreasing_intervals(
-            self.rooted_first_derivative().func,
+            self.rooted_first_derivative.func,
             self._construct_intervals(list(self.pois)),
         )
 
+    @property
     def relative_maxima(self) -> np.ndarray:
         """List all relative maxima of self.func.
 
@@ -541,10 +555,11 @@ class AnalyzedFunc(FuncSpecialPts):
             x_range.
 
         """
-        fp2_of_crits = self.rooted_second_derivative().func(self.crits)
+        fp2_of_crits = self.rooted_second_derivative.func(self.crits)
         mask = np.less(fp2_of_crits, 0)
         return self.crits[mask]
 
+    @property
     def relative_minima(self) -> np.ndarray:
         """List all relative maxima of self.func.
 
@@ -558,10 +573,11 @@ class AnalyzedFunc(FuncSpecialPts):
             x_range.
 
         """
-        fp2_of_crits = self.rooted_second_derivative().func(self.crits)
+        fp2_of_crits = self.rooted_second_derivative.func(self.crits)
         mask = np.greater(fp2_of_crits, 0)
         return self.crits[mask]
 
+    @property
     def absolute_maximum(self) -> np.ndarray:
         """Find the absolute maximum of self.simple_func.
 
@@ -576,11 +592,12 @@ class AnalyzedFunc(FuncSpecialPts):
 
         """
         x_vals: List[mp.mpf] = np.concatenate(
-            (self.relative_maxima(), self.x_range)
+            (self.relative_maxima, self.x_range)
         )
         pairs: np.ndarray = assemble_table(self.func, x_vals)
         return pairs[np.argmax(pairs[:, 1])]
 
+    @property
     def absolute_minimum(self) -> np.ndarray:
         """Find the absolute minimum of self.simple_func.
 
@@ -595,7 +612,7 @@ class AnalyzedFunc(FuncSpecialPts):
 
         """
         x_vals: List[mp.mpf] = np.concatenate(
-            (self.relative_minima(), self.x_range)
+            (self.relative_minima, self.x_range)
         )
         pairs: np.ndarray = assemble_table(self.func, x_vals)
         return pairs[np.argmin(pairs[:, 1])]
