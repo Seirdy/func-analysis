@@ -49,10 +49,13 @@ class AnalyzedFuncBase(object):
         """
         self._func_plotted = SaveXY(func)
         self._func = mp.memoize(self._func_plotted)
-        self.x_range = x_range
-        self.min_x: Real = min(self.x_range)
-        self.max_x: Real = max(self.x_range)
+        self._x_range = x_range
         self._derivatives = derivatives
+
+    @property
+    def x_range(self) -> Interval:
+        """Make self._x_range an Interval object."""
+        return Interval(*self._x_range)
 
     # pylint: disable=no-self-use
     @singledispatchmethod
