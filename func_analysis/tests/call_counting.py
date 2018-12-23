@@ -6,7 +6,7 @@ from typing import Dict, List, Tuple
 
 import numpy as np
 
-from func_analysis.analysis_classes import AnalyzedFunc
+from func_analysis.analyzed_func import AnalyzedFunc
 
 
 # pylint: disable=undefined-variable
