@@ -3,15 +3,15 @@
 from __future__ import annotations
 
 from numbers import Real
-from typing import Callable, Dict, Iterable, List, Optional, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 
 import mpmath as mp
 import numpy as np
 
 from func_analysis.analyzed_func.af_base import AnalyzedFuncBase
 from func_analysis.util import (
-    Interval,
     Func,
+    Interval,
     assemble_table,
     decreasing_intervals,
     find_one_zero,

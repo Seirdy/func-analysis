@@ -15,8 +15,8 @@ from func_analysis.decorators import SaveXY, singledispatchmethod
 from func_analysis.util import Coordinate, Func, Interval
 
 
-class AnalyzedFuncBase(object):
-    """Parent class of all function analysis."""
+class _AnalyzedFuncBaseInit(object):
+    """Initialize AnalyzedFuncBase basic properties."""
 
     def __init__(
         self,
@@ -47,6 +47,20 @@ class AnalyzedFuncBase(object):
     def x_range(self) -> Interval:
         """Make self._x_range an Interval object."""
         return Interval(*self._x_range)
+
+    @property
+    def derivatives(self):
+        """Return all known derivatives of self.func."""
+        if self._derivatives:
+            return {
+                derivative: mp.memoize(func)
+                for derivative, func in self._derivatives.items()
+            }
+        return {}
+
+
+class _AnalyzedFuncBaseFunc(_AnalyzedFuncBaseInit):
+    """Initialize single-dispatched AnalyzedFuncBase.func."""
 
     # pylint: disable=no-self-use
     @singledispatchmethod
@@ -94,6 +108,10 @@ class AnalyzedFuncBase(object):
         """
         return [self.func_real(x_val) for x_val in x_vals]
 
+
+class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
+    """Parent class of all function analysis."""
+
     def plot(self, points_to_plot: int) -> np.ndarray:
         """Produce x,y pairs for self.func in range.
 
@@ -112,13 +130,6 @@ class AnalyzedFuncBase(object):
         x_vals = np.linspace(*self.x_range, points_to_plot)
         y_vals = self.func_iterable(x_vals)
         return np.stack((x_vals, y_vals), axis=-1)
-
-    @property
-    def derivatives(self):
-        """Return all known derivatives of self.func."""
-        if self._derivatives:
-            return {k: mp.memoize(v) for k, v in self._derivatives.items()}
-        return {}
 
     def nth_derivative(self, nth: int) -> Callable[[mp.mpf], mp.mpf]:
         """Create the nth-derivative of a function.
@@ -157,6 +168,13 @@ class AnalyzedFuncBase(object):
         """
         return self._func_plotted.plotted_points
 
+    def plot_at_least(self, points_to_plot):
+        """Make plotted_points meet a minimum length."""
+        num_coords_found = len(self.plotted_points)
+        if num_coords_found < points_to_plot:
+            self.plot(points_to_plot - num_coords_found)
+        return self.plotted_points
+
     def has_symmetry(self, axis: mp.mpf) -> bool:
         """Determine if func is symmetric about given axis.
 
@@ -172,10 +190,7 @@ class AnalyzedFuncBase(object):
             True if self.func is symmetric about axis, False otherwise.
 
         """
-        num_coords_found = len(self.plotted_points)
-        if num_coords_found < 50:
-            self.plot(50 - num_coords_found)
-        saved_coordinates = np.array(self.plotted_points)
+        saved_coordinates = np.array(self.plot_at_least(50))
         x_vals = saved_coordinates[:, 0]
         y_vals = saved_coordinates[:, 1]
         x_mirror = np.subtract(2 * axis, x_vals)

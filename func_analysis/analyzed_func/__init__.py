@@ -3,5 +3,7 @@
 AnalyzedFunc is a class to contain a function and properties
 to describe its behavior.
 """
-__all__ = ["AnalyzedFunc"]
-from .analyzed_func import AnalyzedFunc
+# Silence "unused import" errors.
+from func_analysis.analyzed_func.analyzed_func import (  # NOQA: F401
+    AnalyzedFunc,
+)
