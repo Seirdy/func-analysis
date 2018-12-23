@@ -62,7 +62,7 @@ class AnalyzedFuncBase(object):
     @singledispatchmethod
     def func(self, *args) -> None:
         """Abstract dispatched function to be analyzed."""
-        raise TypeError("Unsupported type '{}'".format(type(*args)))
+        raise TypeError("Unsupported type '{0}'".format(type(*args)))
 
     # pylint: enable=no-self-use
 
@@ -157,12 +157,13 @@ class AnalyzedFuncBase(object):
 
     @property
     def plotted_points(self) -> List[Coordinate]:
-        """A list of all the coordinates calculated.
+        """List all the coordinates calculated.
 
         Returns
         -------
         List[Coordinate]
             A list of x-y coordinate pairs that have been found.
+
         """
         return self._func_plotted.plotted_points
 
@@ -181,10 +182,9 @@ class AnalyzedFuncBase(object):
             True if self.func is symmetric about axis, False otherwise.
 
         """
-        try:
-            assert len(self.plotted_points) > 50
-        except (AssertionError, AttributeError):
-            self.plot(50)
+        num_coords_found = len(self.plotted_points)
+        if num_coords_found < 50:
+            self.plot(50 - num_coords_found)
         saved_coordinates = np.array(self.plotted_points)
         x_vals = saved_coordinates[:, 0]
         y_vals = saved_coordinates[:, 1]
