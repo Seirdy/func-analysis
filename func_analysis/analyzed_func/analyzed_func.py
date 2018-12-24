@@ -18,13 +18,8 @@ from func_analysis.util import (
 )
 
 
-class AnalyzedFunc(FuncSpecialPts):
-    """Complete function analysis, with special points and intervals.
-
-    Intervals found:
-        - Intervals of increase/decrease
-        - Concavity/convexity
-    """
+class AnalyzedFuncIntervals(FuncSpecialPts):
+    """Find increasing/decreasing/concave/convex intervals."""
 
     def _construct_intervals(self, points: List[Real]) -> List[Interval]:
         points.insert(0, self.x_range.start)
@@ -92,6 +87,15 @@ class AnalyzedFunc(FuncSpecialPts):
             self.rooted_first_derivative.func,
             self._construct_intervals(list(self.pois)),
         )
+
+
+class AnalyzedFunc(AnalyzedFuncIntervals):
+    """Complete function analysis, with special points and intervals.
+
+    Intervals found:
+        - Intervals of increase/decrease
+        - Concavity/convexity
+    """
 
     @property
     def relative_maxima(self) -> np.ndarray:
