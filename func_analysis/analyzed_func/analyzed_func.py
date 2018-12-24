@@ -107,7 +107,7 @@ class AnalyzedFunc(FuncSpecialPts):
             x_range.
 
         """
-        fp2_of_crits = self.rooted_second_derivative.func(self.crits)
+        fp2_of_crits = self.rooted_second_derivative.func_iterable(self.crits)
         mask = np.less(fp2_of_crits, 0)
         return self.crits[mask]
 
@@ -125,7 +125,7 @@ class AnalyzedFunc(FuncSpecialPts):
             x_range.
 
         """
-        fp2_of_crits = self.rooted_second_derivative.func(self.crits)
+        fp2_of_crits = self.rooted_second_derivative.func_iterable(self.crits)
         mask = np.greater(fp2_of_crits, 0)
         return self.crits[mask]
 

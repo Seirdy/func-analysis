@@ -108,6 +108,7 @@ class FuncZeros(AnalyzedFuncBase):
         # starting_points is a list of any zeros already found.
         # These zeros are imprecise starting points for exact
         # computation.
+        # noinspection PyUnusedLocal
         starting_points: Optional[Iterator[Real]]
         try:
             starting_points = iter(self._zeros)
@@ -279,7 +280,9 @@ class FuncSpecialPts(FuncZeros):
         if self._pois is None or len(self._pois) < self.pois_wanted:
             fp2_zeros = self.rooted_second_derivative.zeros
             self._pois = fp2_zeros[
-                np.nonzero(self.rooted_first_derivative.func(fp2_zeros))
+                np.nonzero(
+                    self.rooted_first_derivative.func_iterable(fp2_zeros)
+                )
             ]
         return self._pois
 
