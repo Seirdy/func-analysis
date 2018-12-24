@@ -8,7 +8,7 @@ from typing import List
 import mpmath as mp
 import numpy as np
 
-from func_analysis.analyzed_func.af_zcp import FuncSpecialPts
+from func_analysis.analyzed_func.af_zcp import AnalyzedFuncSpecialPts
 from func_analysis.util import (
     Interval,
     assemble_table,
@@ -18,7 +18,7 @@ from func_analysis.util import (
 )
 
 
-class AnalyzedFuncIntervals(FuncSpecialPts):
+class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
     """Find increasing/decreasing/concave/convex intervals."""
 
     def _construct_intervals(self, points: List[Real]) -> List[Interval]:

@@ -21,7 +21,7 @@ from func_analysis.util import (
 )
 
 
-class FuncZeros(AnalyzedFuncBase):
+class AnalyzedFuncZeros(AnalyzedFuncBase):
     """A function with some of its properties.
 
     This object calculates and saves roots of the function.
@@ -148,7 +148,7 @@ class FuncZeros(AnalyzedFuncBase):
         return self._zeros
 
 
-class FuncSpecialPts(FuncZeros):
+class AnalyzedFuncSpecialPts(AnalyzedFuncZeros):
     """A RootedFunction with additional properties (critical Real).
 
     This object includes a function and its properties. If those
@@ -184,7 +184,7 @@ class FuncSpecialPts(FuncZeros):
             as starting points for more precise calculation.
         **kwargs
             Keyword arguments to pass to super. See doc for
-            FuncZeros.__init__()
+            AnalyzedFuncZeros.__init__()
 
         """
         super().__init__(**kwargs)
@@ -201,12 +201,12 @@ class FuncSpecialPts(FuncZeros):
 
     # pylint: disable=undefined-variable
     @property
-    def rooted_first_derivative(self) -> FuncSpecialPts:  # noqa: F821
+    def rooted_first_derivative(self) -> AnalyzedFuncSpecialPts:  # noqa: F821
         """Return FuncZeros object for self.func's 1st derivative.
 
         Returns
         -------
-        fprime : FuncZeros
+        fprime : AnalyzedFuncZeros
             Analyzed 1st derivative of self.func, complete with zeros,
             crits, and an iterable func.
 
@@ -215,7 +215,7 @@ class FuncSpecialPts(FuncZeros):
         derivatives_of_fprime: Optional[Dict[int, Func]] = {
             nth - 1: self.derivatives[nth] for nth in self.derivatives.keys()
         }
-        return FuncSpecialPts(
+        return AnalyzedFuncSpecialPts(
             func=self.nth_derivative(1),
             zeros_wanted=max(self.crits_wanted, 1),
             known_zeros=self._crits,
@@ -226,12 +226,12 @@ class FuncSpecialPts(FuncZeros):
         )
 
     @property
-    def rooted_second_derivative(self) -> FuncZeros:
+    def rooted_second_derivative(self) -> AnalyzedFuncZeros:
         """Return FuncZeros object for self.func's 2nd derivative.
 
         Returns
         -------
-        fprime2 : FuncZeros
+        fprime2 : AnalyzedFuncZeros
             Analyzed 2nd derivative of self.func, complete with zeros
             and an iterable func.
 
@@ -239,7 +239,7 @@ class FuncSpecialPts(FuncZeros):
         derivatives_of_fprime2: Optional[Dict[int, Func]] = {
             nth - 2: self.derivatives[nth] for nth in self.derivatives.keys()
         }
-        return FuncZeros(
+        return AnalyzedFuncZeros(
             func=self.nth_derivative(2),
             zeros_wanted=max(self.pois_wanted, 1),
             known_zeros=self._pois,
