@@ -37,10 +37,6 @@ class AnalyzedFuncCounted(AnalyzedFunc):
 class ForbidCalling(object):
     """Class decorator for tracking state."""
 
-    # pylint: disable=undefined-variable
-    functions: List[ForbidCalling] = []  # NOQA: F821
-    # pylint: enable=undefined-variable
-
     def __init__(self, func):
         """Initialize the object."""
         update_wrapper(self, func)
