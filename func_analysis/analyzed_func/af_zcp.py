@@ -6,7 +6,7 @@ These include zeros, critical points, and points of inflection.
 from __future__ import annotations
 
 from numbers import Real
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, Iterable, Iterator, List, Optional, Tuple
 
 import mpmath as mp
 import numpy as np
@@ -108,10 +108,13 @@ class FuncZeros(AnalyzedFuncBase):
         # starting_points is a list of any zeros already found.
         # These zeros are imprecise starting points for exact
         # computation.
-        starting_points = self._zeros
+        starting_points: Optional[Iterator[Real]]
+        try:
+            starting_points = iter(self._zeros)
+        except TypeError:
+            starting_points = None
         # Intervals containing these zeros.
         intervals_with_zero = self._solved_intervals()
-        sp_index = 0
         # The list of zeros we'll put together. It starts empty.
         zeros: List[mp.mpf] = []
         for x_interval in self._all_zero_intervals():
@@ -119,12 +122,12 @@ class FuncZeros(AnalyzedFuncBase):
             # If this interval has an already-found zero
             # use that as the starting point. Otherwise, let
             # find_one_zero() use the interval's bounds to find a zero.
-            starting_pt: Optional[Real] = None
-            if x_interval in intervals_with_zero:
-                starting_pt = starting_points[sp_index]
-                sp_index += 1
-            # Add the exact zero.
-            zeros.append(find_one_zero(self.func, x_interval, starting_pt))
+            if starting_points and x_interval in intervals_with_zero:
+                zeros.append(
+                    find_one_zero(self.func, x_interval, next(starting_points))
+                )
+            else:
+                zeros.append(find_one_zero(self.func, x_interval))
         return np.array(zeros)
 
     @property
