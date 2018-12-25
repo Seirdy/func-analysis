@@ -8,7 +8,7 @@ from typing import List
 import mpmath as mp
 import numpy as np
 
-from func_analysis.analyzed_func.af_zcp import AnalyzedFuncSpecialPts
+from func_analysis.analyzed_func.af_crits_pois import AnalyzedFuncSpecialPts
 from func_analysis.util import (
     Interval,
     assemble_table,
