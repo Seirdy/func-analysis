@@ -18,7 +18,7 @@ from func_analysis.util import (
 )
 
 
-class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
+class _AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
     """Find increasing/decreasing/concave/convex intervals."""
 
     def _construct_intervals(self, points: List[Real]) -> List[Interval]:
@@ -89,7 +89,7 @@ class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
         )
 
 
-class AnalyzedFunc(AnalyzedFuncIntervals):
+class AnalyzedFunc(_AnalyzedFuncIntervals):
     """Complete function analysis, with special points and intervals.
 
     Intervals found:
