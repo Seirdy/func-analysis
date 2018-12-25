@@ -148,7 +148,35 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         return self._zeros
 
 
-class AnalyzedFuncSpecialPts(AnalyzedFuncZeros):
+class AnalyzedFuncCrits(AnalyzedFuncZeros):
+    """Initialize previously-known critical points."""
+
+    def __init__(
+        self,
+        crits_wanted: int = None,
+        known_crits: Tuple[Real, ...] = None,
+        **kwargs,
+    ):
+        """Initialize the critical points of an analyzed function.
+
+        Parameters
+        ----------
+        crits_wanted
+            Real of critical nums to calculate.
+        known_crits
+            A list of critical numbers already known, used
+            as starting points for more precise calculation.
+
+        """
+        super().__init__(**kwargs)
+        if not crits_wanted:
+            self.crits_wanted = self.zeros_wanted - 1
+        else:
+            self.crits_wanted = crits_wanted
+        self._crits = known_crits
+
+
+class AnalyzedFuncSpecialPts(AnalyzedFuncCrits):
     """A RootedFunction with additional properties (critical Real).
 
     This object includes a function and its properties. If those
@@ -162,8 +190,6 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncZeros):
 
     def __init__(
         self,
-        crits_wanted: int = None,
-        known_crits: Tuple[Real, ...] = None,
         pois_wanted: int = None,
         known_pois: Tuple[Real, ...] = None,
         **kwargs,
@@ -172,11 +198,6 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncZeros):
 
         Parameters
         ----------
-        crits_wanted
-            Real of critical nums to calculate.
-        known_crits
-            A list of critical numbers already known, used
-            as starting points for more precise calculation.
         pois_wanted
             Real of points of inflection to calculate.
         known_pois
@@ -188,15 +209,10 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncZeros):
 
         """
         super().__init__(**kwargs)
-        if not crits_wanted:
-            self.crits_wanted = self.zeros_wanted - 1
-        else:
-            self.crits_wanted = crits_wanted
         if pois_wanted is None:
             self.pois_wanted = self.crits_wanted - 1
         else:
             self.pois_wanted = pois_wanted
-        self._crits = known_crits
         self._pois = known_pois
 
     # pylint: disable=undefined-variable
