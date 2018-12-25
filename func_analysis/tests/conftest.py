@@ -10,30 +10,26 @@ from func_analysis.tests.funcs_to_analyze import (
     trig_func,
 )
 
+trig_func_args = {
+    "func": trig_func,
+    "x_range": (-47.05, -46.3499),
+    "zeros_wanted": 21,
+    "crits_wanted": 21,
+    "known_zeros": [-47.038289673236127, -46.406755885040056],
+}
+
 
 @pytest.fixture
 def analyzed_trig_func():
     """Fixture for an AnalyzedFunc describing trig_func."""
-    analyzed_func = AnalyzedFunc(
-        func=trig_func,
-        x_range=(-47.05, -46.3499),
-        zeros_wanted=21,
-        crits_wanted=21,
-        known_zeros=[-47.038289673236127, -46.406755885040056],
-    )
+    analyzed_func = AnalyzedFunc(**trig_func_args)
     return analyzed_func
 
 
 @pytest.fixture
 def analyzed_trig_func_counted():
     """Version of analyzed_trig_func with counted calls."""
-    analyzed_func = AnalyzedFuncCounted(
-        func=trig_func,
-        x_range=(-47.05, -46.3499),
-        zeros_wanted=21,
-        crits_wanted=21,
-        known_zeros=[-47.038289673236127, -46.406755885040056],
-    )
+    analyzed_func = AnalyzedFuncCounted(**trig_func_args)
     return analyzed_func
 
 
