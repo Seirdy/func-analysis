@@ -7,7 +7,6 @@ dist/
 coverage.xml
 .hypothesis/
 .pytest_cache/
-cov.xml
 .spyproject
 .mypy_cache/
 .vscode/

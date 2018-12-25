@@ -6,7 +6,7 @@ from typing import Dict, List, Tuple
 
 import numpy as np
 
-from func_analysis.analysis_classes import AnalyzedFunc
+from func_analysis.analyzed_func import AnalyzedFunc
 
 
 # pylint: disable=undefined-variable
@@ -36,10 +36,6 @@ class AnalyzedFuncCounted(AnalyzedFunc):
 
 class ForbidCalling(object):
     """Class decorator for tracking state."""
-
-    # pylint: disable=undefined-variable
-    functions: List[ForbidCalling] = []  # NOQA: F821
-    # pylint: enable=undefined-variable
 
     def __init__(self, func):
         """Initialize the object."""
@@ -76,9 +72,10 @@ def workout_analyzed_func(
     saved_coords = tuple(analyzed_func.plotted_points)
     saved_points = [coord[0] for coord in saved_coords]
     # noinspection PyTypeChecker
-    logged_calculation(analyzed_func.func(saved_points), "dupe")
+    logged_calculation(analyzed_func.func_iterable(saved_points), "dupe")
     # noinspection PyTypeChecker
     logged_calculation(
-        analyzed_func.rooted_second_derivative.func(saved_points), "sec_der"
+        analyzed_func.rooted_second_derivative.func_iterable(saved_points),
+        "sec_der",
     )
     return sequential_counts, sequential_deduped_counts

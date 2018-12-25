@@ -8,7 +8,7 @@ This deliberately uses a function requiring a high degree of precision
 
 import numpy as np
 
-from func_analysis.analysis_classes import AnalyzedFunc
+from func_analysis.analyzed_func import AnalyzedFunc
 
 
 def test_zeroth_derivative_is_itself(analyzed_trig_func):
