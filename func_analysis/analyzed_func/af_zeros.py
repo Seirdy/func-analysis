@@ -101,7 +101,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
                 intervals_found.append(possible_zero_interval)
         return intervals_found
 
-    def _compute_zeros(self) -> np.ndarray:
+    def _compute_zeros(self):
         """Compute all zeros wanted and updates self._zeros."""
         # starting_points is a list of any zeros already found.
         # These zeros are imprecise starting points for exact
@@ -113,19 +113,17 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         except TypeError:
             starting_points = None
         # The list of zeros we'll put together. It starts empty.
-        zeros: List[mp.mpf] = []
         for x_interval in self._all_zero_intervals():
             # mpmath's root-finders can take an imprecise starting point.
             # If this interval has an already-found zero
             # use that as the starting point. Otherwise, let
             # find_one_zero() use the interval's bounds to find a zero.
             if starting_points and x_interval in self._solved_intervals():
-                zeros.append(
-                    find_one_zero(self.func, x_interval, next(starting_points))
+                yield find_one_zero(
+                    self.func, x_interval, next(starting_points)
                 )
             else:
-                zeros.append(find_one_zero(self.func, x_interval))
-        return np.array(zeros)
+                yield find_one_zero(self.func, x_interval)
 
     @property
     def zeros(self) -> np.ndarray:
@@ -140,5 +138,5 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         if not self.zeros_wanted:
             return np.array([])
         if self._zeros is None or len(self._zeros) < self.zeros_wanted:
-            self._zeros = self._compute_zeros()
+            self._zeros = np.array(tuple(self._compute_zeros()))
         return self._zeros
