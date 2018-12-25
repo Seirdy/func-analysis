@@ -100,7 +100,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
                 intervals_found.append(possible_zero_interval)
         return intervals_found
 
-    def _compute_zeros(self):
+    def _compute_zeros(self) -> Iterator[Real]:
         """Compute all zeros wanted and updates self._zeros."""
         # starting_points is a list of any zeros already found.
         # These zeros are imprecise starting points for exact

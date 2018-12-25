@@ -5,7 +5,6 @@ from __future__ import annotations
 from numbers import Real
 from typing import List
 
-import mpmath as mp
 import numpy as np
 
 from func_analysis.analyzed_func.af_crits_pois import AnalyzedFuncSpecialPts
@@ -147,7 +146,7 @@ class AnalyzedFunc(_AnalyzedFuncIntervals):
             the form [x, y].
 
         """
-        x_vals: List[mp.mpf] = np.concatenate(
+        x_vals: List[Real] = np.concatenate(
             (self.relative_maxima, self.x_range)
         )
         pairs: np.ndarray = assemble_table(self.func, x_vals)
@@ -167,7 +166,7 @@ class AnalyzedFunc(_AnalyzedFuncIntervals):
             the form [x, y].
 
         """
-        x_vals: List[mp.mpf] = np.concatenate(
+        x_vals: List[Real] = np.concatenate(
             (self.relative_minima, self.x_range)
         )
         pairs: np.ndarray = assemble_table(self.func, x_vals)

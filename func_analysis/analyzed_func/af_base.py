@@ -175,7 +175,7 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
             self.plot(points_to_plot - num_coords_found)
         return self.plotted_points
 
-    def has_symmetry(self, axis: mp.mpf) -> bool:
+    def has_symmetry(self, axis: Real) -> bool:
         """Determine if func is symmetric about given axis.
 
         Parameters

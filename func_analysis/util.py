@@ -67,8 +67,7 @@ def find_one_zero(
 
 
 def assemble_table(
-    func: Callable[[Iterable[mp.mpf]], Iterable[mp.mpf]],
-    x_vals: Iterable[Real],
+    func: Callable[[Iterable[Real]], Iterable[Real]], x_vals: Iterable[Real]
 ) -> np.ndarray:
     """Make a table of values for the function with the given x-vals.
 
@@ -122,7 +121,7 @@ def zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
 def items_in_range(
     items: np.ndarray, interval: Tuple[Real, Real]
 ) -> np.ndarray:
-    """Filter items to contain just items in closed interval.
+    """Fiklter items to contain just items in closed interval.
 
     Parameters
     ----------
@@ -161,7 +160,7 @@ def make_intervals(points: Sequence[Real]) -> List[Interval]:
 
 
 def increasing_intervals(
-    func: Callable[[mp.mpf], mp.mpf], intervals: List[Interval]
+    func: Callable[[Real], Real], intervals: List[Interval]
 ) -> List[Interval]:
     """Return intervals across which func is decreasing.
 
