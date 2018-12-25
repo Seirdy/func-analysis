@@ -1,5 +1,7 @@
 """Fixtures to represent sample AnalyzedFunc instances."""
 
+from typing import Mapping
+
 import pytest
 from func_analysis import AnalyzedFunc
 from func_analysis.tests.call_counting import AnalyzedFuncCounted
@@ -10,7 +12,7 @@ from func_analysis.tests.funcs_to_analyze import (
     trig_func,
 )
 
-trig_func_args = {
+trig_func_args: Mapping = {
     "func": trig_func,
     "x_range": (-47.05, -46.3499),
     "zeros_wanted": 21,
