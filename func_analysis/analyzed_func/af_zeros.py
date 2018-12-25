@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from functools import lru_cache
 from numbers import Real
 from typing import Iterable, Iterator, List, Optional
 
@@ -52,6 +53,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         else:
             self._zeros = None
 
+    @lru_cache(maxsize=1)
     def _all_zero_intervals(self) -> List[Interval]:
         """Find ALL zero intervals for this object's function.
 
@@ -72,6 +74,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
             zero_intervals_found = zero_intervals(self.plot(points_to_plot))
         return zero_intervals_found
 
+    @lru_cache(maxsize=1)
     def _solved_intervals(self) -> List[Interval]:
         """Filter zero intervals containing a zero already known.
 
@@ -88,8 +91,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         if zeros_found is None or not zeros_found.size:
             return intervals_found
         # We're only looking at what's in the window specified.
-        available_zero_intervals = self._all_zero_intervals()
-        for possible_zero_interval in available_zero_intervals:
+        for possible_zero_interval in self._all_zero_intervals():
             # if any zeros are found that fit in this interval,
             # append this interval.
             if np.logical_and(
@@ -110,8 +112,6 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
             starting_points = iter(self._zeros)
         except TypeError:
             starting_points = None
-        # Intervals containing these zeros.
-        intervals_with_zero = self._solved_intervals()
         # The list of zeros we'll put together. It starts empty.
         zeros: List[mp.mpf] = []
         for x_interval in self._all_zero_intervals():
@@ -119,7 +119,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
             # If this interval has an already-found zero
             # use that as the starting point. Otherwise, let
             # find_one_zero() use the interval's bounds to find a zero.
-            if starting_points and x_interval in intervals_with_zero:
+            if starting_points and x_interval in self._solved_intervals():
                 zeros.append(
                     find_one_zero(self.func, x_interval, next(starting_points))
                 )
