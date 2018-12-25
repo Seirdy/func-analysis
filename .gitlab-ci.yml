@@ -20,9 +20,8 @@ pytest:
 
 pytest-cov:
   stage: test
+  image: python:latest  # Need curl and git
   script:
-    - apt-get --quiet update -y
-    - apt-get --quiet install -y curl git
     - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     - chmod +x ./cc-test-reporter
     - ./cc-test-reporter before-build
