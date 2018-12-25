@@ -6,7 +6,6 @@ from functools import lru_cache
 from numbers import Real
 from typing import Iterable, Iterator, List, Optional
 
-import mpmath as mp
 import numpy as np
 
 from func_analysis.analyzed_func.af_base import AnalyzedFuncBase
