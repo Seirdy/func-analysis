@@ -49,6 +49,7 @@ deps =
   flake8-super-call
   flake8-tidy-imports
   flake8-tuple
+  hacking
 commands =
   flake8 --version
   sh -c "flake8 *.py func_analysis/**/*.py"
