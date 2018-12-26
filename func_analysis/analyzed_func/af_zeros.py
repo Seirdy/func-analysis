@@ -100,29 +100,25 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
                 intervals_found.append(possible_zero_interval)
         return intervals_found
 
-    def _compute_zeros(self) -> Iterator[Real]:
-        """Compute all zeros wanted and updates self._zeros."""
-        # starting_points is a list of any zeros already found.
-        # These zeros are imprecise starting points for exact
-        # computation.
-        # noinspection PyUnusedLocal
-        starting_points: Optional[Iterator[Real]]
+    def _known_zeros(self) -> Optional[Iterator[Real]]:
         try:
-            starting_points = iter(self._zeros)
+            return iter(self._zeros)
         except TypeError:
-            starting_points = None
-        # The list of zeros we'll put together. It starts empty.
-        for x_interval in self._all_zero_intervals():
-            # mpmath's root-finders can take an imprecise starting point.
-            # If this interval has an already-found zero
-            # use that as the starting point. Otherwise, let
-            # find_one_zero() use the interval's bounds to find a zero.
-            if starting_points and x_interval in self._solved_intervals():
-                yield find_one_zero(
-                    self.func, x_interval, next(starting_points)
-                )
+            return None
+
+    def _compute_zeros(self) -> Iterator[Real]:
+        """Compute all zeros wanted and updates self._zeros.
+
+        mpmath's root-finders can take an imprecise starting point.
+        If an this interval has an already-found zero, use that as the
+        starting point.
+        """
+        starting_pts = self._known_zeros()
+        for interval in self._all_zero_intervals():
+            if starting_pts and interval in self._solved_intervals():
+                yield find_one_zero(self.func, interval, next(starting_pts))
             else:
-                yield find_one_zero(self.func, x_interval)
+                yield find_one_zero(self.func, interval)
 
     @property
     def zeros(self) -> np.ndarray:
