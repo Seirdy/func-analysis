@@ -1,6 +1,6 @@
 """Fixtures to represent sample AnalyzedFunc instances."""
 
-from typing import Mapping
+from typing import MutableMapping
 
 import pytest
 from func_analysis import AnalyzedFunc
@@ -12,24 +12,29 @@ from func_analysis.tests.funcs_to_analyze import (
     trig_func,
 )
 
-trig_func_args: Mapping = {
-    "func": trig_func,
-    "x_range": (-47.05, -46.3499),
-    "zeros_wanted": 21,
-    "crits_wanted": 21,
-    "known_zeros": [-47.038289673236127, -46.406755885040056],
-}
+
+@pytest.fixture
+def trig_func_args() -> MutableMapping:
+    """Arguments to contruct an AnalyzedFunc from trig_func."""
+    return {
+        "func": trig_func,
+        "x_range": (-47.05, -46.3499),
+        "zeros_wanted": 21,
+        "crits_wanted": 21,
+        "pois_wanted": 21,
+        "known_zeros": [-47.038289673236127, -46.406755885040056],
+    }
 
 
 @pytest.fixture
-def analyzed_trig_func():
+def analyzed_trig_func(trig_func_args):
     """Fixture for an AnalyzedFunc describing trig_func."""
     analyzed_func = AnalyzedFunc(**trig_func_args)
     return analyzed_func
 
 
 @pytest.fixture
-def analyzed_trig_func_counted():
+def analyzed_trig_func_counted(trig_func_args):
     """Version of analyzed_trig_func with counted calls."""
     analyzed_func = AnalyzedFuncCounted(**trig_func_args)
     return analyzed_func
@@ -55,3 +60,14 @@ def analyzed_incdecfunc():
     return AnalyzedFunc(
         func=inc_dec_func, x_range=(-3, -0.001), crits_wanted=1, zeros_wanted=1
     )
+
+
+@pytest.fixture
+def all_analyzed_funcs(
+    analyzed_trig_func, analyzed_parab, analyzed_incdecfunc
+):
+    """All AnalyzedFunc fixtures.
+
+    Useful for tests that apply to any instance of AnalyzedFunc.
+    """
+    return [analyzed_trig_func, analyzed_parab, analyzed_incdecfunc]

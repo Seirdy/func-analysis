@@ -19,19 +19,10 @@ def typecheck_number(number_to_check):
 
 
 def typecheck_iterable(items_to_check: Iterable, *args):
-    """Typecheck items_to_check in an Iterable.
-
-    Assert each item in items_to_check is an instance of something
-    in *args. Since all items_to_check in numpy arrays share the same
-    type, only the first item needs to be checked if items_to_check
-    is an array.
-    """
-    if isinstance(items_to_check, np.ndarray):
-        assert typecheck_multi(items_to_check[0], args)
-    else:
-        assert all(
-            typecheck_multi(each_item, args) for each_item in items_to_check
-        )
+    """Typecheck items_to_check in an Iterable."""
+    assert all(
+        typecheck_multi(each_item, args) for each_item in items_to_check
+    )
 
 
 def typecheck_zcp(points):

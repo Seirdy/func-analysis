@@ -8,6 +8,7 @@ This deliberately uses a function requiring a high degree of precision
 
 import numpy as np
 
+from func_analysis import AnalyzedFunc
 from func_analysis.tests import constants, testing_utils
 
 
@@ -25,6 +26,18 @@ def test_trig_func_has_correct_zeros(analyzed_trig_func):
         func=analyzed_trig_func.func,
         x_vals=analyzed_trig_func.zeros,
         max_y=3.5692e-19,
+    )
+
+
+def test_trig_func_zeros_none_provided(analyzed_trig_func, trig_func_args):
+    """Test that zeros stay the same when some are provided."""
+    trig_func_args["known_zeros"] = None
+    analyzed_trig_func_noneprovided = AnalyzedFunc(**trig_func_args)
+
+    testing_utils.mpf_assert_allclose(
+        analyzed_trig_func.zeros,
+        analyzed_trig_func_noneprovided.zeros,
+        atol=constants.EPSILON1,
     )
 
 
