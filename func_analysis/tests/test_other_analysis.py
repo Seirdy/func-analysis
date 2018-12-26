@@ -6,14 +6,29 @@
 This deliberately uses a function requiring a high degree of precision
 """
 
+from decimal import Decimal
+
 import numpy as np
 
 from func_analysis.analyzed_func import AnalyzedFunc
+from pytest import raises
 
 
 def test_zeroth_derivative_is_itself(analyzed_trig_func):
     """Check that nth_derivative(0) returns the unaltered function."""
     assert analyzed_trig_func.nth_derivative(0) == analyzed_trig_func.func
+
+
+def test_func_raises_error(analyzed_trig_func):
+    """Check that AnalyzedFunc.func raises exception.
+
+    AnalyzedFunc.func raises a special TypeError for unregistered types.
+    """
+    with raises(TypeError) as excinfo:
+        analyzed_trig_func.func(Decimal(2))
+
+    assert str(excinfo.value) == "Unsupported type '<class 'decimal.Decimal'>'"
+    assert excinfo.typename == "TypeError"
 
 
 def test_parabola_has_symmetry(analyzed_parab):
