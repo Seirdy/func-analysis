@@ -40,7 +40,9 @@ def test_original_func_forbidden(all_analyzed_funcs):
     """Test original func supplied to constructor is forbidden."""
     for analyzed_func in all_analyzed_funcs:
         with raises(RuntimeError) as excinfo:
-            analyzed_func._func_plotted.__wrapped__(2)
+            # pylint: disable=protected-access
+            analyzed_func._func_plotted.__wrapped__(2)  # noqa: Z441
+            # pylint: enable=protected-access
 
         assert excinfo.typename == "RuntimeError"
         assert "accessed" in str(excinfo.value)
