@@ -15,7 +15,7 @@ from func_analysis.tests.funcs_to_analyze import (
 
 @pytest.fixture
 def trig_func_args() -> MutableMapping:
-    """Arguments to contruct an AnalyzedFunc from trig_func."""
+    """Arguments to construct an AnalyzedFunc from trig_func."""
     return {
         "func": trig_func,
         "x_range": (-47.05, -46.3499),
