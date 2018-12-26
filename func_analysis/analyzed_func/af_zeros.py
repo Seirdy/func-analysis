@@ -102,25 +102,27 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
 
     def _compute_zeros(self) -> Iterator[Real]:
         """Compute all zeros wanted and updates self._zeros."""
-        # starting_pts is a list of any zeros already found.
+        # starting_points is a list of any zeros already found.
         # These zeros are imprecise starting points for exact
         # computation.
         # noinspection PyUnusedLocal
-        starting_pts: Optional[Iterator[Real]]
+        starting_points: Optional[Iterator[Real]]
         try:
-            starting_pts = iter(self._zeros)
+            starting_points = iter(self._zeros)
         except TypeError:
-            starting_pts = None
+            starting_points = None
         # The list of zeros we'll put together. It starts empty.
-        for interval in self._all_zero_intervals():
+        for x_interval in self._all_zero_intervals():
             # mpmath's root-finders can take an imprecise starting point.
             # If this interval has an already-found zero
             # use that as the starting point. Otherwise, let
             # find_one_zero() use the interval's bounds to find a zero.
-            if starting_pts and interval in self._solved_intervals():
-                yield find_one_zero(self.func, interval, next(starting_pts))
+            if starting_points and x_interval in self._solved_intervals():
+                yield find_one_zero(
+                    self.func, x_interval, next(starting_points)
+                )
             else:
-                yield find_one_zero(self.func, interval)
+                yield find_one_zero(self.func, x_interval)
 
     @property
     def zeros(self) -> np.ndarray:
