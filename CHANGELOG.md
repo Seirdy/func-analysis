@@ -14,7 +14,8 @@ and this project adheres to
 This update contains many breaking changes.
 
 With adoption of [wemake-python-styleguide] came many stylistic improvements.
-Much of the logic in `__init__()` methods now resides in properties.
+The massive analysis_classes.py file has been split up, and much of the logic
+in `__init__()` methods now resides in properties.
 
 [wemake-python-styleguide]: https://wemake-python-styleguide.rtfd.io
 
@@ -46,7 +47,11 @@ Much of the logic in `__init__()` methods now resides in properties.
     - `concave` and `convex`
   - Class `Coordinate` has fields `x_val` and `y_val`. It will be used more in
     a future update.
+- Split `analysis_classes` into `af_base`, `af_zeros`, `af_crits_pois`, and
+  `analyzed_func`.
 - Testing improvements
+  - Add tests to compare constructing AnalyzedFunc objects with/without known
+    special points. Now at 100% test coverage!
   - Splitting large modules
     - Split `tests.helper` into `tests.call_counting` and
       `tests.testing_utils`.
