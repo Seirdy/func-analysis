@@ -86,9 +86,6 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         """
         # There are none if there are no zeros already known.
         intervals_found: List[Interval] = []
-        if self._zeros is None or not self._zeros.size:
-            return intervals_found
-        # We're only looking at what's in the window specified.
         for possible_zero_interval in self._all_zero_intervals():
             # if any zeros are found that fit in this interval,
             # append this interval.
