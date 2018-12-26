@@ -55,3 +55,14 @@ def analyzed_incdecfunc():
     return AnalyzedFunc(
         func=inc_dec_func, x_range=(-3, -0.001), crits_wanted=1, zeros_wanted=1
     )
+
+
+@pytest.fixture
+def all_analyzed_funcs(
+    analyzed_trig_func, analyzed_parab, analyzed_incdecfunc
+):
+    """All AnalyzedFunc fixtures.
+
+    Useful for tests that apply to any instance of AnalyzedFunc.
+    """
+    return [analyzed_trig_func, analyzed_parab, analyzed_incdecfunc]
