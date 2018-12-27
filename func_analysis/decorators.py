@@ -2,7 +2,7 @@
 
 from functools import singledispatch, update_wrapper
 from numbers import Real
-from typing import List
+from typing import Callable, List
 
 from func_analysis.util import Coordinate, Func
 
@@ -18,9 +18,8 @@ class singledispatchmethod(object):  # NOSONAR
     https://github.com/python/cpython/blob/master/Lib/functools.py
     """
 
-    def __init__(self, func):
-        if not callable(func) and not hasattr(func, "__get__"):
-            raise TypeError(f"{func!r} is not callable or a descriptor")
+    def __init__(self, func: Callable):
+        """Initialize with the func and its dispatcher."""
 
         self.dispatcher = singledispatch(func)
         self.func = func
