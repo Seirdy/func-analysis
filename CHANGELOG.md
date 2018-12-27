@@ -59,7 +59,9 @@ in `__init__()` methods now resides in properties.
     - Split `test_zeros_crits_pois` into `test_zeros`, `test_pois`,
       `test_crits`
     - Move extrema-testing from `test_other_analysis` to `test_extrema`.
-  - Move all functions to analyze from `conftest` to `funcs_to_analyze`.
+    - Move all functions to analyze from `conftest` to `funcs_to_analyze`.
+  - Linting: add `wemake-python-styleguide` and OpenStack's `hacking` plugins 
+    to `flake8`
   - Rename long test methods
   - Count-calling that existed only to ensure that a call-count never went
     past 0 has been replaced by tests that forbid calling altogether.
