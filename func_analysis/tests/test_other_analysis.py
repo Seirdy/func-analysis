@@ -16,13 +16,14 @@ from pytest import raises
 
 def test_zeroth_derivative_is_itself(all_analyzed_funcs):
     """Check that nth_derivative(0) returns the unaltered function."""
-    sample_size = 20
+    sample_size = 50
     points = np.random.random(sample_size) * np.random.randint(
         -100, 100, sample_size
     )
     for analyzed_func in all_analyzed_funcs:
-        assert analyzed_func.nth_derivative(0)(points) == analyzed_func.func(
-            points
+        # noinspection PyTypeChecker
+        np.testing.assert_array_equal(
+            analyzed_func.nth_derivative(0)(points), analyzed_func.func(points)
         )
 
 
