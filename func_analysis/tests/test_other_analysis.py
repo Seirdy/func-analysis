@@ -17,7 +17,7 @@ from pytest import raises
 def test_zeroth_derivative_is_itself(all_analyzed_funcs):
     """Check that nth_derivative(0) returns the unaltered function."""
     sample_size = 20
-    points = np.random.random(sample_size) * np.random.random_integers(
+    points = np.random.random(sample_size) * np.random.randint(
         -100, 100, sample_size
     )
     for analyzed_func in all_analyzed_funcs:
