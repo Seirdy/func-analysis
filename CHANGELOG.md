@@ -49,6 +49,7 @@ in `__init__()` methods now resides in properties.
     a future update.
 - Split `analysis_classes` into `af_base`, `af_zeros`, `af_crits_pois`, and
   `analyzed_func`.
+- Prefer the stdlib version of @singledispatchmethod
 - Testing improvements
   - Add tests to compare constructing AnalyzedFunc objects with/without known
     special points. Now at 100% test coverage!

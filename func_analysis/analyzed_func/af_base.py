@@ -11,8 +11,13 @@ from typing import Callable, Dict, Iterable, List, Tuple
 import mpmath as mp
 import numpy as np
 
-from func_analysis.decorators import SaveXY, singledispatchmethod
+from func_analysis.decorators import SaveXY
 from func_analysis.util import Coordinate, Func, Interval
+
+try:
+    from functools import singledispatchmethod  # type: ignore # noqa: Z435
+except ImportError:
+    from func_analysis.decorators import singledispatchmethod  # noqa: Z435
 
 
 class _AnalyzedFuncBaseInit(object):
