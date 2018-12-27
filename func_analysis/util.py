@@ -121,7 +121,7 @@ def zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
 def items_in_range(
     items: np.ndarray, interval: Tuple[Real, Real]
 ) -> np.ndarray:
-    """Fiklter items to contain just items in closed interval.
+    """Filter items to contain just items in closed interval.
 
     Parameters
     ----------

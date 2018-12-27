@@ -2,15 +2,14 @@
 # -*- coding: utf-8 -*-
 """Package func-analysis."""
 
-import ast
 import re
 import sys
-from os import path
+from pathlib import Path
 
 from setuptools import setup
 from setuptools.command.test import test
 
-CURRENT_DIR = path.dirname(__file__)
+PROJECT_ROOT = Path(__file__).parent
 
 
 class PyTest(test):
@@ -45,23 +44,22 @@ def get_long_description() -> str:
         The text of README.md
 
     """
-    with open(path.join(CURRENT_DIR, "README.md"), encoding="utf8") as fp:
-        return fp.read()
+    with PROJECT_ROOT.joinpath("README.md").open() as file_contents:
+        return file_contents.read()
 
 
 def get_version() -> str:
-    """Determine correct version.
+    """Determine correct version."""
+    version_path = PROJECT_ROOT.joinpath("func_analysis", "__init__.py")
+    with version_path.open() as file_contents:
+        version_file = file_contents.read()
+    version_match = re.search(
+        r"^__version__ = ['\"]([^'\"]*)['\"]", version_file, re.M
+    )
+    if version_match:
+        return version_match.group(1)
 
-    Use GitLab pipelines to generate correct version.
-    If this isn't a GitLab pipeline, then extract single-source version
-    from func_analysis/__init__.py.
-    """
-    func_analysis_init = "func_analysis/__init__.py"
-    _version_re = re.compile(r"__version__\s+=\s+(?P<version>.*)")
-    with open(func_analysis_init, encoding="utf8") as file_contents:
-        match = _version_re.search(file_contents.read())
-        version = match.group("version") if match is not None else '"unknown"'
-    return str(ast.literal_eval(version))
+    raise RuntimeError("Unable to find version string.")
 
 
 setup(
@@ -73,7 +71,7 @@ setup(
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
     url="https://gitlab.com/Seirdy/func-analysis",
-    packages=["func_analysis"],
+    packages=["func_analysis", "func_analysis.analyzed_func"],
     classifiers=[
         "License :: OSI Approved :: GNU Affero General Public License "
         "v3 or later (AGPLv3+)",
