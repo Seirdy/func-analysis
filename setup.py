@@ -44,15 +44,15 @@ def get_long_description() -> str:
         The text of README.md
 
     """
-    with PROJECT_ROOT.joinpath("README.md").open() as contents:
-        return contents.read()
+    with PROJECT_ROOT.joinpath("README.md").open() as file_contents:
+        return file_contents.read()
 
 
 def get_version() -> str:
     """Determine correct version."""
     version_path = PROJECT_ROOT.joinpath("func_analysis", "__init__.py")
-    with version_path.open() as contents:
-        version_file = contents.read()
+    with version_path.open() as file_contents:
+        version_file = file_contents.read()
     version_match = re.search(
         r"^__version__ = ['\"]([^'\"]*)['\"]", version_file, re.M
     )
@@ -71,7 +71,7 @@ setup(
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
     url="https://gitlab.com/Seirdy/func-analysis",
-    packages=["func_analysis"],
+    packages=["func_analysis", "func_analysis.analyzed_func"],
     classifiers=[
         "License :: OSI Approved :: GNU Affero General Public License "
         "v3 or later (AGPLv3+)",

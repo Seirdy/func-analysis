@@ -25,5 +25,5 @@ This code uses the Black formatter.
 """
 
 __version__ = "0.1.2"
-__all__ = ["__version__", "AnalyzedFunc"]
+# __all__ = ["__version__", "AnalyzedFunc"]
 from func_analysis.analyzed_func import AnalyzedFunc
