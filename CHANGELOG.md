@@ -47,6 +47,9 @@ in `__init__()` methods now resides in properties.
     - `concave` and `convex`
   - Class `Coordinate` has fields `x_val` and `y_val`. It will be used more in
     a future update.
+
+### Internal
+
 - Split `analysis_classes` into `af_base`, `af_zeros`, `af_crits_pois`, and
   `analyzed_func`.
 - Prefer the stdlib version of @singledispatchmethod
@@ -65,7 +68,8 @@ in `__init__()` methods now resides in properties.
   - Rename long test methods
   - Count-calling that existed only to ensure that a call-count never went
     past 0 has been replaced by tests that forbid calling altogether.
-- Stylistic changes
+- Minor changes
+  - Switch from `os.path` to `pathlib.Path`.
   - Switch from relative imports to absolute imports.
   - Stop numeric underscore normalization
   - Stop un-pythonic comparisons with zero
