@@ -15,7 +15,6 @@ PROJECT_ROOT = Path(__file__).parent
 class PyTest(test):
     """Class to execute pytest as test suite without.
 
-    Also avoids the need to pre-install pytest on the system.
     To run tests, just type `python3 setup.py test`.
     """
 
@@ -40,7 +39,7 @@ def get_long_description() -> str:
 
     Returns
     -------
-    str
+    long_description : str
         The text of README.md
 
     """
@@ -49,7 +48,14 @@ def get_long_description() -> str:
 
 
 def get_version() -> str:
-    """Determine correct version."""
+    """Determine correct version.
+
+    Returns
+    -------
+    version : str
+        The version found in func_analysis/__init__.py
+
+    """
     version_path = PROJECT_ROOT.joinpath("func_analysis", "__init__.py")
     with version_path.open() as file_contents:
         version_file = file_contents.read()

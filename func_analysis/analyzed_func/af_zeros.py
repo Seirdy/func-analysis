@@ -18,10 +18,7 @@ from func_analysis.util import (
 
 
 class AnalyzedFuncZeros(AnalyzedFuncBase):
-    """A function with some of its properties.
-
-    This object calculates and saves roots of the function.
-    """
+    """Function analysis with root-finding."""
 
     def __init__(
         self,
@@ -79,7 +76,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
 
         Returns
         -------
-        filtered_intervals : List[Interval]
+        intervals_found : List[Interval]
             A subset of self._all_zero_intervals() containing zeros
             in self._zeros
 
@@ -97,17 +94,32 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         return intervals_found
 
     def _known_zeros(self) -> Optional[Iterator[Real]]:
+        """Try to make self._zeros an iteratorfor _compute_zeros.
+
+        Returns
+        -------
+        known_zeros : Optional[Iterator[Real]]
+            None if self._zeros is None. Otherwise, an iterator that
+            iterates across self._zeros.
+
+        """
         try:
             return iter(self._zeros)
         except TypeError:
             return None
 
     def _compute_zeros(self) -> Iterator[Real]:
-        """Compute all zeros wanted and updates self._zeros.
+        """Compute each zero wanted.
 
         mpmath's root-finders can take an imprecise starting point.
-        If an this interval has an already-found zero, use that as the
+        If an interval has an already-found zero, use that as the
         starting point.
+
+        Yields
+        ------
+        zero : Real
+            The next zero for the function.
+
         """
         starting_pts = self._known_zeros()
         for interval in self._all_zero_intervals():

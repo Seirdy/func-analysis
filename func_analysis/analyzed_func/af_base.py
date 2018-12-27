@@ -6,7 +6,7 @@ all the analysis that you can find without calculating roots.
 
 from collections import abc
 from numbers import Real
-from typing import Callable, Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Tuple
 
 import mpmath as mp
 import numpy as np
@@ -54,7 +54,7 @@ class _AnalyzedFuncBaseInit(object):
         return Interval(*self._x_range)
 
     @property
-    def derivatives(self):
+    def derivatives(self) -> Dict[int, Func]:
         """Return all known derivatives of self.func."""
         if self._derivatives:
             return {
@@ -70,7 +70,15 @@ class _AnalyzedFuncBaseFunc(_AnalyzedFuncBaseInit):
     # pylint: disable=no-self-use
     @singledispatchmethod
     def func(self, *args) -> None:
-        """Abstract dispatched function to be analyzed."""
+        """Abstract dispatched function to be analyzed.
+
+        Raises
+        ------
+        TypeError
+            If called with argument that isn't an instance
+            of Real or Iterable[Real]
+
+        """
         raise TypeError("Unsupported type '{0}'".format(type(*args)))
 
     # pylint: enable=no-self-use
@@ -86,14 +94,14 @@ class _AnalyzedFuncBaseFunc(_AnalyzedFuncBaseInit):
 
         Returns
         -------
-        y_val
+        y_val : Real
             The y_value of self._func when x is x_val
 
         """
         return self._func(x_val)
 
     @func.register(abc.Iterable)
-    def func_iterable(self, x_vals: Iterable[Real]) -> Iterable[Real]:
+    def func_iterable(self, x_vals: Iterable[Real]) -> List[Real]:
         """Register an iterable type as the parameter for self.func.
 
         Map self._func over iterable input.
@@ -101,21 +109,23 @@ class _AnalyzedFuncBaseFunc(_AnalyzedFuncBaseInit):
         Parameters
         ----------
         x_vals
-            One or more x-values.
+            Multiple x_vals to pass to self.func_real.
 
         Returns
         -------
-        y_vals
-            One or more y-values. If x_vals type is Iterable[Real],
-            return type is Iterable[mp.mpf]. If x_vals type is Real,
-            return type is mp.mpf.
+        y_vals : List[Real]
+            The y-values corresponding to x_vals.
 
         """
         return [self.func_real(x_val) for x_val in x_vals]
 
 
 class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
-    """Parent class of all function analysis."""
+    """Parent class of all function analysis.
+
+    AnalyzedFuncBase performs all possible analysis that does NOT
+    require any calculus.
+    """
 
     def plot(self, points_to_plot: int) -> np.ndarray:
         """Produce x,y pairs for self.func in range.
@@ -136,7 +146,7 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
         y_vals = self.func_iterable(x_vals)
         return np.stack((x_vals, y_vals), axis=-1)
 
-    def nth_derivative(self, nth: int) -> Callable[[mp.mpf], mp.mpf]:
+    def nth_derivative(self, nth: int) -> Func:
         """Create the nth-derivative of a function.
 
         If the nth-derivative has already been found, grab it.
@@ -150,7 +160,7 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
 
         Returns
         -------
-        Callable[[mp.mpf], mp.mpf]
+        Func
             The nth-derivative of the function.
 
         """
@@ -181,7 +191,7 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
         return self.plotted_points
 
     def has_symmetry(self, axis: Real) -> bool:
-        """Determine if func is symmetric about given axis.
+        """Determine if self.func is symmetric about given axis.
 
         Parameters
         ----------

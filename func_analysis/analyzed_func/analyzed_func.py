@@ -18,7 +18,12 @@ from func_analysis.util import (
 
 
 class _AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
-    """Find increasing/decreasing/concave/convex intervals."""
+    """Function analysis with special intervals..
+
+    These intervals include:
+        - Intervals of increase/decrease.
+        - Intervals of concavity/convexity.
+    """
 
     def _construct_intervals(self, points: List[Real]) -> List[Interval]:
         points.insert(0, self.x_range.start)
@@ -91,9 +96,7 @@ class _AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
 class AnalyzedFunc(_AnalyzedFuncIntervals):
     """Complete function analysis, with special points and intervals.
 
-    Intervals found:
-        - Intervals of increase/decrease
-        - Concavity/convexity
+    This class adds relative/absolute extrema to the analysis.
     """
 
     @property

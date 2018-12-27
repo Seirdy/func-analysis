@@ -11,7 +11,7 @@ from func_analysis.analyzed_func import AnalyzedFunc
 
 # pylint: disable=undefined-variable
 class AnalyzedFuncCounted(AnalyzedFunc):
-    """Saves all instances of an object."""
+    """Save number of calls/unique calls to funciton."""
 
     instances: List[AnalyzedFuncCounted] = []  # noqa: F821
 
@@ -35,7 +35,7 @@ class AnalyzedFuncCounted(AnalyzedFunc):
 
 
 class ForbidCalling(object):
-    """Class decorator for tracking state."""
+    """Function decorator to forbid calls."""
 
     def __init__(self, func):
         """Initialize the object."""
@@ -43,7 +43,14 @@ class ForbidCalling(object):
         self.func = func
 
     def __call__(self, *args):
-        """Increment counter each time func is called."""
+        """Raise error instead of calling the function.
+
+        Raises
+        ------
+        RuntimeError
+            If called.
+
+        """
         raise RuntimeError(
             "AnalyzedFunc.func is supposed to be an altered copy of the func "
             "supplied to the constructor, but the original func was accessed."
@@ -56,7 +63,18 @@ SavedCounts = Dict[str, int]
 def workout_analyzed_func(
     analyzed_func: AnalyzedFuncCounted
 ) -> Tuple[SavedCounts, SavedCounts]:
-    """Track function calls throughout function analysis."""
+    """Track function calls throughout function analysis.
+
+    Runs just about all the analysis possible on analyzed_func and
+    tracks the call count of its function.
+
+    Returns
+    -------
+    Tuple[Dict[str, int], Dict[str, int]]
+        The number of times analyzed_func.func was called, and the
+        number of times it was called witih a unique argument.
+
+    """
     sequential_counts: SavedCounts = {}
     sequential_deduped_counts: SavedCounts = {}
 

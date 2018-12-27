@@ -1,4 +1,8 @@
-"""Test memoization of analyzed functions."""
+"""Test memoization of analyzed functions.
+
+This test is relatively slow and time-consuming, and tests a relatively
+unimportant feature (memoization). Run it only if you really need to.
+"""
 from typing import Tuple
 
 import numpy as np
@@ -7,7 +11,7 @@ from func_analysis.tests.call_counting import workout_analyzed_func
 
 
 def test_call_counting(analyzed_trig_func_counted):
-    """Check and print call all_counts for each executed function."""
+    """Check call counts for each executed function."""
     counts = workout_analyzed_func(analyzed_trig_func_counted)
     original_vals: Tuple[int, ...] = tuple(counts[0].values())
     deduped_vals: Tuple[int, ...] = tuple(counts[1].values())

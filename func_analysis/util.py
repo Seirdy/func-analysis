@@ -12,14 +12,14 @@ Func = Callable[[Real], Real]
 
 
 class Interval(NamedTuple):
-    """Type annotation for interval between two numbers."""
+    """Special NamedTuple for interval between two numbers."""
 
     start: Real
     stop: Real
 
 
 class Coordinate(NamedTuple):
-    """Type for x-y coordinate"""
+    """Special NamedTuple for x-y coordinate"""
 
     x_val: Real
     y_val: Real

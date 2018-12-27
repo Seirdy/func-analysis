@@ -47,7 +47,8 @@ def typecheck_intervals(intervals):
 def mpf_assert_allclose(actual, desired, atol=1e-3):
     """Assert that the two arrays are close enough.
 
-    Similar to numpy.testing.assert_allclose().
+    Similar to numpy.testing.assert_allclose(), but specifically
+    written for mpmath numbers.
     """
     assert np.amax(np.abs(np.subtract(actual, desired))) < atol
 
