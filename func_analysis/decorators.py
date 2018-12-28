@@ -24,14 +24,17 @@ class singledispatchmethod(object):  # NOSONAR  # noqa: N801
         self.dispatcher = singledispatch(func)
         self.func = func
 
-    def register(self, cls, method=None):
-        """generic_method.register(cls, func) -> func
+    def register(self, cls, method=None):  # NOQA
+        """Register method for decorated function.
+
         Registers a new implementation for the given *cls* on a
         *generic_method*.
         """
-        return self.dispatcher.register(cls, func=method)
+        return self.dispatcher.register(cls, func=method)  # NOQA
 
-    def __get__(self, obj, cls):
+    def __get__(self, obj, cls):  # NOQA
+        """Retrieve decorated function."""
+
         def _method(*args, **kwargs):
             """Access single-dispatch method."""
             method = self.dispatcher.dispatch(args[0].__class__)
@@ -46,7 +49,8 @@ class singledispatchmethod(object):  # NOSONAR  # noqa: N801
 
     @property
     def __isabstractmethod__(self):
-        return getattr(self.func, "__isabstractmethod__", False)
+        """Magic method for marking decorated func as implemented."""
+        return getattr(self.func, "__isabstractmethod__", False)  # NOQA
 
 
 class SaveXY(object):
