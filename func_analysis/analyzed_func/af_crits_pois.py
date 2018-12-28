@@ -34,7 +34,7 @@ class _AnalyzedFuncCrits(AnalyzedFuncZeros):
         """
         super().__init__(**kwargs)
         if not crits_wanted:
-            self.crits_wanted = self.zeros_wanted - 1
+            self.crits_wanted = max(self.zeros_wanted - 1, 0)
         else:
             self.crits_wanted = crits_wanted
         self._crits = known_crits
@@ -74,7 +74,7 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
         """
         super().__init__(**kwargs)
         if pois_wanted is None:
-            self.pois_wanted = self.crits_wanted - 1
+            self.pois_wanted = max(self.crits_wanted - 1, 0)
         else:
             self.pois_wanted = pois_wanted
         self._pois = known_pois
