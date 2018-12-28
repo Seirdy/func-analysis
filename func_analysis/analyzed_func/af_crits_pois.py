@@ -8,8 +8,8 @@ from typing import Dict, List, Optional, Tuple
 import mpmath as mp
 import numpy as np
 
+from func_analysis.af_util import Func
 from func_analysis.analyzed_func.af_zeros import AnalyzedFuncZeros
-from func_analysis.util import Func
 
 
 class _AnalyzedFuncCrits(AnalyzedFuncZeros):

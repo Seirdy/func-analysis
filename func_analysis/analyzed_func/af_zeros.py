@@ -4,17 +4,14 @@ from __future__ import annotations
 
 from functools import lru_cache
 from numbers import Real
-from typing import Iterable, Iterator, List, Optional
+from typing import Iterable, Iterator, List, Optional, Tuple
 
+import mpmath as mp
 import numpy as np
+from scipy.optimize import brentq
 
+from func_analysis.af_util import Func, Interval, zero_intervals
 from func_analysis.analyzed_func.af_base import AnalyzedFuncBase
-from func_analysis.util import (
-    Interval,
-    find_one_zero,
-    items_in_range,
-    zero_intervals,
-)
 
 
 class AnalyzedFuncZeros(AnalyzedFuncBase):
@@ -140,3 +137,68 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         if self._zeros is None or len(self._zeros) < self.zeros_wanted:
             self._zeros = np.array(tuple(self._compute_zeros()))
         return self._zeros
+
+
+def find_one_zero(
+    func: Func, x_range: Tuple[Real, Real], starting_point: Real = None
+) -> mp.mpf:
+    """Find the zero of a function in a given interval.
+
+    mpmath's zero-finding algorithms require a starting "guess" point.
+    `scipy.optimize.brentq` can find an imprecise zero in a given
+    interval. Combining these, this method uses scipy.optimize's output
+    as a starting point for mpmath's more precise root-finding algo.
+
+    If a starting point is provided, the interval argument
+    becomes unnecessary.
+
+    Parameters
+    ----------
+    func
+        The function to find a zero for.
+    x_range
+        The x-interval in which to find a zero.
+    starting_point
+        A guess-point. Can be `None`, in which case
+        use `scipy.optimize.brentq` to calculate one.
+
+    Returns
+    -------
+    mp.mpf
+        A single very precise zero.
+
+    """
+    # If a starting point is not provided, find one.
+    if starting_point is None:
+        # noinspection PyTypeChecker
+        starting_point = brentq(
+            f=func, a=x_range[0], b=x_range[1], maxiter=50, disp=False
+        )
+    # Maybe this starting point is good enough.
+    if not func(starting_point):
+        return starting_point
+    return mp.findroot(f=func, x0=starting_point)
+
+
+def items_in_range(
+    unfiltered: np.ndarray, interval: Tuple[Real, Real]
+) -> np.ndarray:
+    """Filter items to contain just items in closed interval.
+
+    Parameters
+    ----------
+    unfiltered
+        The 1D array to filter
+    interval
+        The closed interval of acceptable values.
+
+    Returns
+    -------
+    filtered_items : np.ndarray
+        A subset of items that includes only values in interval
+
+    """
+    mask = np.logical_and(
+        min(interval) <= unfiltered, max(interval) >= unfiltered
+    )
+    return unfiltered[mask]

@@ -11,8 +11,8 @@ This deliberately uses a function requiring a high degree of precision
 import mpmath as mp
 import numpy as np
 
+from func_analysis.af_util import make_intervals
 from func_analysis.tests import constants, testing_utils
-from func_analysis.util import make_intervals
 
 
 def test_trig_func_concavity_convexity(analyzed_trig_func):

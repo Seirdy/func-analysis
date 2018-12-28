@@ -3,10 +3,10 @@
 from numbers import Real
 from typing import List
 
-import pytest
 from numpy import float64
 
-from func_analysis.util import (
+import pytest
+from func_analysis.af_util import (
     decreasing_intervals,
     increasing_intervals,
     make_intervals,

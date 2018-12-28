@@ -7,14 +7,14 @@ from typing import List
 
 import numpy as np
 
-from func_analysis.analyzed_func.af_crits_pois import AnalyzedFuncSpecialPts
-from func_analysis.util import (
+from func_analysis.af_util import (
     Interval,
     assemble_table,
     decreasing_intervals,
     increasing_intervals,
     make_intervals,
 )
+from func_analysis.analyzed_func.af_crits_pois import AnalyzedFuncSpecialPts
 
 
 class _AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):

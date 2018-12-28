@@ -11,8 +11,8 @@ from typing import Dict, Iterable, List, Tuple
 import mpmath as mp
 import numpy as np
 
+from func_analysis.af_util import Coordinate, Func, Interval
 from func_analysis.decorators import SaveXY
-from func_analysis.util import Coordinate, Func, Interval
 
 try:
     from functools import singledispatchmethod  # type: ignore # noqa: Z435

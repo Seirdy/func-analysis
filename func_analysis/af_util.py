@@ -2,11 +2,10 @@
 
 
 from numbers import Real
-from typing import Callable, Iterable, List, NamedTuple, Sequence, Tuple
+from typing import Callable, Iterable, List, NamedTuple, Sequence
 
 import mpmath as mp
 import numpy as np
-from scipy.optimize import brentq
 
 Func = Callable[[Real], Real]
 
@@ -19,51 +18,10 @@ class Interval(NamedTuple):
 
 
 class Coordinate(NamedTuple):
-    """Special NamedTuple for x-y coordinate"""
+    """Special NamedTuple for x-y coordinate."""
 
     x_val: Real
     y_val: Real
-
-
-def find_one_zero(
-    func: Func, x_range: Tuple[Real, Real], starting_point: Real = None
-) -> mp.mpf:
-    """Find the zero of a function in a given interval.
-
-    mpmath's zero-finding algorithms require a starting "guess" point.
-    `scipy.optimize.brentq` can find an imprecise zero in a given
-    interval. Combining these, this method uses scipy.optimize's output
-    as a starting point for mpmath's more precise root-finding algo.
-
-    If a starting point is provided, the interval argument
-    becomes unnecessary.
-
-    Parameters
-    ----------
-    func
-        The function to find a zero for.
-    x_range
-        The x-interval in which to find a zero.
-    starting_point
-        A guess-point. Can be `None`, in which case
-        use `scipy.optimize.brentq` to calculate one.
-
-    Returns
-    -------
-    mp.mpf
-        A single very precise zero.
-
-    """
-    # If a starting point is not provided, find one.
-    if starting_point is None:
-        # noinspection PyTypeChecker
-        starting_point = brentq(
-            f=func, a=x_range[0], b=x_range[1], maxiter=50, disp=False
-        )
-    # Maybe this starting point is good enough.
-    if not func(starting_point):
-        return starting_point
-    return mp.findroot(f=func, x0=starting_point)
 
 
 def assemble_table(
@@ -112,32 +70,10 @@ def zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
     # consecutive x-values that has corresponding y-values on the opposite
     # sides of the x-axis
     return [
-        Interval(x_vals[i], x_vals[i + 1])
-        for i in range(0, len(coordinate_pairs) - 1)
-        if is_positive[i] is not is_positive[i + 1]
+        Interval(x_vals[index], x_vals[index + 1])
+        for index in range(0, len(coordinate_pairs) - 1)
+        if is_positive[index] is not is_positive[index + 1]
     ]
-
-
-def items_in_range(
-    items: np.ndarray, interval: Tuple[Real, Real]
-) -> np.ndarray:
-    """Filter items to contain just items in closed interval.
-
-    Parameters
-    ----------
-    items
-        The array to filter
-    interval
-        The closed interval of acceptable values.
-
-    Returns
-    -------
-    filtered_items : np.ndarray
-        A subset of items that includes only values in interval
-
-    """
-    mask = np.logical_and(min(interval) <= items, max(interval) >= items)
-    return items[mask]
 
 
 def make_intervals(points: Sequence[Real]) -> List[Interval]:
@@ -155,7 +91,8 @@ def make_intervals(points: Sequence[Real]) -> List[Interval]:
 
     """
     return [
-        Interval(points[i], points[i + 1]) for i in range(0, len(points) - 1)
+        Interval(points[index], points[index + 1])
+        for index in range(0, len(points) - 1)
     ]
 
 
