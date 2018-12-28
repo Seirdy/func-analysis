@@ -9,9 +9,9 @@ This deliberately uses a function requiring a high degree of precision
 from decimal import Decimal
 
 import numpy as np
-from pytest import raises
 
 from func_analysis.analyzed_func import AnalyzedFunc
+from pytest import raises
 
 
 def test_zeroth_derivative_is_itself(all_analyzed_funcs):
@@ -20,6 +20,7 @@ def test_zeroth_derivative_is_itself(all_analyzed_funcs):
     points = np.random.random(sample_size) * np.random.randint(
         -100, 100, sample_size
     )
+    points = points[abs(points) > 1e-4]
     for analyzed_func in all_analyzed_funcs:
         # noinspection PyTypeChecker
         np.testing.assert_array_equal(
