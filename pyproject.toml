@@ -20,8 +20,8 @@ deps =
   black
   isort
 commands =
-  sh -c "isort *.py func_analysis/**/*.py"
-  sh -c "black --py36 -l 79 *.py func_analysis/**/*.py"
+  sh -c "isort *.py func_analysis/*.py func_analysis/**/*.py"
+  sh -c "black --py36 -l 79 *.py func_analysis/*.py func_analysis/**/*.py"
 
 # Linters
 
@@ -52,7 +52,7 @@ deps =
   hacking
 commands =
   flake8 --version
-  sh -c "flake8 *.py func_analysis/**/*.py"
+  sh -c "flake8 *.py func_analysis/*.py func_analysis/**/*.py"
 
 [testenv:pylint]
 basepython = python3
@@ -66,7 +66,7 @@ commands =
 basepython = python3
 skip_install = true
 deps = pydocstyle
-commands = sh -c "pydocstyle *.py func_analysis/**/*.py"
+commands = sh -c "pydocstyle *.py func_analysis/*.py func_analysis/**/*.py"
 
 [testenv:mypy]
 basepython = python3
