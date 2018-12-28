@@ -31,7 +31,7 @@ def test_trig_func_has_correct_zeros(analyzed_trig_func):
 
 def test_trig_func_zeros_none_provided(analyzed_trig_func, trig_func_args):
     """Test that zeros stay the same when some are provided."""
-    trig_func_args["known_zeros"] = None
+    trig_func_args["zeros"] = None
     analyzed_trig_func_none_provided = AnalyzedFunc(**trig_func_args)
 
     testing_utils.mpf_assert_allclose(

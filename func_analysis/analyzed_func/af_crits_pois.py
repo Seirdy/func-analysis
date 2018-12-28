@@ -18,7 +18,7 @@ class _AnalyzedFuncCrits(AnalyzedFuncZeros):
     def __init__(
         self,
         crits_wanted: int = None,
-        known_crits: Tuple[Real, ...] = None,
+        crits: Tuple[Real, ...] = None,
         **kwargs,
     ):
         """Initialize the critical points of an analyzed function.
@@ -27,7 +27,7 @@ class _AnalyzedFuncCrits(AnalyzedFuncZeros):
         ----------
         crits_wanted
             Real of critical nums to calculate.
-        known_crits
+        crits
             A list of critical numbers already known, used
             as starting points for more precise calculation.
 
@@ -37,7 +37,7 @@ class _AnalyzedFuncCrits(AnalyzedFuncZeros):
             self.crits_wanted = max(self.zeros_wanted - 1, 0)
         else:
             self.crits_wanted = crits_wanted
-        self._crits = known_crits
+        self._crits = crits
 
 
 class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
@@ -53,10 +53,7 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
     """
 
     def __init__(
-        self,
-        pois_wanted: int = None,
-        known_pois: Tuple[Real, ...] = None,
-        **kwargs,
+        self, pois_wanted: int = None, pois: Tuple[Real, ...] = None, **kwargs
     ):
         """Initialize a CriticalFunction.
 
@@ -64,7 +61,7 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
         ----------
         pois_wanted
             Real of points of inflection to calculate.
-        known_pois
+        pois
             A list of points of inflection already known, used
             as starting points for more precise calculation.
         **kwargs
@@ -77,7 +74,7 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
             self.pois_wanted = max(self.crits_wanted - 1, 0)
         else:
             self.pois_wanted = pois_wanted
-        self._pois = known_pois
+        self._pois = pois
 
     # pylint: disable=undefined-variable
     @property
@@ -98,11 +95,11 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
         return AnalyzedFuncSpecialPts(
             func=self.nth_derivative(1),
             zeros_wanted=max(self.crits_wanted, 1),
-            known_zeros=self._crits,
+            zeros=self._crits,
             derivatives=derivatives_of_fprime,
             x_range=self.x_range,
             crits_wanted=self.pois_wanted,
-            known_crits=self._pois,
+            crits=self._pois,
         )
 
     @property
@@ -122,7 +119,7 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
         return AnalyzedFuncZeros(
             func=self.nth_derivative(2),
             zeros_wanted=max(self.pois_wanted, 1),
-            known_zeros=self._pois,
+            zeros=self._pois,
             derivatives=derivatives_of_fprime2,
             x_range=self.x_range,
         )

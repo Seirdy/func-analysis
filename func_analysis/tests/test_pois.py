@@ -37,7 +37,7 @@ def pois_stay_close_when_given_fp2(analyzedfunc, fp2_zeros):
         x_range=(-47.05, -46.3499),
         zeros_wanted=21,
         crits_wanted=21,
-        known_zeros=[-47.038289673236127, -46.406755885040056],
+        zeros=[-47.038289673236127, -46.406755885040056],
         derivatives={2: fp2_zeros.func},
     )
     # make sure fp2_zeros.func() is actually used by tracking its call count

@@ -22,7 +22,7 @@ def trig_func_args() -> MutableMapping:
         "zeros_wanted": 21,
         "crits_wanted": 21,
         "pois_wanted": 21,
-        "known_zeros": [-47.038289673236127, -46.406755885040056],
+        "zeros": [-47.038289673236127, -46.406755885040056],
     }
 
 

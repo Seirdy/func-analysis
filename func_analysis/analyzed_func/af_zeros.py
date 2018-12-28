@@ -21,10 +21,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
     """Function analysis with root-finding."""
 
     def __init__(
-        self,
-        zeros_wanted: int = 0,
-        known_zeros: Iterable[Real] = None,
-        **kwargs,
+        self, zeros_wanted: int = 0, zeros: Iterable[Real] = None, **kwargs
     ):
         """Initialize the object.
 
@@ -32,7 +29,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         ----------
         zeros_wanted
             The number of zeros to find
-        known_zeros
+        zeros
             List of zeros already known. Used as starting points for
             more exact computation.
         **kwargs
@@ -42,9 +39,9 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         """
         super().__init__(**kwargs)
         self.zeros_wanted = zeros_wanted
-        if known_zeros is not None:
+        if zeros is not None:
             self._zeros: np.ndarray = items_in_range(
-                np.array(known_zeros), self.x_range
+                np.array(zeros), self.x_range
             )
         else:
             self._zeros = None
@@ -98,7 +95,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
 
         Returns
         -------
-        known_zeros : Optional[Iterator[Real]]
+        zeros : Optional[Iterator[Real]]
             None if self._zeros is None. Otherwise, an iterator that
             iterates across self._zeros.
 
