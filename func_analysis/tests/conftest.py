@@ -3,6 +3,7 @@
 from typing import MutableMapping, Tuple
 
 import pytest
+
 from func_analysis import AnalyzedFunc
 from func_analysis.tests.call_counting import AnalyzedFuncCounted
 from func_analysis.tests.funcs_to_analyze import (

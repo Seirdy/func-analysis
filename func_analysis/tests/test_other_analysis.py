@@ -9,9 +9,9 @@ This deliberately uses a function requiring a high degree of precision
 from decimal import Decimal
 
 import numpy as np
+from pytest import raises
 
 from func_analysis.analyzed_func import AnalyzedFunc
-from pytest import raises
 
 
 def test_zeroth_derivative_is_itself(all_analyzed_funcs):
