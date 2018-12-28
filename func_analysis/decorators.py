@@ -8,7 +8,7 @@ from func_analysis.util import Coordinate, Func
 
 
 # noinspection PyPep8Naming,PyUnresolvedReferences
-class singledispatchmethod(object):  # NOSONAR
+class singledispatchmethod(object):  # NOSONAR  # noqa: N801
     """Single-dispatch generic method descriptor.
 
     Supports wrapping existing descriptors and handles non-descriptor
