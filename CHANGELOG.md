@@ -9,6 +9,13 @@ and this project adheres to
 
 [Full Changelog]
 
+[Full Changelog]:
+https://gitlab.com/Seirdy/func-analysis/compare/0.2.0...master
+
+## [0.2.0] (2018-12-27)
+
+[Full Changelog](https://gitlab.com/Seirdy/func-analysis/compare/0.1.2...0.2.0)
+
 ### Summary
 
 This update contains many breaking changes.
@@ -19,6 +26,10 @@ in `__init__()` methods now resides in properties.
 
 [wemake-python-styleguide]: https://wemake-python-styleguide.rtfd.io
 
+### Fixed
+
+- `zeros_wanted`,`crits_wanted`, and `pois_wanted` cannot be negative anymore.
+
 ### Added
 
 - `AnalyzedFunc.func_real` and `AnalyzedFunc.func_iterable` are limited
@@ -26,6 +37,8 @@ in `__init__()` methods now resides in properties.
 
 ### Changed
 
+- In `AnalyzedFunc.__init__`, rename parameters `known_zeros`, `known_crits`,
+  and `known_pois` to `zeros`, `crits`, and `pois`. 
 - Use more `@property` decorators.
   - Convert some attrs to properties in `AnalyzedFunc`:
     - `x_range`
@@ -63,7 +76,7 @@ in `__init__()` methods now resides in properties.
       `test_crits`
     - Move extrema-testing from `test_other_analysis` to `test_extrema`.
     - Move all functions to analyze from `conftest` to `funcs_to_analyze`.
-  - Linting: add `wemake-python-styleguide` and OpenStack's `hacking` plugins 
+  - Linting: add `wemake-python-styleguide` and OpenStack's `hacking` plugins
     to `flake8`
   - Rename long test methods
   - Count-calling that existed only to ensure that a call-count never went
@@ -76,9 +89,6 @@ in `__init__()` methods now resides in properties.
   - Stop separating numerals from letters with underscores.
   - Explicit object inheritance
   - Spelling
-
-[Full Changelog]:
-https://gitlab.com/Seirdy/func-analysis/compare/0.1.2...master
 
 ## [0.1.2] (2018-12-19)
 
@@ -155,6 +165,7 @@ file to PYPI.
 Initial release
 
 [Unreleased]: https://gitlab.com/Seirdy/func-analysis/tree/master
+[0.2.0]: https://gitlab.com/Seirdy/func-analysis/tree/0.2.0
 [0.1.2]: https://gitlab.com/Seirdy/func-analysis/tree/0.1.2
 [0.1.1]: https://gitlab.com/Seirdy/func-analysis/tree/0.1.1
 [0.1.0]: https://gitlab.com/Seirdy/func-analysis/tree/0.1.0
