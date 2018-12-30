@@ -9,6 +9,14 @@ and this project adheres to
 
 [Full Changelog]
 
+## Internal
+
+- Fix: Add glob pattern `func_analysis/*.py` to tox commands.
+- Move once-used functions from `util.py` to the submodules that use them.
+- Rename `util.py` to `af_util.py`.
+- Fix divide-by-0 error in
+  `test_other_analysis.test_zeroth_derivative_is_itself`.
+
 [Full Changelog]:
 https://gitlab.com/Seirdy/func-analysis/compare/0.2.0...master
 
