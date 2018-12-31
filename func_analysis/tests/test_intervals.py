@@ -12,7 +12,7 @@ import mpmath as mp
 import numpy as np
 
 from func_analysis.af_util import make_intervals
-from func_analysis.tests import constants, testing_utils
+from func_analysis.tests import constants, testing_utils, typechecking
 
 
 def test_trig_func_concavity_convexity(analyzed_trig_func):
@@ -58,7 +58,7 @@ def test_analyzed_incdecfunc_decreasing(analyzed_incdecfunc):
     """
     analyzed_incdecfunc_decreasing = analyzed_incdecfunc.decreasing
 
-    testing_utils.typecheck_intervals(analyzed_incdecfunc_decreasing)
+    typechecking.typecheck_intervals(analyzed_incdecfunc_decreasing)
     testing_utils.mpf_assert_allclose(
         analyzed_incdecfunc.decreasing,
         [(-3, mp.fneg(mp.e))],
@@ -70,7 +70,7 @@ def test_analyzed_incdecfunc_increasing(analyzed_incdecfunc):
     """Test FuncIntervals' increasing() and decreasing() methods."""
     analyzed_incdecfunc_increasing = analyzed_incdecfunc.increasing
 
-    testing_utils.typecheck_intervals(analyzed_incdecfunc_increasing)
+    typechecking.typecheck_intervals(analyzed_incdecfunc_increasing)
     testing_utils.mpf_assert_allclose(
         analyzed_incdecfunc_increasing,
         [(mp.fneg(mp.e), -0.001)],

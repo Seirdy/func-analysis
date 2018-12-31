@@ -9,7 +9,7 @@ This deliberately uses a function requiring a high degree of precision
 import numpy as np
 
 from func_analysis import AnalyzedFunc
-from func_analysis.tests import constants, testing_utils
+from func_analysis.tests import constants, testing_utils, typechecking
 
 
 def assert_trig_func_pois_are_accurate(analyzedfunc, pois_found: np.ndarray):
@@ -47,7 +47,7 @@ def pois_stay_close_when_given_fp2(analyzedfunc, fp2_zeros):
     fp2_zeros_func_counts_after = len(fp2_zeros.plotted_points)
     assert fp2_zeros_func_counts_after - fp2_zeros_func_counts_before > 50
 
-    testing_utils.typecheck_zcp(more_exact_pois)
+    typechecking.typecheck_zcp(more_exact_pois)
     testing_utils.mpf_assert_allclose(
         fp2_zeros.zeros, more_exact_pois, constants.EPSILON0
     )
@@ -64,7 +64,7 @@ def test_trig_func_has_correct_pois(analyzed_trig_func, fp2_zeros):
     derivative.
     """
     # typechecking
-    testing_utils.typecheck_zcp(analyzed_trig_func.pois)
+    typechecking.typecheck_zcp(analyzed_trig_func.pois)
     assert_trig_func_pois_are_accurate(
         analyzed_trig_func, analyzed_trig_func.pois
     )

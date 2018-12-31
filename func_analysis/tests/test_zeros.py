@@ -9,12 +9,12 @@ This deliberately uses a function requiring a high degree of precision
 import numpy as np
 
 from func_analysis import AnalyzedFunc
-from func_analysis.tests import constants, testing_utils
+from func_analysis.tests import constants, testing_utils, typechecking
 
 
 def test_trig_func_has_correct_zeros(analyzed_trig_func):
     """Test the correctness of analyzed_trig_func.zeros."""
-    testing_utils.typecheck_zcp(analyzed_trig_func.zeros)
+    typechecking.typecheck_zcp(analyzed_trig_func.zeros)
     # approximate accuracy
     np.testing.assert_allclose(
         np.float64(analyzed_trig_func.zeros),

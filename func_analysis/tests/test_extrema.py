@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from func_analysis.tests import testing_utils
+from func_analysis.tests import typechecking
 
 
 def test_trig_func_has_correct_relative_extrema(analyzed_trig_func):
@@ -16,8 +16,8 @@ def test_trig_func_has_correct_relative_extrema(analyzed_trig_func):
     """
     maxima = analyzed_trig_func.relative_maxima
     minima = analyzed_trig_func.relative_minima
-    testing_utils.typecheck_zcp(maxima)
-    testing_utils.typecheck_zcp(minima)
+    typechecking.typecheck_zcp(maxima)
+    typechecking.typecheck_zcp(minima)
     np.testing.assert_equal(maxima, analyzed_trig_func.crits[::2])
     np.testing.assert_equal(minima, analyzed_trig_func.crits[1::2])
 
