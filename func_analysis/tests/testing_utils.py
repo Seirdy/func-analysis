@@ -21,3 +21,9 @@ def assert_output_lessthan(func, x_vals, max_y):
 def calculate_error(expected, actual):
     """Calculate the experimental error."""
     return abs(1 - actual / expected)
+
+
+def assert_error_lessthan(expected, actual, maxerror):
+    """Assert that the error is within bounds."""
+    error = calculate_error(expected, actual)
+    assert error < maxerror
