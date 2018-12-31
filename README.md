@@ -3,6 +3,7 @@
 [![pipeline status]](https://gitlab.com/Seirdy/func-analysis/commits/master)
 [![coverage report]](https://gitlab.com/Seirdy/func-analysis/commits/master)
 [![Code Climate]](https://codeclimate.com/github/Seirdy/func-analysis)
+[![LGTM]](https://lgtm.com/projects/g/Seirdy/func-analysis/context:python)
 [![License]](https://gitlab.com/Seirdy/func-analysis/blob/master/LICENSE)
 [![PYPI latest release]](https://pypi.org/project/func-analysis/)
 [![Python version]](https://pypi.org/project/func-analysis/)
@@ -14,6 +15,8 @@ https://gitlab.com/Seirdy/func-analysis/badges/master/pipeline.svg
 https://gitlab.com/Seirdy/func-analysis/badges/master/coverage.svg
 [Code Climate]:
 https://codeclimate.com/github/Seirdy/func-analysis/badges/gpa.svg
+[LGTM]:
+https://img.shields.io/lgtm/grade/python/g/Seirdy/func-analysis.svg?logo=lgtm&logoWidth=18
 [License]:
 https://img.shields.io/pypi/l/func-analysis.svg
 [PYPI Latest Release]:
