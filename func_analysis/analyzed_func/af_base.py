@@ -211,3 +211,17 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
         x_mirror = np.subtract(2 * axis, x_vals)
         y_mirror = self.func_iterable(x_mirror)
         return np.array_equal(np.abs(y_vals), np.abs(y_mirror))
+
+
+class AnalyzedFuncArea(_AnalyzedFuncBaseFunc):
+    """Add area across x-range to function analysis."""
+
+    @property
+    def signed_area(self) -> Real:
+        """Calculate the definite integral bounded by x_range."""
+        return mp.quad(self.func_real, self.x_range)
+
+    @property
+    def unsigned_area(self) -> Real:
+        """Calculate the geometric area bounded by x_range."""
+        return mp.quad(lambda x_val: abs(self.func_real(x_val)), self.x_range)
