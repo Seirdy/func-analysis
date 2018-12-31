@@ -9,7 +9,7 @@ import numpy as np
 from func_analysis.analyzed_func import AnalyzedFunc
 
 
-# pylint: disable=undefined-variable
+# pylint: disable=undefined-variable, too-many-ancestors
 class AnalyzedFuncCounted(AnalyzedFunc):
     """Save number of calls/unique calls to funciton."""
 
@@ -31,7 +31,7 @@ class AnalyzedFuncCounted(AnalyzedFunc):
         return len(np.unique([coord[0] for coord in self.plotted_points]))
 
 
-# pylint: enable=undefined-variable
+# pylint: enable=undefined-variable, too-many-ancestors
 
 
 class ForbidCalling(object):

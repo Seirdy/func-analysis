@@ -80,7 +80,7 @@ setup(
     packages=["func_analysis", "func_analysis.analyzed_func"],
     classifiers=[
         "License :: OSI Approved :: GNU Affero General Public License "
-        "v3 or later (AGPLv3+)",
+        + "v3 or later (AGPLv3+)",
         "Operating System :: OS Independent",
         "Development Status :: 2 - Pre-Alpha",
         "Programming Language :: Python",
