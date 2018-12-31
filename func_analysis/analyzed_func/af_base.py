@@ -79,7 +79,11 @@ class _AnalyzedFuncBaseFunc(_AnalyzedFuncBaseInit):
             of Real or Iterable[Real]
 
         """
-        raise TypeError("Unsupported type '{0}'".format(type(*args)))
+        bad_types = (type(bad_arg) for bad_arg in args)
+        raise TypeError(
+            "Unsupported type '{0}'. ".format(*bad_types)
+            + "Expected type abc.Real or Iterable[abc.Real]."
+        )
 
     # pylint: enable=no-self-use
 

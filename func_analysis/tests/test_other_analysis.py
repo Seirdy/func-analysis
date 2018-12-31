@@ -39,7 +39,8 @@ def test_unregistered_func_exception(all_analyzed_funcs):
 
         assert (
             str(excinfo.value)
-            == "Unsupported type '<class 'decimal.Decimal'>'"
+            == "Unsupported type '<class 'decimal.Decimal'>'. "
+            + "Expected type abc.Real or Iterable[abc.Real]."
         )
         assert excinfo.typename == "TypeError"
 
