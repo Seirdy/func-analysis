@@ -14,7 +14,7 @@ def test_trig_func_signed_area(analyzed_trig_func):
 
 
 def test_trig_func_unsigned_area(analyzed_trig_func):
-    """Test definite integral of trig_func is accurate."""
+    """Test unsigned area of trig_func is accurate."""
     assert_error_lessthan(
         analyzed_trig_func.unsigned_area,
         constants.TRIG_FUNC_UNSIGNED_AREA,
