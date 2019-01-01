@@ -7,6 +7,7 @@ from numpy import float64
 
 import pytest
 from func_analysis.af_util import (
+    Interval,
     decreasing_intervals,
     increasing_intervals,
     make_intervals,
@@ -18,7 +19,7 @@ def intervals() -> List:
     """Points for interval functions in _util."""
     sample_numbers = [-2, 8, -3, -4, -9, 12, 18, 4, 0]
     float_numbers: List[Real] = list(float64(sample_numbers))
-    return make_intervals(float_numbers)
+    return list(make_intervals(float_numbers))
 
 
 def test_make_intervals(intervals):
@@ -27,7 +28,7 @@ def test_make_intervals(intervals):
     These functions include _make_intervals(), _increasing_intervals(),
     and _decreasing_intervals()/
     """
-    expected: List = [
+    expected_values = [
         (-2, 8),
         (8, -3),
         (-3, -4),
@@ -37,6 +38,8 @@ def test_make_intervals(intervals):
         (18, 4),
         (4, 0),
     ]
+    # mypy thinks *Tuple[int, int] is incompatible with expected Real, Real
+    expected = [Interval(*pair) for pair in expected_values]  # type: ignore
     actual = intervals
 
     assert expected == actual

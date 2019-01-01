@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from numbers import Real
-from typing import List
+from typing import Iterator, List
 
 import numpy as np
 
@@ -25,7 +25,7 @@ class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
         - Intervals of concavity/convexity.
     """
 
-    def _construct_intervals(self, points: List[Real]) -> List[Interval]:
+    def _construct_intervals(self, points: List[Real]) -> Iterator[Interval]:
         points.insert(0, self.x_range.start)
         points.append(self.x_range.stop)
         return make_intervals(points)

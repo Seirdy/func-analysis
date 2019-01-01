@@ -1,8 +1,7 @@
 """Utilities for use in AnalyzedFunc."""
-
-
+from itertools import chain
 from numbers import Real
-from typing import Callable, Iterable, List, NamedTuple, Sequence
+from typing import Callable, Iterable, Iterator, List, NamedTuple
 
 import mpmath as mp
 import numpy as np
@@ -76,8 +75,8 @@ def zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
     ]
 
 
-def make_intervals(points: Sequence[Real]) -> List[Interval]:
-    """Pair each point to the next.
+def make_intervals(points: Iterable[Real]) -> Iterator[Interval]:
+    """Make intervals that pair each point to the next.
 
     Parameters
     ----------
@@ -86,18 +85,25 @@ def make_intervals(points: Sequence[Real]) -> List[Interval]:
 
     Returns
     -------
-    List[Interval]
+    intervals : List[Interval]
         A list of intervals in which every two points have been paired.
 
     """
-    return [
-        Interval(points[index], points[index + 1])
-        for index in range(0, len(points) - 1)
-    ]
+    # Make an iterator that yields each point twice.
+    doubled = chain.from_iterable((point, point) for point in points)
+    # Chop off the first point. The last point will be dropped automatically.
+    try:
+        next(doubled)
+    except StopIteration:
+        raise ValueError("Must have more than one point to make intervals.")
+    # zip two copies of doubled and make each resulting pair an Interval.
+    to_zip = [doubled] * 2
+    for pair in zip(*to_zip):
+        yield Interval(*pair)
 
 
 def increasing_intervals(
-    func: Callable[[Real], Real], intervals: List[Interval]
+    func: Callable[[Real], Real], intervals: Iterable[Interval]
 ) -> List[Interval]:
     """Return intervals across which func is decreasing.
 
@@ -123,7 +129,7 @@ def increasing_intervals(
 
 
 def decreasing_intervals(
-    func: Callable[[mp.mpf], mp.mpf], intervals: List[Interval]
+    func: Callable[[mp.mpf], mp.mpf], intervals: Iterable[Interval]
 ) -> List[Interval]:
     """Return intervals across which func is decreasing.
 
@@ -144,5 +150,5 @@ def decreasing_intervals(
     return [
         x_interval
         for x_interval in intervals
-        if func(x_interval[0]) > func(x_interval[1])
+        if func(x_interval.start) > func(x_interval.stop)
     ]

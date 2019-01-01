@@ -23,7 +23,7 @@ def test_trig_func_concavity_convexity(analyzed_trig_func):
     all_pts = list(analyzed_trig_func.pois)
     all_pts.insert(0, analyzed_trig_func.x_range.start)
     all_pts.append(analyzed_trig_func.x_range.stop)
-    all_intervals = make_intervals(all_pts)
+    all_intervals = list(make_intervals(all_pts))
 
     np.testing.assert_array_equal(
         np.array(analyzed_trig_func.concave), all_intervals[::2]
