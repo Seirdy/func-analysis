@@ -92,10 +92,9 @@ def make_intervals(points: Iterable[Real]) -> Iterator[Interval]:
     # Make an iterator that yields each point twice.
     doubled = chain.from_iterable((point, point) for point in points)
     # Chop off the first point. The last point will be dropped automatically.
-    try:
-        next(doubled)
-    except StopIteration:
-        raise ValueError("Must have more than one point to make intervals.")
+    # pylint: disable=stop-iteration-return
+    next(doubled)
+    # pylint: enable=stop-iteration-return
     # zip two copies of doubled and make each resulting pair an Interval.
     to_zip = [doubled] * 2
     for pair in zip(*to_zip):
