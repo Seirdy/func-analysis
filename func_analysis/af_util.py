@@ -23,29 +23,6 @@ class Coordinate(NamedTuple):
     y_val: Real
 
 
-def assemble_table(
-    func: Callable[[Iterable[Real]], Iterable[Real]], x_vals: Iterable[Real]
-) -> np.ndarray:
-    """Make a table of values for the function with the given x-vals.
-
-    Parameters
-    ----------
-    func
-        The function to generate an x-y table for.
-    x_vals
-        The values to put in the x-column of the table.
-
-    Returns
-    -------
-    np.ndarray
-        A 2d numpy array containing a column of x-values (see
-        Args: x_vals) and computed y-values.
-
-    """
-    y_vals = func(x_vals)
-    return np.stack((x_vals, y_vals), axis=-1)
-
-
 def zero_intervals(coordinates: np.ndarray) -> List[Interval]:
     """Find open intervals containing zeros.
 

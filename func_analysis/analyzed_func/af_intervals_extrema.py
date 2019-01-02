@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 from numbers import Real
-from typing import Iterator, List
+from typing import Callable, Iterator, List, Sequence
 
 import numpy as np
 
 from func_analysis.af_util import (
     Interval,
-    assemble_table,
     decreasing_intervals,
     increasing_intervals,
     make_intervals,
@@ -149,11 +148,7 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
             the form [x, y].
 
         """
-        x_vals: List[Real] = np.concatenate(
-            (self.relative_maxima, self.x_range)
-        )
-        pairs: np.ndarray = assemble_table(self.func, x_vals)
-        return pairs[np.argmax(pairs[:, 1])]
+        return self._absolute_extrema(self.relative_maxima, np.argmax)
 
     @property
     def absolute_minimum(self) -> np.ndarray:
@@ -169,8 +164,10 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
             the form [x, y].
 
         """
-        x_vals: List[Real] = np.concatenate(
-            (self.relative_minima, self.x_range)
-        )
-        pairs: np.ndarray = assemble_table(self.func, x_vals)
-        return pairs[np.argmin(pairs[:, 1])]
+        return self._absolute_extrema(self.relative_minima, np.argmin)
+
+    def _absolute_extrema(self, points: Sequence, extrema_finder: Callable):
+        """Generalized absolute-extrema finder."""
+        x_vals: List[Real] = np.concatenate((points, self.x_range))
+        pairs: np.ndarray = np.stack((x_vals, self.func(x_vals)), axis=-1)
+        return pairs[extrema_finder(pairs[:, 1])]
