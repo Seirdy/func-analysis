@@ -121,7 +121,7 @@ def increasing_intervals(
     return [
         x_interval
         for x_interval in intervals
-        if func(x_interval[0]) < func(x_interval[1])
+        if func(x_interval.start) < func(x_interval.stop)
     ]
 
 
