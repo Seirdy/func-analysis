@@ -1,7 +1,7 @@
 """Utilities for use in AnalyzedFunc."""
 import itertools as it
 from numbers import Real
-from typing import Callable, Iterable, Iterator, List, NamedTuple
+from typing import Any, Callable, Iterable, Iterator, List, NamedTuple, Tuple
 
 import mpmath as mp
 import numpy as np
@@ -46,12 +46,12 @@ def assemble_table(
     return np.stack((x_vals, y_vals), axis=-1)
 
 
-def zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
+def zero_intervals(coordinates: np.ndarray) -> List[Interval]:
     """Find open intervals containing zeros.
 
     Parameters
     ----------
-    coordinate_pairs
+    coordinates
         An x-y table represented by a 2d ndarray.
 
     Returns
@@ -61,18 +61,35 @@ def zero_intervals(coordinate_pairs: np.ndarray) -> List[Interval]:
         x-axis
 
     """
-    y_vals = coordinate_pairs[:, 1]
-    x_vals = coordinate_pairs[:, 0]
-    # First determine if each coordinate is above the x-axis.
-    is_positive = np.greater(y_vals, 0)
-    # Using is_positive, return a list of tuples containing every pair of
-    # consecutive x-values that has corresponding y-values on the opposite
-    # sides of the x-axis
+    x_intervals = make_intervals(coordinates[:, 0])
+    is_positive = _make_pairs(np.greater(coordinates[:, 1], 0))
     return [
-        Interval(x_vals[index], x_vals[index + 1])
-        for index in range(0, len(coordinate_pairs) - 1)
-        if is_positive[index] is not is_positive[index + 1]
+        interval_map[0]
+        for interval_map in zip(x_intervals, is_positive)
+        if interval_map[1][0] is not interval_map[1][1]
     ]
+
+
+def _make_pairs(points: Iterable[Any]) -> Iterator[Tuple[Any, Any]]:
+    """Pair each point to the next.
+
+    Parameters
+    ----------
+    points
+        A list of points
+
+    Yields
+    ------
+    Pair: Tuple[Any, Any]
+        Pairing of every two points as an Interval, with redundancy.
+
+    """
+    # Make an iterator that yields each point twice.
+    doubled = it.chain.from_iterable((point, point) for point in points)
+    # Chop off the first point. The last point will be dropped
+    # automatically and zip two copies to form intervals.
+    for pair in zip(*[it.islice(doubled, 1, None)] * 2):
+        yield pair
 
 
 def make_intervals(points: Iterable[Real]) -> Iterator[Interval]:
@@ -89,13 +106,7 @@ def make_intervals(points: Iterable[Real]) -> Iterator[Interval]:
         Pairing of every two points as an Interval, with redundancy.
 
     """
-    # Make an iterator that yields each point twice.
-    doubled = it.chain.from_iterable((point, point) for point in points)
-    # Chop off the first point. The last point will be dropped automatically.
-    doubled = it.islice(doubled, 1, None)
-    # zip two copies of doubled and make each resulting pair an Interval.
-    to_zip = [doubled] * 2
-    for pair in zip(*to_zip):
+    for pair in _make_pairs(points):
         yield Interval(*pair)
 
 
