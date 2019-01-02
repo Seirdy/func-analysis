@@ -1,5 +1,5 @@
 """Utilities for use in AnalyzedFunc."""
-from itertools import chain
+import itertools as it
 from numbers import Real
 from typing import Callable, Iterable, Iterator, List, NamedTuple
 
@@ -83,18 +83,16 @@ def make_intervals(points: Iterable[Real]) -> Iterator[Interval]:
     points
         A list of points
 
-    Returns
-    -------
-    intervals : List[Interval]
-        A list of intervals in which every two points have been paired.
+    Yields
+    ------
+    Interval
+        Pairing of every two points as an Interval, with redundancy.
 
     """
     # Make an iterator that yields each point twice.
-    doubled = chain.from_iterable((point, point) for point in points)
+    doubled = it.chain.from_iterable((point, point) for point in points)
     # Chop off the first point. The last point will be dropped automatically.
-    # pylint: disable=stop-iteration-return
-    next(doubled)
-    # pylint: enable=stop-iteration-return
+    doubled = it.islice(doubled, 1, None)
     # zip two copies of doubled and make each resulting pair an Interval.
     to_zip = [doubled] * 2
     for pair in zip(*to_zip):
