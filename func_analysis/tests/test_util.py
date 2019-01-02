@@ -26,7 +26,7 @@ def test_make_intervals(intervals):
     """Test many helper functions that FuncIntervals leverages.
 
     These functions include _make_intervals(), _increasing_intervals(),
-    and _decreasing_intervals()/
+    and _decreasing_intervals().
     """
     expected_values = [
         (-2, 8),
