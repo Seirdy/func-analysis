@@ -30,6 +30,8 @@ class _AnalyzedFuncCrits(AnalyzedFuncZeros):
         crits
             A list of critical numbers already known, used
             as starting points for more precise calculation.
+        **kwargs
+            Keyword arguments to pass to AnalyzedFuncZeros.
 
         """
         super().__init__(**kwargs)

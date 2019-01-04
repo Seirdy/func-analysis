@@ -10,7 +10,16 @@ Func = Callable[[Real], Real]
 
 
 class Interval(NamedTuple):
-    """Special NamedTuple for interval between two numbers."""
+    """Special NamedTuple for interval between two numbers.
+
+    Attributes
+    ----------
+    start : Real
+        The lower/left-bound of the interval
+    stop : Real
+        The upper/right-bound of the interval
+
+    """
 
     start: Real
     stop: Real

@@ -17,7 +17,7 @@ from func_analysis.analyzed_func.af_crits_pois import AnalyzedFuncSpecialPts
 
 
 class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
-    """Function analysis with special intervals..
+    """Function analysis with special intervals.
 
     These intervals include:
         - Intervals of increase/decrease.
@@ -25,6 +25,23 @@ class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
     """
 
     def _construct_intervals(self, points: List[Real]) -> Iterator[Interval]:
+        """Construct intervals to filter in interval analysis.
+
+        All interval analysis uses intervals bounded by values taken
+        from the x-range and a set of special points.
+
+        Parameters
+        ----------
+        points
+            A set of special points to serve as the bounds of intervals.
+
+        Returns
+        -------
+        Iterator[Interval]
+            A bunch of intervals to filter into
+            increasing/decreasing/concave/convex intervals.
+
+        """
         points.insert(0, self.x_range.start)
         points.append(self.x_range.stop)
         return make_intervals(points)
@@ -167,7 +184,23 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
         return self._absolute_extrema(self.relative_minima, np.argmin)
 
     def _absolute_extrema(self, points: Sequence, extrema_finder: Callable):
-        """Generalized absolute-extrema finder."""
+        """Generalized absolute-extrema finder.
+
+        Parameters
+        ----------
+        points
+            The contenders for the absolute extrema excluding the
+            bounds of self.x_range.
+        extrema_finder
+            The function that computes the index of the extrema
+            (i.e., np.argmax or np.argmin).
+
+        Returns
+        -------
+        np.ndarray
+            The x-y coordinates of the absolute extrema.
+
+        """
         x_vals: List[Real] = np.concatenate((points, self.x_range))
         pairs: np.ndarray = np.stack((x_vals, self.func(x_vals)), axis=-1)
         return pairs[extrema_finder(pairs[:, 1])]

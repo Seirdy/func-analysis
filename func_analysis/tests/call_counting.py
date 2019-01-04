@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from functools import update_wrapper
-from typing import Dict, List, Tuple
+from typing import Callable, Dict, List, Tuple
 
 import numpy as np
 
@@ -11,7 +11,7 @@ from func_analysis.analyzed_func import AnalyzedFunc
 
 # pylint: disable=undefined-variable, too-many-ancestors
 class AnalyzedFuncCounted(AnalyzedFunc):
-    """Save number of calls/unique calls to funciton."""
+    """Save number of calls/unique calls to function."""
 
     instances: List[AnalyzedFuncCounted] = []  # noqa: F821
 
@@ -37,13 +37,26 @@ class AnalyzedFuncCounted(AnalyzedFunc):
 class ForbidCalling(object):
     """Function decorator to forbid calls."""
 
-    def __init__(self, func):
-        """Initialize the object."""
+    def __init__(self, func: Callable):
+        """Initialize the object.
+
+        Parameters
+        ----------
+        func
+            The function to wrap and forbid calling.
+
+        """
         update_wrapper(self, func)
         self.func = func
 
-    def __call__(self, *args):
+    def __call__(self, *args, **kwargs):
         """Raise error instead of calling the function.
+
+        Parameters
+        ----------
+        *args, **kwargs
+            The arguments that would normally have been passed to the
+            function. These are actually unused.
 
         Raises
         ------
@@ -57,6 +70,7 @@ class ForbidCalling(object):
         )
 
 
+# Type annotation for dictionary of saved call-counts
 SavedCounts = Dict[str, int]
 
 
@@ -68,11 +82,17 @@ def workout_analyzed_func(
     Runs just about all the analysis possible on analyzed_func and
     tracks the call count of its function.
 
+    Parameters
+    ----------
+    analyzed_func
+        The AnalyzedFuncCounted object to run analysis on while
+        counting calls.
+
     Returns
     -------
     Tuple[Dict[str, int], Dict[str, int]]
         The number of times analyzed_func.func was called, and the
-        number of times it was called witih a unique argument.
+        number of times it was called with a unique argument.
 
     """
     sequential_counts: SavedCounts = {}

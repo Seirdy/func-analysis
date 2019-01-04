@@ -34,7 +34,7 @@ class _AnalyzedFuncBaseInit(object):
         Parameters
         ----------
         func
-            The function
+            The function to analyze.
         x_range
             The interval of x-values. This is treated as an
             open interval except when finding absolute extrema.
@@ -72,11 +72,16 @@ class _AnalyzedFuncBaseFunc(_AnalyzedFuncBaseInit):
     def func(self, *args) -> None:
         """Abstract dispatched function to be analyzed.
 
+        Parameters
+        ----------
+        *args
+            Bad arguments of unknown type.
+
         Raises
         ------
         TypeError
             If called with argument that isn't an instance
-            of Real or Iterable[Real]
+            of Real or Iterable[Real].
 
         """
         bad_types = (type(bad_arg) for bad_arg in args)
@@ -99,7 +104,7 @@ class _AnalyzedFuncBaseFunc(_AnalyzedFuncBaseInit):
         Returns
         -------
         y_val : Real
-            The y_value of self._func when x is x_val
+            The y_value of self._func when x is x_val.
 
         """
         return self._func(x_val)
@@ -187,8 +192,21 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
         """
         return self._func_plotted.plotted_points
 
-    def plot_enough(self, points_to_plot=50):
-        """Make plotted_points meet a minimum length."""
+    def plot_enough(self, points_to_plot: int = 50):
+        """Make plotted_points meet a minimum length.
+
+        Parameters
+        ----------
+        points_to_plot
+            The minimum number of points that should be plotted.
+
+        Returns
+        -------
+        plotted_points: List[Coordinate]
+            self.plotted_points after the minimum number of points to
+            plot has been plotted.
+
+        """
         num_coords_found = len(self.plotted_points)
         if num_coords_found < points_to_plot:
             self.plot(points_to_plot - num_coords_found)
@@ -221,11 +239,27 @@ class AnalyzedFuncArea(_AnalyzedFuncBaseFunc):
     """Add area across x-range to function analysis."""
 
     @property
-    def signed_area(self) -> Real:
-        """Calculate the definite integral bounded by x_range."""
+    def signed_area(self) -> mp.mpf:
+        """Calculate the definite integral bounded by x_range.
+
+        Returns
+        -------
+        mp.mpf
+            The signed area of the analyzed function relative to the
+            x-axis.
+
+        """
         return mp.quad(self.func_real, self.x_range)
 
     @property
-    def unsigned_area(self) -> Real:
-        """Calculate the geometric area bounded by x_range."""
+    def unsigned_area(self) -> mp.mpf:
+        """Calculate the geometric area bounded by x_range.
+
+        Returns
+        -------
+        mp.mpf
+            The unsigned area of the analyzed function relative to the
+            x-axis.
+
+        """
         return mp.quad(lambda x_val: abs(self.func_real(x_val)), self.x_range)

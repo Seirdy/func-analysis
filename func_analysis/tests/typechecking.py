@@ -5,6 +5,8 @@ from typing import Iterable, List
 import mpmath as mp
 import numpy as np
 
+from func_analysis.af_util import Interval
+
 
 def typecheck_multi(item_to_check, *args) -> bool:
     """Check if item_to_check is instance of anything in *args."""
@@ -35,7 +37,7 @@ def typecheck_zcp(points):
     typecheck_iterable(points, mp.mpf)
 
 
-def typecheck_intervals(intervals):
+def typecheck_intervals(intervals: List[Interval]):
     """Typecheck of all functions with return type List[Interval]."""
     assert isinstance(intervals, List)
     for interval in intervals:

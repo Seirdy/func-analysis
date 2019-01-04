@@ -88,7 +88,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         return intervals_found
 
     def _known_zeros(self) -> Optional[Iterator[Real]]:
-        """Try to make self._zeros an iteratorfor _compute_zeros.
+        """Try to make self._zeros an iterator for _compute_zeros.
 
         Returns
         -------
