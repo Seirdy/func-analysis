@@ -192,7 +192,7 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
         """
         return self._func_plotted.plotted_points
 
-    def plot_enough(self, points_to_plot: int = 50):
+    def _plot_enough(self, points_to_plot: int = 50):
         """Make plotted_points meet a minimum length.
 
         Parameters
@@ -227,7 +227,7 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
             True if self.func is symmetric about axis, False otherwise.
 
         """
-        saved_coordinates = np.array(self.plot_enough())
+        saved_coordinates = np.array(self._plot_enough())
         x_vals = saved_coordinates[:, 0]
         y_vals = saved_coordinates[:, 1]
         x_mirror = np.subtract(2 * axis, x_vals)
