@@ -73,9 +73,9 @@ class _AnalyzedFuncBaseFunc(object):
         self._func_plotted = SaveXY(func)
         self._func = mp.memoize(self._func_plotted)
 
-    # pylint: disable=no-self-use
     @singledispatchmethod
-    def func(self, *args) -> None:
+    @staticmethod
+    def func(*args) -> None:
         """Abstract dispatched function to be analyzed.
 
         Parameters
@@ -95,8 +95,6 @@ class _AnalyzedFuncBaseFunc(object):
             "Unsupported type '{0}'. ".format(*bad_types)
             + "Expected type abc.Real or Iterable[abc.Real]."
         )
-
-    # pylint: enable=no-self-use
 
     @func.register
     def func_real(self, x_val: Real) -> Real:
