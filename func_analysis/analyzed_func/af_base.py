@@ -24,17 +24,12 @@ class _AnalyzedFuncBaseInit(object):
     """Initialize AnalyzedFuncBase basic properties."""
 
     def __init__(
-        self,
-        func: Func,
-        x_range: Tuple[Real, Real],
-        derivatives: Dict[int, Func] = None,
+        self, x_range: Tuple[Real, Real], derivatives: Dict[int, Func] = None
     ):
         """Initialize the object.
 
         Parameters
         ----------
-        func
-            The function to analyze.
         x_range
             The interval of x-values. This is treated as an
             open interval except when finding absolute extrema.
@@ -43,8 +38,7 @@ class _AnalyzedFuncBaseInit(object):
             is the nth derivative of func.
 
         """
-        self._func_plotted = SaveXY(func)
-        self._func = mp.memoize(self._func_plotted)
+
         self._x_range = x_range
         self._derivatives = derivatives
 
@@ -64,8 +58,20 @@ class _AnalyzedFuncBaseInit(object):
         return {}
 
 
-class _AnalyzedFuncBaseFunc(_AnalyzedFuncBaseInit):
+class _AnalyzedFuncBaseFunc(object):
     """Initialize single-dispatched AnalyzedFuncBase.func."""
+
+    def __init__(self, func: Func):
+        """Initialize the object.
+
+        Parameters
+        ----------
+        func
+            The function to analyze
+
+        """
+        self._func_plotted = SaveXY(func)
+        self._func = mp.memoize(self._func_plotted)
 
     # pylint: disable=no-self-use
     @singledispatchmethod
@@ -129,12 +135,37 @@ class _AnalyzedFuncBaseFunc(_AnalyzedFuncBaseInit):
         return [self.func_real(x_val) for x_val in x_vals]
 
 
-class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
+class AnalyzedFuncBase(_AnalyzedFuncBaseInit, _AnalyzedFuncBaseFunc):
     """Parent class of all function analysis.
 
     AnalyzedFuncBase performs all possible analysis that does NOT
     require any calculus.
     """
+
+    def __init__(
+        self,
+        func: Func,
+        x_range: Tuple[Real, Real],
+        derivatives: Dict[int, Func] = None,
+    ):
+        """Initialize AnalyzedFuncBase with explicit MRO.
+
+        Parameters
+        ----------
+        func
+            The function to analyze
+        x_range
+            The interval of x-values. This is treated as an
+            open interval except when finding absolute extrema.
+        derivatives
+            A dictionary of derivatives. derivatives[nth]
+            is the nth derivative of func.
+
+        """
+        _AnalyzedFuncBaseInit.__init__(
+            self, x_range=x_range, derivatives=derivatives
+        )
+        _AnalyzedFuncBaseFunc.__init__(self, func=func)
 
     def plot(self, points_to_plot: int) -> np.ndarray:
         """Produce x,y pairs for self.func in range.
@@ -235,7 +266,7 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
         return np.array_equal(np.abs(y_vals), np.abs(y_mirror))
 
 
-class AnalyzedFuncArea(_AnalyzedFuncBaseFunc):
+class AnalyzedFuncArea(_AnalyzedFuncBaseInit, _AnalyzedFuncBaseFunc):
     """Add area across x-range to function analysis."""
 
     @property
