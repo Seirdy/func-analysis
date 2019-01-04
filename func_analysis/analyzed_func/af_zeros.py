@@ -87,6 +87,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
                 intervals_found.append(possible_zero_interval)
         return intervals_found
 
+    @lru_cache(maxsize=1)
     def _known_zeros(self) -> Optional[Iterator[Real]]:
         """Try to make self._zeros an iterator for _compute_zeros.
 
@@ -115,10 +116,17 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
             The next zero for the function.
 
         """
-        starting_pts = self._known_zeros()
         for interval in self._all_zero_intervals():
-            if starting_pts and interval in self._solved_intervals():
-                yield find_one_zero(self.func, interval, next(starting_pts))
+            if self._known_zeros() and interval in self._solved_intervals():
+                # If we made it this far, self._known_zeros will be an iterator
+                # that will not raise a StopIteration exception.
+                yield find_one_zero(
+                    self.func,
+                    interval,
+                    # pylint: disable=stop-iteration-return
+                    next(self._known_zeros())  # type: ignore
+                    # pylint: enable=stop-iteration-return
+                )
             else:
                 yield find_one_zero(self.func, interval)
 
