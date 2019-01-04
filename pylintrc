@@ -9,7 +9,7 @@ disable =
   too-few-public-methods,
   useless-object-inheritance
 max-line-length=79
-score=yes
+score=no
 ignore=.ropeproject
 load-plugins =
   pylint.extensions.docstyle,
