@@ -59,8 +59,8 @@ basepython = python3
 skip_install = true
 deps = pylint
 commands =
-  sh -c "pylint -s n *.py func_analysis/*.py"
-  sh -c "pylint -s n -d redefined-outer-name func_analysis/tests/*.py"
+  sh -c "pylint *.py func_analysis/*.py func_analysis/analyzed_func/*.py"
+  sh -c "pylint -d redefined-outer-name func_analysis/tests/*.py"
 
 [testenv:pydocstyle]
 basepython = python3
