@@ -241,24 +241,8 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
         return np.array_equal(np.abs(y_vals), np.abs(y_mirror))
 
 
-class AnalyzedFuncArea(object):
+class AnalyzedFuncArea(AnalyzedFuncBase):
     """Add area across x-range to function analysis."""
-
-    def __init__(self, x_range, func):
-        """Initialize the object."""
-        self.afbase = AnalyzedFuncBase(x_range, func)
-        self.x_range = self.afbase.x_range
-
-    def func_real(self, x_val):
-        """Define the integrand.
-
-        Parameters
-        ----------
-        x_val
-            The variable of integration.
-
-        """
-        return self.afbase.func_real(x_val)
 
     @property
     def signed_area(self) -> mp.mpf:
