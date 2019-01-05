@@ -73,7 +73,12 @@ class _AnalyzedFuncBaseFunc(object):
         self._func_plotted = SaveXY(func)
         self._func = mp.memoize(self._func_plotted)
 
-    @singledispatchmethod
+    # Before it gets dispatch methods, _AnalyzedFuncBaseFunc.func
+    # doesn't access instance or class state; however, it still needs
+    # to be in the class because register methods func_real and
+    # func_iterable access instance state. Therefore, it makes sense to
+    # violate wemake-python-styleguide's Z433 and make it static.
+    @singledispatchmethod  # noqa: Z433
     @staticmethod
     def func(*args) -> None:
         """Abstract dispatched function to be analyzed.
