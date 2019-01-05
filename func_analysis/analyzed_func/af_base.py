@@ -20,44 +20,6 @@ except ImportError:
     from func_analysis.decorators import singledispatchmethod  # noqa: Z435
 
 
-class _AnalyzedFuncBaseInit(object):
-    """Initialize AnalyzedFuncBase basic properties."""
-
-    def __init__(
-        self, x_range: Tuple[Real, Real], derivatives: Dict[int, Func] = None
-    ):
-        """Initialize the object.
-
-        Parameters
-        ----------
-        x_range
-            The interval of x-values. This is treated as an
-            open interval except when finding absolute extrema.
-        derivatives
-            A dictionary of derivatives. derivatives[nth]
-            is the nth derivative of func.
-
-        """
-
-        self._x_range = x_range
-        self._derivatives = derivatives
-
-    @property
-    def x_range(self) -> Interval:
-        """Make self._x_range an Interval object."""
-        return Interval(*self._x_range)
-
-    @property
-    def derivatives(self) -> Dict[int, Func]:
-        """Return all known derivatives of self.func."""
-        if self._derivatives:
-            return {
-                derivative: mp.memoize(func)
-                for derivative, func in self._derivatives.items()
-            }
-        return {}
-
-
 class _AnalyzedFuncBaseFunc(object):
     """Initialize single-dispatched AnalyzedFuncBase.func."""
 
@@ -70,8 +32,8 @@ class _AnalyzedFuncBaseFunc(object):
             The function to analyze
 
         """
-        self._func_plotted = SaveXY(func)
-        self._func = mp.memoize(self._func_plotted)
+        self.func_plotted = SaveXY(func)
+        self.func_memoized = mp.memoize(self.func_plotted)
 
     # Before it gets dispatch methods, _AnalyzedFuncBaseFunc.func
     # doesn't access instance or class state; however, it still needs
@@ -108,21 +70,21 @@ class _AnalyzedFuncBaseFunc(object):
         Parameters
         ----------
         x_val
-            The independent variable to input to self._func.
+            The independent variable to input to self.func_memoized.
 
         Returns
         -------
         y_val : Real
-            The y_value of self._func when x is x_val.
+            The y_value of self.func_memoized when x is x_val.
 
         """
-        return self._func(x_val)
+        return self.func_memoized(x_val)
 
     @func.register(abc.Iterable)
     def func_iterable(self, x_vals: Iterable[Real]) -> List[Real]:
         """Register an iterable type as the parameter for self.func.
 
-        Map self._func over iterable input.
+        Map self.func_memoized over iterable input.
 
         Parameters
         ----------
@@ -138,7 +100,7 @@ class _AnalyzedFuncBaseFunc(object):
         return [self.func_real(x_val) for x_val in x_vals]
 
 
-class AnalyzedFuncBase(_AnalyzedFuncBaseInit, _AnalyzedFuncBaseFunc):
+class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
     """Parent class of all function analysis.
 
     AnalyzedFuncBase performs all possible analysis that does NOT
@@ -165,10 +127,20 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseInit, _AnalyzedFuncBaseFunc):
             is the nth derivative of func.
 
         """
-        _AnalyzedFuncBaseInit.__init__(
-            self, x_range=x_range, derivatives=derivatives
-        )
-        _AnalyzedFuncBaseFunc.__init__(self, func=func)
+
+        self.x_range = Interval(*x_range)
+        self._derivatives = derivatives
+        super().__init__(func=func)
+
+    @property
+    def derivatives(self) -> Dict[int, Func]:
+        """Return all known derivatives of self.func."""
+        if self._derivatives:
+            return {
+                derivative: mp.memoize(func)
+                for derivative, func in self._derivatives.items()
+            }
+        return {}
 
     def plot(self, points_to_plot: int) -> np.ndarray:
         """Produce x,y pairs for self.func in range.
@@ -224,7 +196,7 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseInit, _AnalyzedFuncBaseFunc):
             A list of x-y coordinate pairs that have been found.
 
         """
-        return self._func_plotted.plotted_points
+        return self.func_plotted.plotted_points
 
     def _plot_enough(self, points_to_plot: int = 50):
         """Make plotted_points meet a minimum length.
@@ -269,8 +241,24 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseInit, _AnalyzedFuncBaseFunc):
         return np.array_equal(np.abs(y_vals), np.abs(y_mirror))
 
 
-class AnalyzedFuncArea(_AnalyzedFuncBaseInit, _AnalyzedFuncBaseFunc):
+class AnalyzedFuncArea(object):
     """Add area across x-range to function analysis."""
+
+    def __init__(self, x_range, func):
+        """Initialize the object."""
+        self.afbase = AnalyzedFuncBase(x_range, func)
+        self.x_range = self.afbase.x_range
+
+    def func_real(self, x_val):
+        """Define the integrand.
+
+        Parameters
+        ----------
+        x_val
+            The variable of integration.
+
+        """
+        return self.afbase.func_real(x_val)
 
     @property
     def signed_area(self) -> mp.mpf:
