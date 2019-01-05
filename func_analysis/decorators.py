@@ -30,7 +30,7 @@ class singledispatchmethod(object):  # NOSONAR  # noqa: N801
         Registers a new implementation for the given *cls* on a
         *generic_method*.
         """
-        return self.dispatcher.register(cls, func=method)  # NOQA
+        return self.dispatcher.register(cls, func=method)
 
     def __get__(self, obj, cls):  # NOQA
         """Retrieve decorated function."""
