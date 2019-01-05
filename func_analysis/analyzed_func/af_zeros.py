@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 from numbers import Real
-from typing import Iterable, Iterator, List, Optional, Tuple
+from typing import Iterable, Iterator, List, Optional, Set, Tuple
 
 import mpmath as mp
 import numpy as np
@@ -65,12 +65,12 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         return zero_intervals_found
 
     @lru_cache(maxsize=1)
-    def _solved_intervals(self) -> List[Interval]:
+    def _solved_intervals(self) -> Set[Interval]:
         """Filter zero intervals containing a zero already known.
 
         Returns
         -------
-        intervals_found : List[Interval]
+        intervals_found : Set[Interval]
             A subset of self._all_zero_intervals() containing zeros
             in self._zeros
 
@@ -85,7 +85,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
                 self._zeros < possible_zero_interval[1],
             ).any():
                 intervals_found.append(possible_zero_interval)
-        return intervals_found
+        return set(intervals_found)
 
     @lru_cache(maxsize=1)
     def _known_zeros(self) -> Optional[Iterator[Real]]:
