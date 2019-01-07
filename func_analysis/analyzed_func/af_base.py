@@ -197,33 +197,3 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
 
         """
         return self.func_plotted.plotted_points
-
-
-class AnalyzedFuncArea(AnalyzedFuncBase):
-    """Add area across x-range to function analysis."""
-
-    @property
-    def signed_area(self) -> mp.mpf:
-        """Calculate the definite integral bounded by x_range.
-
-        Returns
-        -------
-        mp.mpf
-            The signed area of the analyzed function relative to the
-            x-axis.
-
-        """
-        return mp.quad(self.func_real, self.x_range)
-
-    @property
-    def unsigned_area(self) -> mp.mpf:
-        """Calculate the geometric area bounded by x_range.
-
-        Returns
-        -------
-        mp.mpf
-            The unsigned area of the analyzed function relative to the
-            x-axis.
-
-        """
-        return mp.quad(lambda x_val: abs(self.func_real(x_val)), self.x_range)

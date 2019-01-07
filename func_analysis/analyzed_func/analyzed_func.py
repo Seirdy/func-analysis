@@ -4,7 +4,6 @@ from typing import List
 
 import mpmath as mp
 
-from func_analysis.analyzed_func.af_base import AnalyzedFuncArea
 from func_analysis.analyzed_func.af_intervals_extrema import (
     AnalyzedFuncExtrema,
     AnalyzedFuncIntervals,
@@ -26,11 +25,6 @@ class AnalyzedFunc(AnalyzedFuncIntervals, AnalyzedFuncExtrema):
         )
 
     @property
-    def _analyzed_func_area(self) -> AnalyzedFuncArea:
-        """Class composition for AnalyzedFuncArea."""
-        return AnalyzedFuncArea(self.func_real, self.x_range)
-
-    @property
     def signed_area(self) -> mp.mpf:
         """Calculate the definite integral bounded by x_range.
 
@@ -41,7 +35,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals, AnalyzedFuncExtrema):
             x-axis.
 
         """
-        return self._analyzed_func_area.signed_area
+        return mp.quad(self.func_real, self.x_range)
 
     @property
     def unsigned_area(self) -> mp.mpf:
@@ -54,7 +48,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals, AnalyzedFuncExtrema):
             x-axis.
 
         """
-        return self._analyzed_func_area.unsigned_area
+        return mp.quad(lambda x_val: abs(self.func_real(x_val)), self.x_range)
 
     def has_symmetry(self, axis: Real) -> bool:
         """Determine if self.func is symmetric about given axis.
