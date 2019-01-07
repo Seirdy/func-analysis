@@ -198,48 +198,6 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
         """
         return self.func_plotted.plotted_points
 
-    def _plot_enough(self, points_to_plot: int = 50):
-        """Make plotted_points meet a minimum length.
-
-        Parameters
-        ----------
-        points_to_plot
-            The minimum number of points that should be plotted.
-
-        Returns
-        -------
-        plotted_points: List[Coordinate]
-            self.plotted_points after the minimum number of points to
-            plot has been plotted.
-
-        """
-        num_coords_found = len(self.plotted_points)
-        if num_coords_found < points_to_plot:
-            self.plot(points_to_plot - num_coords_found)
-        return self.plotted_points
-
-    def has_symmetry(self, axis: Real) -> bool:
-        """Determine if self.func is symmetric about given axis.
-
-        Parameters
-        ----------
-        axis
-            The number representing the domain of the vertical
-            line about which self.func has symmetry.
-
-        Returns
-        -------
-        bool
-            True if self.func is symmetric about axis, False otherwise.
-
-        """
-        saved_coordinates = np.array(self._plot_enough())
-        x_vals = saved_coordinates[:, 0]
-        y_vals = saved_coordinates[:, 1]
-        x_mirror = np.subtract(2 * axis, x_vals)
-        y_mirror = self.func_iterable(x_mirror)
-        return np.array_equal(np.abs(y_vals), np.abs(y_mirror))
-
 
 class AnalyzedFuncArea(AnalyzedFuncBase):
     """Add area across x-range to function analysis."""

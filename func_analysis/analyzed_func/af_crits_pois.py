@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 from numbers import Real
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional, Sequence
 
-import mpmath as mp
 import numpy as np
 
 from func_analysis.af_util import Func
@@ -16,10 +15,7 @@ class _AnalyzedFuncCrits(AnalyzedFuncZeros):
     """Initialize previously-known critical points."""
 
     def __init__(
-        self,
-        crits_wanted: int = None,
-        crits: Tuple[Real, ...] = None,
-        **kwargs,
+        self, crits_wanted: int = None, crits: Sequence[Real] = None, **kwargs
     ):
         """Initialize the critical points of an analyzed function.
 
@@ -55,7 +51,7 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
     """
 
     def __init__(
-        self, pois_wanted: int = None, pois: Tuple[Real, ...] = None, **kwargs
+        self, pois_wanted: int = None, pois: Sequence[Real] = None, **kwargs
     ):
         """Initialize a CriticalFunction.
 
@@ -164,16 +160,3 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
                 )
             ]
         return self._pois
-
-    @property
-    def vertical_axis_of_symmetry(self) -> List[mp.mpf]:
-        """Find all vertical axes of symmetry.
-
-        Returns
-        -------
-        list_of_axes : List[mpf]
-            A list of x-values for vertical lines about which self.func
-            has symmetry.
-
-        """
-        return [crit for crit in self.crits if self.has_symmetry(axis=crit)]
