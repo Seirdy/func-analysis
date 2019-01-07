@@ -6,7 +6,7 @@ from typing import Callable, Dict, List, Tuple
 
 import numpy as np
 
-from func_analysis.analyzed_func import AnalyzedFunc
+from func_analysis import AnalyzedFunc
 
 
 # pylint: disable=undefined-variable, too-many-ancestors

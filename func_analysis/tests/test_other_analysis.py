@@ -10,7 +10,7 @@ from decimal import Decimal
 
 import numpy as np
 
-from func_analysis.analyzed_func import AnalyzedFunc
+from func_analysis import AnalyzedFunc
 from pytest import raises
 
 
