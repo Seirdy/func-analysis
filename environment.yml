@@ -33,6 +33,8 @@ dependencies:
   - tox
   - twine
   - pip:
+      - cohesion
+      - hacking
       - pydiatra
       - flake8-eradicate
       - flake8-tuple
@@ -48,3 +50,5 @@ dependencies:
       - pytest-black
       - pytest-mypy
       - pytest-docstyle
+      - wemake-python-styleguide
+      - yesqa
