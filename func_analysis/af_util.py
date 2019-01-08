@@ -9,6 +9,9 @@ import numpy as np
 Func = Callable[[Real], Real]
 
 
+# "start" and "stop" are sometimes erroneusly flagged as unresolved
+# references in the class docstring.
+# noinspection PyUnresolvedReferences
 class Interval(NamedTuple):
     """Special NamedTuple for interval between two numbers.
 
@@ -25,8 +28,17 @@ class Interval(NamedTuple):
     stop: Real
 
 
+# "x_val" and "y_val" are sometimes erroneusly flagged as unresolved
+# references in the class docstring.
+# noinspection PyUnresolvedReferences
 class Coordinate(NamedTuple):
-    """Special NamedTuple for x-y coordinate."""
+    """Special NamedTuple for x-y coordinate.
+
+    Attributes
+    ----------
+    x_val : Real
+    y_val : Real
+    """
 
     x_val: Real
     y_val: Real

@@ -37,9 +37,11 @@ class _AnalyzedFuncBaseFunc(object):
 
     # Before it gets dispatch methods, _AnalyzedFuncBaseFunc.func
     # doesn't access instance or class state; however, it still needs
-    # to be in the class because register methods func_real and
-    # func_iterable access instance state. Therefore, it makes sense to
-    # violate wemake-python-styleguide's Z433 and make it static.
+    # to be in the class because registered implementations func_real
+    # and func_iterable access instance state. Therefore, it makes
+    # sense to violate wemake-python-styleguide's Z433 and make it
+    # static.
+    # noinspection PyNestedDecorators
     @singledispatchmethod  # noqa: Z433
     @staticmethod
     def func(*args) -> None:
@@ -134,7 +136,15 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
 
     @property
     def derivatives(self) -> Dict[int, Func]:
-        """Return all known derivatives of self.func."""
+        """Return all known derivatives of self.func.
+
+        Returns
+        -------
+        derivatives : Dict[int, Callable[[Real], Real]
+            A dictionary of known derivatives of the function being
+            analyzed.
+
+        """
         if self._derivatives:
             return {
                 derivative: mp.memoize(func)

@@ -74,14 +74,16 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
             self.pois_wanted = pois_wanted
         self._pois = pois
 
+    # pylint and flake8 don't yet recognize postponed evaluation of
+    # annotations.
     # pylint: disable=undefined-variable
     @property
     def rooted_first_derivative(self) -> AnalyzedFuncSpecialPts:  # noqa: F821
-        """Return FuncZeros object for self.func's 1st derivative.
+        """Analyze self.func's 1st derivative.
 
         Returns
         -------
-        fprime : AnalyzedFuncZeros
+        fprime : AnalyzedFuncSpecialPts
             Analyzed 1st derivative of self.func, complete with zeros,
             crits, and an iterable func.
 
@@ -102,7 +104,7 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
 
     @property
     def rooted_second_derivative(self) -> AnalyzedFuncZeros:
-        """Return FuncZeros object for self.func's 2nd derivative.
+        """Analyze self.func's 1st derivative.
 
         Returns
         -------
@@ -111,6 +113,9 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
             and an iterable func.
 
         """
+        # This doesn't use the obvious approach of
+        # self.rooted_first_derivative.rooted_first_derivative because
+        # doing so could re-calculate known values.
         derivatives_of_fprime2: Optional[Dict[int, Func]] = {
             nth - 2: self.derivatives[nth] for nth in self.derivatives.keys()
         }

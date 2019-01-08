@@ -82,7 +82,7 @@ class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
 
         Returns
         -------
-        intervals_of_concavity : [Interval]
+        intervals_of_concavity : List[Interval]
             All intervals of self.x_range across which self.func is
             concave (opening up).
 
