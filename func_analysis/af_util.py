@@ -38,6 +38,7 @@ class Coordinate(NamedTuple):
     ----------
     x_val : Real
     y_val : Real
+
     """
 
     x_val: Real
