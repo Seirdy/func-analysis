@@ -14,6 +14,7 @@ dependencies:
   - pytest-cov
   - black
   - isort
+  - mypy
   - flake8
   - pep8-naming
   - flake8-blind-except
@@ -32,6 +33,7 @@ dependencies:
   - pytest-flake8
   - tox
   - twine
+  - xenon
   - pip:
       - cohesion
       - hacking
