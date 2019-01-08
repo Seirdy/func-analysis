@@ -20,56 +20,29 @@ except ImportError:
     from func_analysis.decorators import singledispatchmethod  # noqa: Z435
 
 
-class _AnalyzedFuncBaseInit(object):
-    """Initialize AnalyzedFuncBase basic properties."""
+class _AnalyzedFuncBaseFunc(object):
+    """Initialize single-dispatched AnalyzedFuncBase.func."""
 
-    def __init__(
-        self,
-        func: Func,
-        x_range: Tuple[Real, Real],
-        derivatives: Dict[int, Func] = None,
-    ):
+    def __init__(self, func: Func):
         """Initialize the object.
 
         Parameters
         ----------
         func
-            The function to analyze.
-        x_range
-            The interval of x-values. This is treated as an
-            open interval except when finding absolute extrema.
-        derivatives
-            A dictionary of derivatives. derivatives[nth]
-            is the nth derivative of func.
+            The function to analyze
 
         """
-        self._func_plotted = SaveXY(func)
-        self._func = mp.memoize(self._func_plotted)
-        self._x_range = x_range
-        self._derivatives = derivatives
+        self.func_plotted = SaveXY(func)
+        self.func_memoized = mp.memoize(self.func_plotted)
 
-    @property
-    def x_range(self) -> Interval:
-        """Make self._x_range an Interval object."""
-        return Interval(*self._x_range)
-
-    @property
-    def derivatives(self) -> Dict[int, Func]:
-        """Return all known derivatives of self.func."""
-        if self._derivatives:
-            return {
-                derivative: mp.memoize(func)
-                for derivative, func in self._derivatives.items()
-            }
-        return {}
-
-
-class _AnalyzedFuncBaseFunc(_AnalyzedFuncBaseInit):
-    """Initialize single-dispatched AnalyzedFuncBase.func."""
-
-    # pylint: disable=no-self-use
-    @singledispatchmethod
-    def func(self, *args) -> None:
+    # Before it gets dispatch methods, _AnalyzedFuncBaseFunc.func
+    # doesn't access instance or class state; however, it still needs
+    # to be in the class because register methods func_real and
+    # func_iterable access instance state. Therefore, it makes sense to
+    # violate wemake-python-styleguide's Z433 and make it static.
+    @singledispatchmethod  # noqa: Z433
+    @staticmethod
+    def func(*args) -> None:
         """Abstract dispatched function to be analyzed.
 
         Parameters
@@ -90,8 +63,6 @@ class _AnalyzedFuncBaseFunc(_AnalyzedFuncBaseInit):
             + "Expected type abc.Real or Iterable[abc.Real]."
         )
 
-    # pylint: enable=no-self-use
-
     @func.register
     def func_real(self, x_val: Real) -> Real:
         """Define the function to be analyzed.
@@ -99,21 +70,21 @@ class _AnalyzedFuncBaseFunc(_AnalyzedFuncBaseInit):
         Parameters
         ----------
         x_val
-            The independent variable to input to self._func.
+            The independent variable to input to self.func_memoized.
 
         Returns
         -------
         y_val : Real
-            The y_value of self._func when x is x_val.
+            The y_value of self.func_memoized when x is x_val.
 
         """
-        return self._func(x_val)
+        return self.func_memoized(x_val)
 
     @func.register(abc.Iterable)
     def func_iterable(self, x_vals: Iterable[Real]) -> List[Real]:
         """Register an iterable type as the parameter for self.func.
 
-        Map self._func over iterable input.
+        Map self.func_memoized over iterable input.
 
         Parameters
         ----------
@@ -135,6 +106,41 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
     AnalyzedFuncBase performs all possible analysis that does NOT
     require any calculus.
     """
+
+    def __init__(
+        self,
+        func: Func,
+        x_range: Tuple[Real, Real],
+        derivatives: Dict[int, Func] = None,
+    ):
+        """Initialize AnalyzedFuncBase with explicit MRO.
+
+        Parameters
+        ----------
+        func
+            The function to analyze
+        x_range
+            The interval of x-values. This is treated as an
+            open interval except when finding absolute extrema.
+        derivatives
+            A dictionary of derivatives. derivatives[nth]
+            is the nth derivative of func.
+
+        """
+
+        self.x_range = Interval(*x_range)
+        self._derivatives = derivatives
+        super().__init__(func=func)
+
+    @property
+    def derivatives(self) -> Dict[int, Func]:
+        """Return all known derivatives of self.func."""
+        if self._derivatives:
+            return {
+                derivative: mp.memoize(func)
+                for derivative, func in self._derivatives.items()
+            }
+        return {}
 
     def plot(self, points_to_plot: int) -> np.ndarray:
         """Produce x,y pairs for self.func in range.
@@ -190,76 +196,4 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
             A list of x-y coordinate pairs that have been found.
 
         """
-        return self._func_plotted.plotted_points
-
-    def _plot_enough(self, points_to_plot: int = 50):
-        """Make plotted_points meet a minimum length.
-
-        Parameters
-        ----------
-        points_to_plot
-            The minimum number of points that should be plotted.
-
-        Returns
-        -------
-        plotted_points: List[Coordinate]
-            self.plotted_points after the minimum number of points to
-            plot has been plotted.
-
-        """
-        num_coords_found = len(self.plotted_points)
-        if num_coords_found < points_to_plot:
-            self.plot(points_to_plot - num_coords_found)
-        return self.plotted_points
-
-    def has_symmetry(self, axis: Real) -> bool:
-        """Determine if self.func is symmetric about given axis.
-
-        Parameters
-        ----------
-        axis
-            The number representing the domain of the vertical
-            line about which self.func has symmetry.
-
-        Returns
-        -------
-        bool
-            True if self.func is symmetric about axis, False otherwise.
-
-        """
-        saved_coordinates = np.array(self._plot_enough())
-        x_vals = saved_coordinates[:, 0]
-        y_vals = saved_coordinates[:, 1]
-        x_mirror = np.subtract(2 * axis, x_vals)
-        y_mirror = self.func_iterable(x_mirror)
-        return np.array_equal(np.abs(y_vals), np.abs(y_mirror))
-
-
-class AnalyzedFuncArea(_AnalyzedFuncBaseFunc):
-    """Add area across x-range to function analysis."""
-
-    @property
-    def signed_area(self) -> mp.mpf:
-        """Calculate the definite integral bounded by x_range.
-
-        Returns
-        -------
-        mp.mpf
-            The signed area of the analyzed function relative to the
-            x-axis.
-
-        """
-        return mp.quad(self.func_real, self.x_range)
-
-    @property
-    def unsigned_area(self) -> mp.mpf:
-        """Calculate the geometric area bounded by x_range.
-
-        Returns
-        -------
-        mp.mpf
-            The unsigned area of the analyzed function relative to the
-            x-axis.
-
-        """
-        return mp.quad(lambda x_val: abs(self.func_real(x_val)), self.x_range)
+        return self.func_plotted.plotted_points

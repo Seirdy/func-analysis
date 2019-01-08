@@ -10,7 +10,7 @@ from decimal import Decimal
 
 import numpy as np
 
-from func_analysis.analyzed_func import AnalyzedFunc
+from func_analysis import AnalyzedFunc
 from pytest import raises
 
 
@@ -49,7 +49,7 @@ def test_original_func_forbidden(all_analyzed_funcs):
     for analyzed_func in all_analyzed_funcs:
         with raises(RuntimeError) as excinfo:
             # pylint: disable=protected-access
-            analyzed_func._func_plotted.__wrapped__(2)  # noqa: Z441
+            analyzed_func.func_plotted.__wrapped__(2)  # noqa: Z441
             # pylint: enable=protected-access
 
         assert excinfo.typename == "RuntimeError"
