@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Fixtures to represent sample AnalyzedFunc instances."""
 
 from typing import MutableMapping, Tuple

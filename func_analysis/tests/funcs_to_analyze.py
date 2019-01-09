@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """The plain Python functions to pass to AnalyzedFunc."""
 from numbers import Real
 

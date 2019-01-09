@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Extend AnalyzedFuncBase to be able to use zeros."""
 
 from __future__ import annotations

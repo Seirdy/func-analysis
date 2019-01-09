@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Custom types to use throughout function analysis.
 
 These are all used in mypy type annotations, and Interval and

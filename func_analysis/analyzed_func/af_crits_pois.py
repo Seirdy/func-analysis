@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Add critical/inflection points to function analysis."""
 
 from __future__ import annotations

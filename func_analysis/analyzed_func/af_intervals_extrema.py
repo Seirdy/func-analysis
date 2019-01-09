@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """The classes that do the actual function analysis."""
 
 from __future__ import annotations

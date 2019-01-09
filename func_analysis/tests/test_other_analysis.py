@@ -1,4 +1,3 @@
-#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 # pylint: disable=comparison-with-callable
 """Tests func_analysis.

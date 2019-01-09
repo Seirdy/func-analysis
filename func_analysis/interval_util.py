@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Utilities for use in AnalyzedFunc."""
 import itertools as it
 from numbers import Real

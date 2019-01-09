@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Typechecking functions for testing AnalyzedFunc."""
 from numbers import Real
 from typing import Callable, Iterable, Sequence, Union

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Test that AnalyzedFunc handles no special pts being wanted."""
 import numpy as np
 

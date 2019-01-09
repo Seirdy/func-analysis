@@ -1,4 +1,3 @@
-#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 # pylint: disable=comparison-with-callable
 """Tests critical-number-finding algorithms in func_analysis.

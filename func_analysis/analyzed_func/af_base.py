@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Create AnalyzedFuncBase.
 
 AnalyzedFuncBase is a parent class of AnalyzedFunc that contains

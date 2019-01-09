@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Add axes-of-symmetry to function analysis."""
 from numbers import Real
 from typing import List, Sequence

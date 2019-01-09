@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Test AnalyzedFunc's relative and absolute extrema."""
 
 import numpy as np
