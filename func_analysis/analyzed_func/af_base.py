@@ -11,7 +11,7 @@ from typing import Dict, Iterable, List, Tuple
 import mpmath as mp
 import numpy as np
 
-from func_analysis.af_util import Coordinate, Func, Interval
+from func_analysis.custom_types import Coordinate, Func, Interval
 from func_analysis.decorators import SaveXY
 
 try:

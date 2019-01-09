@@ -4,7 +4,7 @@ from functools import singledispatch, update_wrapper
 from numbers import Real
 from typing import Callable, List
 
-from func_analysis.af_util import Coordinate, Func
+from func_analysis.custom_types import Coordinate, Func
 
 
 # noinspection PyPep8Naming,PyUnresolvedReferences

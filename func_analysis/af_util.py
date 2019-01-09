@@ -1,48 +1,12 @@
 """Utilities for use in AnalyzedFunc."""
 import itertools as it
 from numbers import Real
-from typing import Any, Callable, Iterable, Iterator, List, NamedTuple, Tuple
+from typing import Any, Callable, Iterable, Iterator, List, Tuple
 
 import mpmath as mp
 import numpy as np
 
-Func = Callable[[Real], Real]
-
-
-# "start" and "stop" are sometimes erroneusly flagged as unresolved
-# references in the class docstring.
-# noinspection PyUnresolvedReferences
-class Interval(NamedTuple):
-    """Special NamedTuple for interval between two numbers.
-
-    Attributes
-    ----------
-    start : Real
-        The lower/left-bound of the interval
-    stop : Real
-        The upper/right-bound of the interval
-
-    """
-
-    start: Real
-    stop: Real
-
-
-# "x_val" and "y_val" are sometimes erroneusly flagged as unresolved
-# references in the class docstring.
-# noinspection PyUnresolvedReferences
-class Coordinate(NamedTuple):
-    """Special NamedTuple for x-y coordinate.
-
-    Attributes
-    ----------
-    x_val : Real
-    y_val : Real
-
-    """
-
-    x_val: Real
-    y_val: Real
+from func_analysis.custom_types import Interval
 
 
 def zero_intervals(coordinates: np.ndarray) -> List[Interval]:

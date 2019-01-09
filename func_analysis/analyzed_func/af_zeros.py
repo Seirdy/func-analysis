@@ -10,8 +10,9 @@ import mpmath as mp
 import numpy as np
 from scipy.optimize import brentq
 
-from func_analysis.af_util import Func, Interval, zero_intervals
+from func_analysis.af_util import zero_intervals
 from func_analysis.analyzed_func.af_base import AnalyzedFuncBase
+from func_analysis.custom_types import Func, Interval
 
 
 class AnalyzedFuncZeros(AnalyzedFuncBase):

@@ -7,11 +7,11 @@ from numpy import float64
 
 import pytest
 from func_analysis.af_util import (
-    Interval,
     decreasing_intervals,
     increasing_intervals,
     make_intervals,
 )
+from func_analysis.custom_types import Interval
 
 
 @pytest.fixture(scope="module")

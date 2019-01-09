@@ -7,8 +7,8 @@ from typing import Dict, Optional, Sequence
 
 import numpy as np
 
-from func_analysis.af_util import Func
 from func_analysis.analyzed_func.af_zeros import AnalyzedFuncZeros
+from func_analysis.custom_types import Func
 
 
 class _AnalyzedFuncCrits(AnalyzedFuncZeros):

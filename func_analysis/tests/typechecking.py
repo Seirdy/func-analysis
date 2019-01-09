@@ -5,7 +5,7 @@ from typing import Iterable, List
 import mpmath as mp
 import numpy as np
 
-from func_analysis.af_util import Interval
+from func_analysis.custom_types import Interval
 
 
 def typecheck_multi(item_to_check, *args) -> bool:

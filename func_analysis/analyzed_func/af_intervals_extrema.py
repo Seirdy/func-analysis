@@ -8,12 +8,12 @@ from typing import Callable, Iterator, List, Sequence
 import numpy as np
 
 from func_analysis.af_util import (
-    Interval,
     decreasing_intervals,
     increasing_intervals,
     make_intervals,
 )
 from func_analysis.analyzed_func.af_crits_pois import AnalyzedFuncSpecialPts
+from func_analysis.custom_types import Interval
 
 
 class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
