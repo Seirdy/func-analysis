@@ -10,9 +10,9 @@ import mpmath as mp
 import numpy as np
 from scipy.optimize import brentq
 
-from func_analysis.af_util import zero_intervals
 from func_analysis.analyzed_func.af_base import AnalyzedFuncBase
 from func_analysis.custom_types import Func, Interval
+from func_analysis.interval_util import make_intervals, make_pairs
 
 
 class AnalyzedFuncZeros(AnalyzedFuncBase):
@@ -211,3 +211,27 @@ def items_in_range(
         min(interval) <= unfiltered, max(interval) >= unfiltered
     )
     return unfiltered[mask]
+
+
+def zero_intervals(coordinates: np.ndarray) -> List[Interval]:
+    """Find open intervals containing zeros.
+
+    Parameters
+    ----------
+    coordinates
+        An x-y table represented by a 2d ndarray.
+
+    Returns
+    -------
+    List[Interval]
+        A list of x-intervals across which self.func crosses the
+        x-axis
+
+    """
+    x_intervals = make_intervals(coordinates[:, 0])
+    is_positive = make_pairs(np.greater(coordinates[:, 1], 0))
+    return [
+        interval_map[0]
+        for interval_map in zip(x_intervals, is_positive)
+        if interval_map[1][0] is not interval_map[1][1]
+    ]

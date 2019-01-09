@@ -4,36 +4,11 @@ from numbers import Real
 from typing import Any, Callable, Iterable, Iterator, List, Tuple
 
 import mpmath as mp
-import numpy as np
 
 from func_analysis.custom_types import Interval
 
 
-def zero_intervals(coordinates: np.ndarray) -> List[Interval]:
-    """Find open intervals containing zeros.
-
-    Parameters
-    ----------
-    coordinates
-        An x-y table represented by a 2d ndarray.
-
-    Returns
-    -------
-    List[Interval]
-        A list of x-intervals across which self.func crosses the
-        x-axis
-
-    """
-    x_intervals = make_intervals(coordinates[:, 0])
-    is_positive = _make_pairs(np.greater(coordinates[:, 1], 0))
-    return [
-        interval_map[0]
-        for interval_map in zip(x_intervals, is_positive)
-        if interval_map[1][0] is not interval_map[1][1]
-    ]
-
-
-def _make_pairs(points: Iterable[Any]) -> Iterator[Tuple[Any, Any]]:
+def make_pairs(points: Iterable[Any]) -> Iterator[Tuple[Any, Any]]:
     """Pair each point to the next.
 
     Parameters
@@ -69,7 +44,7 @@ def make_intervals(points: Iterable[Real]) -> Iterator[Interval]:
         Pairing of every two points as an Interval, with redundancy.
 
     """
-    for pair in _make_pairs(points):
+    for pair in make_pairs(points):
         yield Interval(*pair)
 
 

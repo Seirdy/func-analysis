@@ -11,7 +11,7 @@ This deliberately uses a function requiring a high degree of precision
 import mpmath as mp
 import numpy as np
 
-from func_analysis.af_util import make_intervals
+from func_analysis.interval_util import make_intervals
 from func_analysis.tests import constants, testing_utils, typechecking
 
 

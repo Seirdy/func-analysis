@@ -6,12 +6,12 @@ from typing import List
 from numpy import float64
 
 import pytest
-from func_analysis.af_util import (
+from func_analysis.custom_types import Interval
+from func_analysis.interval_util import (
     decreasing_intervals,
     increasing_intervals,
     make_intervals,
 )
-from func_analysis.custom_types import Interval
 
 
 @pytest.fixture(scope="module")
@@ -25,7 +25,7 @@ def intervals() -> List:
 def test_make_intervals(intervals):
     """Test many helper functions that FuncIntervals leverages.
 
-    These functions include _make_pairs(), _increasing_intervals(),
+    These functions include make_pairs(), _increasing_intervals(),
     and _decreasing_intervals().
     """
     expected_values = (
