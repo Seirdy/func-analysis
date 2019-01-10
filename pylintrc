@@ -8,6 +8,7 @@ disable =
   invalid-name,
   too-few-public-methods,
   useless-object-inheritance
+enable=useless-suppression
 max-line-length=79
 score=no
 ignore=.ropeproject

@@ -77,7 +77,6 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
 
     # pylint and flake8 don't yet recognize postponed evaluation of
     # annotations.
-    # pylint: disable=undefined-variable
     @property
     def rooted_first_derivative(self) -> AnalyzedFuncSpecialPts:  # noqa: F821
         """Analyze self.func's 1st derivative.
@@ -89,7 +88,6 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
             crits, and an iterable func.
 
         """
-        # pylint: enable=undefined-variable
         derivatives_of_fprime: Optional[Dict[int, Func]] = {
             nth - 1: self.derivatives[nth] for nth in self.derivatives.keys()
         }

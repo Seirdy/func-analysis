@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=comparison-with-callable
 """Tests inflection-point-finding algorithms in func_analysis.
 
 This deliberately uses a function requiring a high degree of precision

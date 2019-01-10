@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=comparison-with-callable
 """Tests interval-finding algorithms in func_analysis.
 
 These include intervals of increase/decrease and concavity/convexity.
