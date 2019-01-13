@@ -9,13 +9,36 @@ and this project adheres to
 
 [Full Changelog]
 
-## Internal
+### Added
 
-- Fix: Add glob pattern `func_analysis/*.py` to tox commands.
+- Added new analysis: signed area and unsigned area of the function across the 
+  x-range.
+
+### Fixed
+
+- Handle multiple bad args passed to AnalyzedFunc.func.
+- interval-finding no longer raises a `StopIteration` exception.
+
+### Changed
+
+- Put all all pairing logic in the functions `make_pairs` and 
+`make_intervals` in the module `func_analysis.interval_util`, and make 
+  both functions generators.
+- Improve class cohesion for `AnalyzedFunc` and its parents.
+  - Favor composition over inheritance in some cases.
+  - AnalyzedFunc now has 8 parents (down from 10).
+  - Cohesion still sucks; still have a long way to go!
+
+### Internal
+
+- Started using [LGTM](https://lgtm.com/projects/g/Seirdy/func-analysis/) for
+  code quality checks and added a config file (lgtm.yml) to the repo.
 - Move once-used functions from `util.py` to the submodules that use them.
-- Rename `util.py` to `af_util.py`.
-- Fix divide-by-0 error in
-  `test_other_analysis.test_zeroth_derivative_is_itself`.
+- Replace `util.py` with `custom_types.py` and `interval_util.py`.
+- Testing improvements:
+  - Fix divide-by-0 error in
+    `test_other_analysis.test_zeroth_derivative_is_itself`.
+  - Fix some static analyzers missing some directories.
 
 [Full Changelog]:
 https://gitlab.com/Seirdy/func-analysis/compare/0.2.0...master
