@@ -1,0 +1,26 @@
+extraction:
+  python:
+    python_setup:
+      version: 3
+queries:
+  - include: py/file-not-closed
+  - include: py/uninitialized-local-variable
+  - include: py/mixed-tuple-returns
+  - include: py/import-of-mutable-attribute
+  - include: py/print-during-import
+  - include: py/old-style-octal-literal
+  - include: py/undefined-placeholder-variable
+  - include: py/mostly-similar-file
+  - include: py/mostly-duplicate-file
+  - include: py/mixed-returns
+  - include: py/overwritten-inherited-attribute
+  - include: py/exit-from-finally
+  - include: py/unused-global-variable
+  - include: py/not-named-cls
+  - include: py/unnecessary-lambda
+  - include: py/duplicate-function
+  - include: py/commented-out-code
+  - include: py/empty-except
+  - include: py/mostly-duplicate-class
+  - include: py/ineffectual-statement
+  - include: py/overly-complex-delete
