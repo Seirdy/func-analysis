@@ -4,27 +4,10 @@
 [![coverage report]](https://gitlab.com/Seirdy/func-analysis/commits/master)
 [![Code Climate]](https://codeclimate.com/github/Seirdy/func-analysis)
 [![LGTM]](https://lgtm.com/projects/g/Seirdy/func-analysis/)
-[![License]](https://gitlab.com/Seirdy/func-analysis/blob/master/LICENSE)
-[![PYPI latest release]](https://pypi.org/project/func-analysis/)
-[![Python version]](https://pypi.org/project/func-analysis/)
-[![Code style: black]](https://github.com/ambv/black)
-
-[pipeline status]:
-https://gitlab.com/Seirdy/func-analysis/badges/master/pipeline.svg
-[coverage report]:
-https://gitlab.com/Seirdy/func-analysis/badges/master/coverage.svg
-[Code Climate]:
-https://codeclimate.com/github/Seirdy/func-analysis/badges/gpa.svg
-[LGTM]:
-https://img.shields.io/lgtm/grade/python/g/Seirdy/func-analysis.svg?logo=lgtm&logoWidth=18
-[License]:
-https://img.shields.io/pypi/l/func-analysis.svg
-[PYPI Latest Release]:
-https://img.shields.io/pypi/v/func-analysis.svg
-[Python version]:
-https://img.shields.io/pypi/pyversions/func-analysis.svg
-[Code style: black]:
-https://img.shields.io/badge/code%20style-black-000000.svg
+[![license]](https://gitlab.com/Seirdy/func-analysis/blob/master/LICENSE)
+[![python version]](https://pypi.org/project/func-analysis/)
+[![latest release]](https://pypi.org/project/func-analysis/)
+[![code style: black]](https://github.com/ambv/black)
 
 This library uses concepts typically taught in an introductory Calculus
 class to describe properties of continuous, differentiable, single-variable
@@ -59,3 +42,20 @@ Any of the above data can be calculated by an instance of `AnalyzedFunc`.
 
 This program is licensed under the GNU Affero General Public License v3 or
 later.
+
+[pipeline status]:
+https://gitlab.com/Seirdy/func-analysis/badges/master/pipeline.svg
+[coverage report]:
+https://gitlab.com/Seirdy/func-analysis/badges/master/coverage.svg
+[Code Climate]:
+https://codeclimate.com/github/Seirdy/func-analysis/badges/gpa.svg
+[LGTM]:
+https://img.shields.io/lgtm/alerts/g/Seirdy/func-analysis.svg?logo=lgtm&logoWidth=18
+[license]:
+https://img.shields.io/pypi/l/func-analysis.svg
+[python version]:
+https://img.shields.io/pypi/pyversions/func-analysis.svg?logo=python
+[latest release]:
+https://img.shields.io/pypi/v/func-analysis.svg
+[code style: black]:
+https://img.shields.io/badge/code%20style-black-000000.svg
