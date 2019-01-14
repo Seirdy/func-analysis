@@ -9,7 +9,7 @@ from typing import Callable, Iterator, List, MutableSequence, Sequence
 import numpy as np
 
 from func_analysis.analyzed_func.af_crits_pois import AnalyzedFuncSpecialPts
-from func_analysis.custom_types import Interval
+from func_analysis.custom_types import Coordinate, Interval
 from func_analysis.interval_util import (
     decreasing_intervals,
     increasing_intervals,
@@ -155,7 +155,7 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
         return self.crits[mask]
 
     @property
-    def absolute_maximum(self) -> np.ndarray:
+    def absolute_maximum(self) -> Coordinate:
         """Find the absolute maximum of self.simple_func.
 
         Find the maximum of self.relative_maxima and the bounds of
@@ -171,7 +171,7 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
         return self._absolute_extrema(self.relative_maxima, np.argmax)
 
     @property
-    def absolute_minimum(self) -> np.ndarray:
+    def absolute_minimum(self) -> Coordinate:
         """Find the absolute minimum of self.simple_func.
 
         Find the minimum of self.relative_minima and the bounds of
@@ -190,7 +190,7 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
         self,
         points: Sequence,
         extrema_finder: Callable[[np.ndarray], np.ndarray],
-    ):
+    ) -> Coordinate:
         """Generalized absolute-extrema finder.
 
         Parameters
@@ -210,4 +210,4 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
         """
         x_vals: np.ndarray = np.concatenate((points, self.x_range))
         pairs: np.ndarray = np.stack((x_vals, self.func(x_vals)), axis=-1)
-        return pairs[extrema_finder(pairs[:, 1])]
+        return Coordinate(*pairs[extrema_finder(pairs[:, 1])])
