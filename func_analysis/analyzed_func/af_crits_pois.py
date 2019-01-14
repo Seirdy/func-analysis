@@ -23,7 +23,7 @@ class _AnalyzedFuncCrits(AnalyzedFuncZeros):
         Parameters
         ----------
         crits_wanted
-            Real of critical nums to calculate.
+            Number of critical nums to calculate.
         crits
             A list of critical numbers already known, used
             as starting points for more precise calculation.
@@ -46,9 +46,10 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
     properties are not provided, they will be calculated and saved.
 
     The function properties included:
-        - generator of derivatives
+        - derivatives
         - zeros
-        - critical Real
+        - critical points
+        - inflection points.
     """
 
     def __init__(
@@ -134,7 +135,7 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
 
         Returns
         -------
-        np.ndarray
+        crits : ndarray of Reals
             An array of precise critical points for self.func.
 
         """
@@ -150,7 +151,7 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
 
         Returns
         -------
-        np.ndarray
+        pois : ndarray of Reals.
             An array of precise points of inflection for self.func.
 
         """

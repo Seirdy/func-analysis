@@ -21,6 +21,8 @@ class PyTest(test):
         """Finalize pytest options."""
         test.finalize_options(self)
         self.test_args: list = []
+        # defining attributes outside init is okay in
+        # test.finalize_options().
         # pylint: disable = attribute-defined-outside-init
         self.test_suite = True
         # pylint: enable = attribute-defined-outside-init
@@ -39,7 +41,7 @@ def get_long_description() -> str:
     Returns
     -------
     long_description : str
-        The text of README.md
+        The text of README.md.
 
     """
     with PROJECT_ROOT.joinpath("README.md").open() as file_contents:
@@ -52,7 +54,13 @@ def get_version() -> str:
     Returns
     -------
     version : str
-        The version found in func_analysis/__init__.py
+        The version found in func_analysis/__init__.py.
+
+    Raises
+    ------
+    RuntimeError
+        If the string "__version__" cannot be found in the file
+        `func_analysis/__init__.py`.
 
     """
     version_path = PROJECT_ROOT.joinpath("func_analysis", "__init__.py")

@@ -62,7 +62,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals, AnalyzedFuncExtrema):
 
         Returns
         -------
-        bool
+        has_symmetry : bool
             True if self.func is symmetric about axis, False otherwise.
 
         """
@@ -74,7 +74,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals, AnalyzedFuncExtrema):
 
         Returns
         -------
-        list_of_axes : List[mpf]
+        list_of_axes : List[Real]
             A list of x-values for vertical lines about which self.func
             has symmetry.
 

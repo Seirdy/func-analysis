@@ -138,7 +138,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
 
         Returns
         -------
-        np.ndarray
+        zeros : ndarray
             An array of precise zeros for self.func.
 
         """
@@ -151,7 +151,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
 
 def find_one_zero(
     func: Func, x_range: Tuple[Real, Real], starting_point: Real = None
-) -> mp.mpf:
+) -> Real:
     """Find the zero of a function in a given interval.
 
     mpmath's zero-finding algorithms require a starting "guess" point.
@@ -174,7 +174,7 @@ def find_one_zero(
 
     Returns
     -------
-    mp.mpf
+    zero : Real
         A single very precise zero.
 
     """
@@ -197,15 +197,15 @@ def items_in_range(
 
     Parameters
     ----------
-    unfiltered
+    unfiltered : ndarray of Reals
         The 1D array to filter
     interval
         The closed interval of acceptable values.
 
     Returns
     -------
-    filtered_items : np.ndarray
-        A subset of items that includes only values in interval
+    filtered_items : ndarray
+        A subset of `unfiltered` that includes only values in interval
 
     """
     mask = np.logical_and(

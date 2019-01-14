@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from numbers import Real
-from typing import Callable, Iterator, List, Sequence
+from typing import Callable, Iterator, List, MutableSequence, Sequence
 
 import numpy as np
 
@@ -25,7 +25,9 @@ class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
         - Intervals of concavity/convexity.
     """
 
-    def _construct_intervals(self, points: List[Real]) -> Iterator[Interval]:
+    def _construct_intervals(
+        self, points: MutableSequence[Real]
+    ) -> Iterator[Interval]:
         """Construct intervals to filter in interval analysis.
 
         All interval analysis uses intervals bounded by values taken
@@ -125,7 +127,7 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
 
         Returns
         -------
-        np.ndarray
+        relative_maxima : ndarray of Reals
             Array of precise relative maxima of self.func appearing in
             x_range.
 
@@ -143,7 +145,7 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
 
         Returns
         -------
-        np.ndarray
+        relative_minima : ndarray of Coords
             Array of precise relative minima of self.func appearing in
             x_range.
 
@@ -161,7 +163,7 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
 
         Returns
         -------
-        abs_max : np.ndarray
+        abs_max : Coordinate
             The x-y coordinate of the absolute maximum of self.func in
             the form [x, y].
 
@@ -177,14 +179,18 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
 
         Returns
         -------
-        abs_min : ndarray
+        abs_min : Coordinate
             The x-y coordinate of the absolute minimum of self.func in
             the form [x, y].
 
         """
         return self._absolute_extrema(self.relative_minima, np.argmin)
 
-    def _absolute_extrema(self, points: Sequence, extrema_finder: Callable):
+    def _absolute_extrema(
+        self,
+        points: Sequence,
+        extrema_finder: Callable[[np.ndarray], np.ndarray],
+    ):
         """Generalized absolute-extrema finder.
 
         Parameters
@@ -198,10 +204,10 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
 
         Returns
         -------
-        np.ndarray
+        absolute_extrema : Coordinate
             The x-y coordinates of the absolute extrema.
 
         """
-        x_vals: List[Real] = np.concatenate((points, self.x_range))
+        x_vals: np.ndarray = np.concatenate((points, self.x_range))
         pairs: np.ndarray = np.stack((x_vals, self.func(x_vals)), axis=-1)
         return pairs[extrema_finder(pairs[:, 1])]

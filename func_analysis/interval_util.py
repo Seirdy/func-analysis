@@ -2,11 +2,9 @@
 """Utilities for use in AnalyzedFunc."""
 import itertools as it
 from numbers import Real
-from typing import Any, Callable, Iterable, Iterator, List, Tuple
+from typing import Any, Iterable, Iterator, List, Tuple
 
-import mpmath as mp
-
-from func_analysis.custom_types import Interval
+from func_analysis.custom_types import Func, Interval
 
 
 def make_pairs(points: Iterable[Any]) -> Iterator[Tuple[Any, Any]]:
@@ -50,7 +48,7 @@ def make_intervals(points: Iterable[Real]) -> Iterator[Interval]:
 
 
 def increasing_intervals(
-    func: Callable[[Real], Real], intervals: Iterable[Interval]
+    func: Func, intervals: Iterable[Interval]
 ) -> List[Interval]:
     """Return intervals across which func is decreasing.
 
@@ -76,7 +74,7 @@ def increasing_intervals(
 
 
 def decreasing_intervals(
-    func: Callable[[mp.mpf], mp.mpf], intervals: Iterable[Interval]
+    func: Func, intervals: Iterable[Interval]
 ) -> List[Interval]:
     """Return intervals across which func is decreasing.
 

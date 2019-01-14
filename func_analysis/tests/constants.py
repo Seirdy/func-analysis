@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Constants to be used in other tests."""
+"""Constants to be used in other tests.
+
+This module contains "expected" values to be compared with "acutal"
+values.
+"""
 
 EPSILON0 = 1e-20
 EPSILON1 = 3.05e-15

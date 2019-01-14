@@ -65,7 +65,7 @@ class SaveXY(object):
     ----------
     func: Callable[[Real], mp.mpf]
         The function to decorate and save values for.
-    plotted_points: List[Tuple[mp.mpf, mp.mpf]]
+    plotted_points: List[Coordinate]
         The saved coordinate pairs.
 
     """

@@ -25,7 +25,7 @@ class _AnalyzedFuncBaseFunc(object):
     """Initialize single-dispatched AnalyzedFuncBase.func."""
 
     def __init__(self, func: Func):
-        """Initialize the object.
+        """Initialize a memoized function that saves its computations.
 
         Parameters
         ----------
@@ -163,7 +163,7 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
 
         Returns
         -------
-        xy_table : np.ndarray
+        xy_table : ndarray of ints
             A 2d numpy array containing a column of x-values (see
             Args: x_vals) and computed y-values.
 
@@ -186,7 +186,7 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
 
         Returns
         -------
-        Func
+        nth_derivative : Func
             The nth-derivative of the function.
 
         """
@@ -203,7 +203,7 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
 
         Returns
         -------
-        List[Coordinate]
+        plotted_points : List[Coordinate]
             A list of x-y coordinate pairs that have been found.
 
         """
