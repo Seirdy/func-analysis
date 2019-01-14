@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Add axes-of-symmetry to function analysis."""
+import random
 from numbers import Real
 from typing import List, Sequence
 
@@ -31,16 +32,19 @@ class AnalyzedFuncSymmetry(object):
         Returns
         -------
         plotted_points: List[Coordinate]
-            self.plotted_points after the minimum number of points to
-            plot has been plotted.
+            Random sample of self.plotted_points with size specified by
+            points_to_plot.
 
         """
+        # Plot at least points_to_plot points.
         num_coords_found = len(self.analyzed_func_special_pts.plotted_points)
         if num_coords_found < points_to_plot:
             self.analyzed_func_special_pts.plot(
                 points_to_plot - num_coords_found
             )
-        return self.analyzed_func_special_pts.plotted_points
+        # Don't return more points than necessary.
+        all_points = self.analyzed_func_special_pts.plotted_points
+        return random.choices(population=all_points, k=points_to_plot)
 
     def has_symmetry(self, axis: Real) -> bool:
         """Determine if self.func is symmetric about given axis.
