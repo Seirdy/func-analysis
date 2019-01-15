@@ -25,7 +25,7 @@ Required data include:
 - The function to be analyzed
 
 Special points include zeros, critical numbers, extrema, and points of
-inflection. Calculating these is possible when given the number of points
+inflection. It's possible to calculate these when given the number of points
 wanted.
 
 Optional data can be provided to improve precision and performance. Such

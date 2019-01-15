@@ -11,18 +11,18 @@ and this project adheres to
 
 ### Added
 
-- Added new analysis: signed area and unsigned area of the function across the 
+- Added new analysis: signed area and unsigned area of the function across the
   x-range.
 
 ### Fixed
 
 - Handle multiple bad args passed to AnalyzedFunc.func.
-- interval-finding no longer raises a `StopIteration` exception.
+- Interval-finding no longer raises a `StopIteration` exception.
 
 ### Changed
 
-- Put all all pairing logic in the functions `make_pairs` and 
-`make_intervals` in the module `func_analysis.interval_util`, and make 
+- Put all pairing logic in the functions `make_pairs` and
+  `make_intervals` in the module `func_analysis.interval_util`, and make
   both functions generators.
 - Improve class cohesion for `AnalyzedFunc` and its parents.
   - Favor composition over inheritance in some cases.
@@ -59,7 +59,7 @@ in `__init__()` methods now resides in properties.
 
 ### Fixed
 
-- `zeros_wanted`,`crits_wanted`, and `pois_wanted` cannot be negative anymore.
+- `zeros_wanted`, `crits_wanted`, and `pois_wanted` cannot be negative anymore.
 
 ### Added
 
@@ -69,7 +69,7 @@ in `__init__()` methods now resides in properties.
 ### Changed
 
 - In `AnalyzedFunc.__init__`, rename parameters `known_zeros`, `known_crits`,
-  and `known_pois` to `zeros`, `crits`, and `pois`. 
+  and `known_pois` to `zeros`, `crits`, and `pois`.
 - Use more `@property` decorators.
   - Convert some attrs to properties in `AnalyzedFunc`:
     - `x_range`
