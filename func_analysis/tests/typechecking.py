@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """Utility functions to typecheck function analysis."""
+from numbers import Real
+from typing import Iterable, Sequence
 
-from typing import Iterable, List
-
-import mpmath as mp
 import numpy as np
 
 from func_analysis.custom_types import Interval
@@ -18,7 +17,7 @@ def typecheck_multi(item_to_check, *args) -> bool:
 
 def typecheck_number(number_to_check):
     """Assert that item is a Real."""
-    assert typecheck_multi(number_to_check, mp.mpf, float, np.float64, int)
+    assert typecheck_multi(number_to_check, Real, float, np.float64, int)
 
 
 def typecheck_iterable(items_to_check: Iterable, *args):
@@ -34,14 +33,14 @@ def typecheck_zcp(points):
     Such functions include zeros(), crits, pois(),
     relative_maxima(), relative_minima().
     """
-    assert isinstance(points, np.ndarray)
-    typecheck_iterable(points, mp.mpf)
+    assert typecheck_multi(points, np.ndarray, Sequence)
+    typecheck_iterable(points, Real)
 
 
-def typecheck_intervals(intervals: List[Interval]):
-    """Typecheck of all functions with return type List[Interval]."""
-    assert isinstance(intervals, List)
+def typecheck_intervals(intervals: Sequence[Interval]):
+    """Typecheck of all functions that return a sequence of intervals."""
+    assert isinstance(intervals, Sequence)
     for interval in intervals:
-        assert isinstance(interval, tuple)
-        typecheck_number(interval[0])
-        typecheck_number(interval[1])
+        assert isinstance(interval, Interval)
+        typecheck_number(interval.start)
+        typecheck_number(interval.stop)
