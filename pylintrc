@@ -21,4 +21,4 @@ load-plugins =
   pylint.extensions.redefined_variable_type
 
 [DESIGN]
-max-parents = 8
+max-parents = 7

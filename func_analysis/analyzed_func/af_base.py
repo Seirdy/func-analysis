@@ -115,6 +115,7 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
         func: Func,
         x_range: Tuple[Real, Real],
         derivatives: Dict[int, Func] = None,
+        **_,
     ):
         """Initialize AnalyzedFuncBase with explicit MRO.
 
@@ -128,6 +129,9 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
         derivatives
             A dictionary of derivatives. derivatives[nth]
             is the nth derivative of func.
+        _
+            Unused arguments intended for other AnalyzedFuncBase
+            ancestors.
 
         """
 

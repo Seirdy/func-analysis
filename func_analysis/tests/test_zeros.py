@@ -23,7 +23,7 @@ def test_trig_func_has_correct_zeros(analyzed_trig_func):
     testing_utils.assert_output_lessthan(
         func=analyzed_trig_func.func,
         x_vals=analyzed_trig_func.zeros,
-        max_y=3.5692e-19,
+        max_y=2.14e-13,
     )
 
 

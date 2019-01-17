@@ -8,11 +8,12 @@ from typing import Dict, Optional, Sequence
 
 import numpy as np
 
+from func_analysis.analyzed_func.af_base import AnalyzedFuncBase
 from func_analysis.analyzed_func.af_zeros import AnalyzedFuncZeros
 from func_analysis.custom_types import Func
 
 
-class _AnalyzedFuncCrits(AnalyzedFuncZeros):
+class _AnalyzedFuncCrits(AnalyzedFuncBase):
     """Initialize previously-known critical points."""
 
     def __init__(
@@ -32,11 +33,25 @@ class _AnalyzedFuncCrits(AnalyzedFuncZeros):
 
         """
         super().__init__(**kwargs)
+        self.af_zeros = AnalyzedFuncZeros(**kwargs)
+        self.zeros_wanted = self.af_zeros.zeros_wanted
         if not crits_wanted:
             self.crits_wanted = max(self.zeros_wanted - 1, 0)
         else:
             self.crits_wanted = crits_wanted
         self._crits = crits
+
+    @property
+    def zeros(self) -> np.ndarray:
+        """List all zeros wanted in x_range.
+
+        Returns
+        -------
+        zeros : ndarray
+            An array of precise zeros for self.func.
+
+        """
+        return self.af_zeros.zeros
 
 
 class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
@@ -90,14 +105,15 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
 
         """
         derivatives_of_fprime: Optional[Dict[int, Func]] = {
-            nth - 1: self.derivatives[nth] for nth in self.derivatives.keys()
+            nth - 1: self.af_zeros.derivatives[nth]
+            for nth in self.af_zeros.derivatives.keys()
         }
         return AnalyzedFuncSpecialPts(
-            func=self.nth_derivative(1),
+            func=self.af_zeros.nth_derivative(1),
             zeros_wanted=max(self.crits_wanted, 1),
             zeros=self._crits,
             derivatives=derivatives_of_fprime,
-            x_range=self.x_range,
+            x_range=self.af_zeros.x_range,
             crits_wanted=self.pois_wanted,
             crits=self._pois,
         )
@@ -117,14 +133,15 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
         # self.rooted_first_derivative.rooted_first_derivative because
         # doing so could re-calculate known values.
         derivatives_of_fprime2: Optional[Dict[int, Func]] = {
-            nth - 2: self.derivatives[nth] for nth in self.derivatives.keys()
+            nth - 2: self.af_zeros.derivatives[nth]
+            for nth in self.af_zeros.derivatives.keys()
         }
         return AnalyzedFuncZeros(
-            func=self.nth_derivative(2),
+            func=self.af_zeros.nth_derivative(2),
             zeros_wanted=max(self.pois_wanted, 1),
             zeros=self._pois,
             derivatives=derivatives_of_fprime2,
-            x_range=self.x_range,
+            x_range=self.af_zeros.x_range,
         )
 
     @property
