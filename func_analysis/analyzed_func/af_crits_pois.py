@@ -35,23 +35,12 @@ class _AnalyzedFuncCrits(AnalyzedFuncBase):
         super().__init__(**kwargs)
         self.af_zeros = AnalyzedFuncZeros(**kwargs)
         self.zeros_wanted = self.af_zeros.zeros_wanted
+        self.zeros = self.af_zeros.zeros
         if not crits_wanted:
             self.crits_wanted = max(self.zeros_wanted - 1, 0)
         else:
             self.crits_wanted = crits_wanted
         self._crits = crits
-
-    @property
-    def zeros(self) -> np.ndarray:
-        """List all zeros wanted in x_range.
-
-        Returns
-        -------
-        zeros : ndarray
-            An array of precise zeros for self.func.
-
-        """
-        return self.af_zeros.zeros
 
 
 class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
