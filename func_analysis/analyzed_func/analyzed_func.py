@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """The classes that do the actual function analysis."""
-from numbers import Real
 from typing import List
 
 import mpmath as mp
@@ -51,7 +50,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals, AnalyzedFuncExtrema):
         """
         return mp.quad(lambda x_val: abs(self.func_real(x_val)), self.x_range)
 
-    def has_symmetry(self, axis: Real) -> bool:
+    def has_symmetry(self, axis: int) -> bool:
         """Determine if self.func is symmetric about given axis.
 
         Parameters
