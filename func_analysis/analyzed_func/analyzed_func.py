@@ -21,7 +21,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals, AnalyzedFuncExtrema):
         return AnalyzedFuncSymmetry(
             func=self.func_real,
             x_range=self.x_range,
-            crits_wanted=self.crits_wanted,
+            crits_wanted=self.af_crits.crits_wanted,
             crits=self._crits,
         )
 

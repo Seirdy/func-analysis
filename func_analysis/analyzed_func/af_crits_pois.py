@@ -13,7 +13,7 @@ from func_analysis.analyzed_func.af_zeros import AnalyzedFuncZeros
 from func_analysis.custom_types import Func
 
 
-class _AnalyzedFuncCrits(AnalyzedFuncBase):
+class _AnalyzedFuncCrits(object):
     """Initialize previously-known critical points."""
 
     def __init__(
@@ -32,18 +32,15 @@ class _AnalyzedFuncCrits(AnalyzedFuncBase):
             Keyword arguments to pass to AnalyzedFuncZeros.
 
         """
-        super().__init__(**kwargs)
         self.af_zeros = AnalyzedFuncZeros(**kwargs)
-        self.zeros_wanted = self.af_zeros.zeros_wanted
-        self.zeros = self.af_zeros.zeros
         if not crits_wanted:
-            self.crits_wanted = max(self.zeros_wanted - 1, 0)
+            self.crits_wanted = max(self.af_zeros.zeros_wanted - 1, 0)
         else:
             self.crits_wanted = crits_wanted
-        self._crits = crits
+        self.crits = crits
 
 
-class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
+class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
     """A RootedFunction with additional properties (critical Real).
 
     This object includes a function and its properties. If those
@@ -74,14 +71,28 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
 
         """
         super().__init__(**kwargs)
+        self.af_crits = _AnalyzedFuncCrits(**kwargs)
+        self._crits = self.af_crits.crits
         if pois_wanted is None:
-            self.pois_wanted = max(self.crits_wanted - 1, 0)
+            self.pois_wanted = max(self.af_crits.crits_wanted - 1, 0)
         else:
             self.pois_wanted = pois_wanted
         self._pois = pois
 
     # pylint and flake8 don't yet recognize postponed evaluation of
     # annotations.
+    @property
+    def zeros(self):
+        """List all zeros wanted in x_range.
+
+        Returns
+        -------
+        zeros : ndarray
+            An array of precise zeros for self.func.
+
+        """
+        return self.af_crits.af_zeros.zeros
+
     @property
     def rooted_first_derivative(self) -> AnalyzedFuncSpecialPts:  # noqa: F821
         """Analyze self.func's 1st derivative.
@@ -94,15 +105,15 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
 
         """
         derivatives_of_fprime: Dict[int, Func] = {
-            nth - 1: self.af_zeros.derivatives[nth]
-            for nth in self.af_zeros.derivatives.keys()
+            nth - 1: self.af_crits.af_zeros.derivatives[nth]
+            for nth in self.af_crits.af_zeros.derivatives.keys()
         }
         return AnalyzedFuncSpecialPts(
-            func=self.af_zeros.nth_derivative(1),
-            zeros_wanted=max(self.crits_wanted, 1),
+            func=self.af_crits.af_zeros.nth_derivative(1),
+            zeros_wanted=max(self.af_crits.crits_wanted, 1),
             zeros=self._crits,
             derivatives=derivatives_of_fprime,
-            x_range=self.af_zeros.x_range,
+            x_range=self.af_crits.af_zeros.x_range,
             crits_wanted=self.pois_wanted,
             crits=self._pois,
         )
@@ -122,15 +133,15 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
         # self.rooted_first_derivative.rooted_first_derivative because
         # doing so could re-calculate known values.
         derivatives_of_fprime2: Dict[int, Func] = {
-            nth - 2: self.af_zeros.derivatives[nth]
-            for nth in self.af_zeros.derivatives.keys()
+            nth - 2: self.af_crits.af_zeros.derivatives[nth]
+            for nth in self.af_crits.af_zeros.derivatives.keys()
         }
         return AnalyzedFuncZeros(
-            func=self.af_zeros.nth_derivative(2),
+            func=self.af_crits.af_zeros.nth_derivative(2),
             zeros_wanted=max(self.pois_wanted, 1),
             zeros=self._pois,
             derivatives=derivatives_of_fprime2,
-            x_range=self.af_zeros.x_range,
+            x_range=self.af_crits.af_zeros.x_range,
         )
 
     @property
@@ -145,9 +156,12 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
             An array of precise critical points for self.func.
 
         """
-        if not self.crits_wanted:
+        if not self.af_crits.crits_wanted:
             return np.array([])
-        if self._crits is None or len(self._crits) < self.crits_wanted:
+        if (
+            self._crits is None
+            or len(self._crits) < self.af_crits.crits_wanted
+        ):
             self._crits = self.rooted_first_derivative.zeros
         return self._crits
 
