@@ -77,17 +77,16 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
             in self._zeros
 
         """
-        # There are none if there are no zeros already known.
-        intervals_found: List[Interval] = []
-        for possible_zero_interval in self._all_zero_intervals():
-            # if any zeros are found that fit in this interval,
-            # append this interval.
+        return {
+            possible_zero_interval
+            for possible_zero_interval in self._all_zero_intervals()
+            # if any zeros are found that fit in an interval,
+            # include the interval.
             if np.logical_and(
                 self._zeros > possible_zero_interval[0],
                 self._zeros < possible_zero_interval[1],
-            ).any():
-                intervals_found.append(possible_zero_interval)
-        return set(intervals_found)
+            ).any()
+        }
 
     @lru_cache(maxsize=1)
     def _known_zeros(self) -> Optional[Iterator[Real]]:
