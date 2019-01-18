@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from numbers import Real
-from typing import Dict, Optional, Sequence
+from typing import Dict, Sequence
 
 import numpy as np
 
@@ -93,7 +93,7 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
             crits, and an iterable func.
 
         """
-        derivatives_of_fprime: Optional[Dict[int, Func]] = {
+        derivatives_of_fprime: Dict[int, Func] = {
             nth - 1: self.af_zeros.derivatives[nth]
             for nth in self.af_zeros.derivatives.keys()
         }
@@ -121,7 +121,7 @@ class AnalyzedFuncSpecialPts(_AnalyzedFuncCrits):
         # This doesn't use the obvious approach of
         # self.rooted_first_derivative.rooted_first_derivative because
         # doing so could re-calculate known values.
-        derivatives_of_fprime2: Optional[Dict[int, Func]] = {
+        derivatives_of_fprime2: Dict[int, Func] = {
             nth - 2: self.af_zeros.derivatives[nth]
             for nth in self.af_zeros.derivatives.keys()
         }
