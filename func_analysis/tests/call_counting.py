@@ -66,8 +66,7 @@ class ForbidCalling(object):
 
         """
         raise RuntimeError(
-            "AnalyzedFunc.func is supposed to be an altered copy of the func "
-            "supplied to the constructor, but the original func was accessed."
+            f"Tried to call forbidden function {self.__name__}."
         )
 
 

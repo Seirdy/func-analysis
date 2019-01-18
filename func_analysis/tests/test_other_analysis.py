@@ -47,7 +47,7 @@ def test_original_func_forbidden(all_analyzed_funcs):
     for analyzed_func in all_analyzed_funcs:
         with raises(RuntimeError) as excinfo:
             analyzed_func.func_plotted.__wrapped__(2)  # noqa: Z441
-        assert "accessed" in str(excinfo.value)
+        assert "forbidden" in str(excinfo.value)
 
 
 def test_parabola_has_symmetry(analyzed_parab):
