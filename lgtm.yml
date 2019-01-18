@@ -4,7 +4,6 @@ extraction:
       version: 3
 queries:
   - include: py/file-not-closed
-  - include: py/uninitialized-local-variable
   - include: py/mixed-tuple-returns
   - include: py/import-of-mutable-attribute
   - include: py/print-during-import
