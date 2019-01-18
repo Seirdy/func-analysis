@@ -71,7 +71,7 @@ commands = sh -c "pydocstyle *.py func_analysis/*.py func_analysis/**/*.py"
 [testenv:mypy]
 basepython = python3
 skip_install = true
-deps = mypy
+deps = mypy-mypyc
 commands =
   mypy .
 
