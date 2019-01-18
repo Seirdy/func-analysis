@@ -23,5 +23,6 @@ queries:
   - include: py/mostly-duplicate-class
   - include: py/ineffectual-statement
   - include: py/overly-complex-delete
-  # false positives
+  # false positive
+  # not included by default, but explicitly excluded just to be safe
   - exclude: py/uninitialized-local-variable

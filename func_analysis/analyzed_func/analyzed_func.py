@@ -30,7 +30,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals, AnalyzedFuncExtrema):
 
         Returns
         -------
-        mp.mpf
+        signed_area : mp.mpf
             The signed area of the analyzed function relative to the
             x-axis.
 
@@ -43,7 +43,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals, AnalyzedFuncExtrema):
 
         Returns
         -------
-        mp.mpf
+        unsigned_area : mp.mpf
             The unsigned area of the analyzed function relative to the
             x-axis.
 

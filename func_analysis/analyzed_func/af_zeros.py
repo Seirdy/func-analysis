@@ -119,11 +119,11 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         """
         for interval in self._all_zero_intervals():
             if self._known_zeros() and interval in self._solved_intervals():
-                # If we made it this far, self._known_zeros will be an iterator
-                # that will not raise a StopIteration exception.
                 yield find_one_zero(
                     self.func,
                     interval,
+                    # If we made it this far, self._known_zeros will
+                    # not raise a StopIteration exception.
                     # pylint: disable=stop-iteration-return
                     next(self._known_zeros())  # type: ignore
                     # pylint: enable=stop-iteration-return
@@ -144,6 +144,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         if not self.zeros_wanted:
             return np.array([])
         if self._zeros is None or len(self._zeros) < self.zeros_wanted:
+            # Collect values from self._compute_zeros() into a numpy array.
             self._zeros = np.array(tuple(self._compute_zeros()))
         return self._zeros
 
