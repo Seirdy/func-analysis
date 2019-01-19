@@ -9,6 +9,7 @@ from func_analysis.analyzed_func.af_intervals_extrema import (
     AnalyzedFuncIntervals,
 )
 from func_analysis.analyzed_func.af_symmetry import AnalyzedFuncSymmetry
+from func_analysis.decorators import copy_docstring_from
 
 
 class AnalyzedFunc(AnalyzedFuncIntervals, AnalyzedFuncExtrema):
@@ -50,32 +51,29 @@ class AnalyzedFunc(AnalyzedFuncIntervals, AnalyzedFuncExtrema):
         """
         return mp.quad(lambda x_val: abs(self.func_real(x_val)), self.x_range)
 
+    # noinspection PyCallingNonCallable
+    @copy_docstring_from(AnalyzedFuncSymmetry.has_symmetry)
     def has_symmetry(self, axis: int) -> bool:
         """Determine if self.func is symmetric about given axis.
 
-        Parameters
-        ----------
-        axis
-            The number representing the domain of the vertical
-            line about which self.func has symmetry.
-
-        Returns
-        -------
-        has_symmetry : bool
-            True if self.func is symmetric about axis, False otherwise.
+        See Also
+        --------
+        AnalyzedFuncSymmetry.has_symmetry
 
         """
         return self._analyzed_func_symmetry.has_symmetry(axis=axis)
 
-    @property
+    # mypy false positive: decorated property not supported.
+    # See https://github.com/python/mypy/issues/1362
+    # noinspection PyCallingNonCallable
+    @property  # type: ignore
+    @copy_docstring_from(AnalyzedFuncSymmetry.vertical_axis_of_symmetry)
     def vertical_axis_of_symmetry(self) -> List[mp.mpf]:
         """Find all vertical axes of symmetry.
 
-        Returns
-        -------
-        list_of_axes : List[Real]
-            A list of x-values for vertical lines about which self.func
-            has symmetry.
+        See Also
+        --------
+        AnalyzedFuncSymmetry.vertical_axis_of_symmetry
 
         """
         return self._analyzed_func_symmetry.vertical_axis_of_symmetry

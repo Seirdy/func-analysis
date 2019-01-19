@@ -96,3 +96,38 @@ class SaveXY(object):
         coordinate = Coordinate(x_val, y_val)
         self.plotted_points.append(coordinate)
         return y_val
+
+
+def copy_docstring_from(good_doc_obj):
+    """Copy another object's docstring into doc of decorated object.
+
+    Parameters
+    ----------
+    good_doc_obj
+        The object to copy the docstring from.
+
+    Returns
+    -------
+    updated_doc_obj_wrapper : object
+        bad_doc_object with a docstring copied from good_doc_obj.
+
+    """
+
+    def wrapper(bad_doc_obj):
+        """Wrap the decorated object.
+
+        Parameters
+        ----------
+        bad_doc_obj
+            The decorated object to update the docstring for.
+
+        Returns
+        -------
+        updated_doc_obj : object
+            bad_doc_obj with a docstring copied from good_doc_obj.
+
+        """
+        bad_doc_obj.__doc__ = good_doc_obj.__doc__
+        return bad_doc_obj
+
+    return wrapper

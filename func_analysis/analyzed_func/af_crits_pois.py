@@ -11,6 +11,7 @@ import numpy as np
 from func_analysis.analyzed_func.af_base import AnalyzedFuncBase
 from func_analysis.analyzed_func.af_zeros import AnalyzedFuncZeros
 from func_analysis.custom_types import Func
+from func_analysis.decorators import copy_docstring_from
 
 
 class _AnalyzedFuncCrits(object):
@@ -79,20 +80,23 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
             self.pois_wanted = pois_wanted
         self._pois = pois
 
-    # pylint and flake8 don't yet recognize postponed evaluation of
-    # annotations.
-    @property
+    # mypy false positive: decorated property not supported.
+    # See https://github.com/python/mypy/issues/1362
+    # noinspection PyCallingNonCallable
+    @property  # type: ignore
+    @copy_docstring_from(AnalyzedFuncZeros.zeros)
     def zeros(self):
         """List all zeros wanted in x_range.
 
-        Returns
-        -------
-        zeros : ndarray
-            An array of precise zeros for self.func.
+        See Also
+        --------
+        AnalyzedFuncZeros.zeros
 
         """
         return self.af_crits.af_zeros.zeros
 
+    # pylint and flake8 don't yet recognize postponed evaluation of
+    # annotations.
     @property
     def rooted_first_derivative(self) -> AnalyzedFuncSpecialPts:  # noqa: F821
         """Analyze self.func's 1st derivative.
