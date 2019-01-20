@@ -53,7 +53,7 @@ linting 3/4:
   stage: test
   image: python:3-slim
   script:
-    tox -e flake8
+    - tox -e flake8
 
 linting 4/4:
   stage: test
@@ -92,3 +92,25 @@ build-release:
       - dist/
   only:
     - tags
+
+deps-report:
+  stage: build
+  image: python:alpine
+  before_script:
+    - pip install requires.io
+  script:
+    - requires.io update-branch -t $REQUIRESIO_TOKEN -r func-analysis -n MASTER .
+  only:
+    refs:
+      - master
+
+deps-report-tag:
+  stage: build
+  image: python:alpine
+  before_script:
+    - pip install requires.io
+  script:
+    - requires.io update-tag -t $REQUIRESIO_TOKEN -r func-analysis -n $CI_COMMIT_TAG .
+  only:
+    - tags
+
