@@ -44,7 +44,7 @@ def get_long_description() -> str:
         The text of README.md.
 
     """
-    with PROJECT_ROOT.joinpath("README.md").open() as file_contents:
+    with PROJECT_ROOT.joinpath("README.rst").open() as file_contents:
         return file_contents.read()
 
 
@@ -82,7 +82,7 @@ setup(
     author_email="seirdy@pm.ch",
     description="Analyze function behavior using introductory calculus.",
     long_description=get_long_description(),
-    long_description_content_type="text/markdown",
+    long_description_content_type="text/x-rst",
     url="https://gitlab.com/Seirdy/func-analysis",
     packages=["func_analysis", "func_analysis.analyzed_func"],
     classifiers=[
