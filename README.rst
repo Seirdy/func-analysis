@@ -2,19 +2,19 @@
 Function Analysis
 =================
 
-+------------------+------------------------------------------------------+
-| CI & Test Status | |gitlab-ci| |coverage|                               |
-+------------------+------------------------------------------------------+
-| Code Quality     | |codeclimate| |codebeat| |codefactor| |LGTM|         |
-+------------------+------------------------------------------------------+
-| Code Style       | |code style: black|                                  |
-+------------------+------------------------------------------------------+
-| Dependencies     | |requires|                                           |
-+------------------+------------------------------------------------------+
-| Usage            | |license|                                            |
-+------------------+------------------------------------------------------+
-| PyPI             | |python version| |latest release|                    |
-+------------------+------------------------------------------------------+
++------------------+-------------------------------------------------------+
+| CI & Test Status | |gitlab-ci| |coverage|                                |
++------------------+-------------------------------------------------------+
+| Code Quality     | |codeclimate| |codacy| |codebeat| |codefactor| |LGTM| |
++------------------+-------------------------------------------------------+
+| Code Style       | |code style: black|                                   |
++------------------+-------------------------------------------------------+
+| Dependencies     | |requires|                                            |
++------------------+-------------------------------------------------------+
+| Usage            | |license|                                             |
++------------------+-------------------------------------------------------+
+| PyPI             | |python version| |latest release|                     |
++------------------+-------------------------------------------------------+
 
 
 This library uses concepts typically taught in an introductory Calculus
@@ -63,6 +63,9 @@ or later.
 .. |codeclimate| image:: https://codeclimate.com/github/Seirdy/func-analysis/badges/gpa.svg
    :target: https://codeclimate.com/github/Seirdy/func-analysis
    :alt: Code Climate
+.. |codacy| image:: https://api.codacy.com/project/badge/Grade/cd4ff1fd5f26481f9da4e9f8a1ee8b7a
+    :target: https://www.codacy.com/app/Seirdy/func-analysis
+    :alt: Codacy
 .. |codebeat| image:: https://codebeat.co/badges/439f2845-f06f-483c-848d-50633cae37bd
    :target: https://codebeat.co/projects/gitlab-com-seirdy-func-analysis-master
    :alt: codebeat badge
