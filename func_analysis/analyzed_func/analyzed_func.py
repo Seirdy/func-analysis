@@ -18,10 +18,50 @@ from func_analysis.decorators import copy_metadata_from
 class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
     """Complete function analysis.
 
-    Function analysis includes:
-        - special points
-        - special intervals
-        - signed/unsigned area.
+    Attributes
+    ----------
+    zeros
+        An array of precise zeros for the function.
+    crits
+        An array of precise critical points for the function.
+    pois
+        An array of precise points of inflection for the function.
+    rooted_first_derivative
+        Analyzed 1st derivative of the function, complete with
+        zeros, crits, and an iterable func.
+    rooted_second_derivative
+        Analyzed 2nd derivative of the function, complete with
+        zeros and an iterable func.
+    increasing
+        All intervals within ``self.x_range`` across which
+        the function is increasing.
+    decreasing
+        All intervals within ``self.x_range`` across which
+        the function is increasing.
+    concave
+        All intervals within ``self.x_range`` across which
+        the function is concave (opening up).
+    convex
+        All intervals within ``self.x_range`` across which
+        the function is convex (opening down).
+    relative_maxima
+        Array of precise relative maxima appearing in x_range.
+    relative_minima
+        Array of precise relative minima appearing in x_range.
+    absolute_maximum
+        The coordinate of the absolute maximum of the function.
+    absolute_minimum
+        The coordinate of the absolute minimum of the function.
+    signed_area
+        The signed area of the analyzed function relative to the
+        x-axis.
+    unsigned_area
+        The unsigned area of the analyzed function relative to the
+        x-axis.
+    vertical_axis_of_symmetry
+        A list of x-values for vertical lines about which the
+        function has symmetry.
+
     """
 
     def __init__(self, **kwargs):
