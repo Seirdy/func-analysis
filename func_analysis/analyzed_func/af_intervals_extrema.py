@@ -117,11 +117,21 @@ class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
         )
 
 
-class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
+class AnalyzedFuncExtrema(object):
     """Function analysis concerning special points.
 
     This class adds relative/absolute extrema to the analysis.
     """
+
+    def __init__(self, **kwargs):
+        """Initialize the object."""
+        self.af_special_pts = AnalyzedFuncSpecialPts(**kwargs)
+
+    def _concavity_at_crits(self):
+        """Find slope of second derivative at each critical point."""
+        return self.af_special_pts.rooted_second_derivative.func_iterable(
+            self.af_special_pts.crits
+        )
 
     @property
     def relative_maxima(self) -> np.ndarray:
@@ -136,15 +146,14 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
             Array of precise relative maxima appearing in x_range.
 
         """
-        fp2_of_crits = self.rooted_second_derivative.func_iterable(self.crits)
-        mask = np.less(fp2_of_crits, 0)
-        return self.crits[mask]
+        mask = np.less(self._concavity_at_crits(), 0)
+        return self.af_special_pts.crits[mask]
 
     @property
     def relative_minima(self) -> np.ndarray:
         """Find all relative maxima of the function.
 
-        Find the subset of ``self.crits`` containing critical numbers
+        Find the subset of ``crits`` containing critical numbers
         appearing on intervals in which the function is concave.
 
         Returns
@@ -153,9 +162,11 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
             Array of precise relative minima appearing in x_range.
 
         """
-        fp2_of_crits = self.rooted_second_derivative.func_iterable(self.crits)
-        mask = np.greater(fp2_of_crits, 0)
-        return self.crits[mask]
+        concavity = self.af_special_pts.rooted_second_derivative.func_iterable(
+            self.af_special_pts.crits
+        )
+        mask = np.greater(concavity, 0)
+        return self.af_special_pts.crits[mask]
 
     @property
     def absolute_maximum(self) -> Coordinate:
@@ -209,6 +220,10 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
             The coordinates of the absolute extrema.
 
         """
-        x_vals: np.ndarray = np.concatenate((points, self.x_range))
-        pairs: np.ndarray = np.stack((x_vals, self.func(x_vals)), axis=-1)
+        x_vals: np.ndarray = np.concatenate(
+            (points, self.af_special_pts.x_range)
+        )
+        pairs: np.ndarray = np.stack(
+            (x_vals, self.af_special_pts.func_iterable(x_vals)), axis=-1
+        )
         return Coordinate(*pairs[extrema_finder(pairs[:, 1])])

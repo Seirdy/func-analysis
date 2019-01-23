@@ -16,9 +16,9 @@ class AnalyzedFuncCounted(AnalyzedFunc):
 
     instances: List[AnalyzedFuncCounted] = []  # noqa: F821
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         """Initialize the object."""
-        super().__init__(*args, **kwargs)
+        super().__init__(**kwargs)
         self.instances.append(self)
 
     @property
