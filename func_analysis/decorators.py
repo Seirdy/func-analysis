@@ -109,7 +109,7 @@ def copy_docstring_from(good_doc_obj):
     Returns
     -------
     updated_doc_obj_wrapper : object
-        bad_doc_object with a docstring copied from good_doc_obj.
+        bad_doc_object with a docstring copied from ```good_doc_obj```.
 
     """
 
@@ -124,7 +124,8 @@ def copy_docstring_from(good_doc_obj):
         Returns
         -------
         updated_doc_obj : object
-            bad_doc_obj with a docstring copied from good_doc_obj.
+            ```bad_doc_obj``` with a docstring copied from
+            ```good_doc_obj```.
 
         """
         bad_doc_obj.__doc__ = good_doc_obj.__doc__

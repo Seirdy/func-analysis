@@ -18,7 +18,7 @@ def make_pairs(points: Iterable[Any]) -> Iterator[Tuple[Any, Any]]:
     Yields
     ------
     Pair: Tuple[Any, Any]
-        Pairing of every two points as an Interval, with redundancy.
+        Pairing of every two points as a ``tuple``.
 
     """
     # Make an iterator that yields each point twice.
@@ -40,7 +40,7 @@ def make_intervals(points: Iterable[Real]) -> Iterator[Interval]:
     Yields
     ------
     Interval
-        Pairing of every two points as an Interval, with redundancy.
+        Pairing of every two points as an ``Interval``.
 
     """
     for pair in make_pairs(points):
@@ -63,7 +63,7 @@ def increasing_intervals(
     -------
     List[Interval]
         Subset of intervals containing only intervals across which
-        self.func is increasing.
+        ``func`` is increasing.
 
     """
     return [
@@ -89,7 +89,7 @@ def decreasing_intervals(
     -------
     List[Interval]
         Subset of intervals containing only intervals across which
-        self.func is decreasing.
+        ``func`` is decreasing.
 
     """
     return [

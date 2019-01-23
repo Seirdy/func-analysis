@@ -15,7 +15,7 @@ class AnalyzedFuncSymmetry(object):
     def __init__(
         self, func, x_range, crits_wanted: int = None, crits: Sequence = None
     ):
-        """Initialize with class composition for AnalyzedFuncSpecialPts."""
+        """Initialize using composition with ``AnalyzedFuncSpecialPts``."""
         self.analyzed_func_special_pts = AnalyzedFuncSpecialPts(
             func=func, x_range=x_range, crits_wanted=crits_wanted, crits=crits
         )
@@ -31,8 +31,8 @@ class AnalyzedFuncSymmetry(object):
         Returns
         -------
         plotted_points: List[Coordinate]
-            Random sample of self.plotted_points with size specified by
-            points_to_plot.
+            Random sample of ``self.plotted_points`` with size specified by
+            ``points_to_plot``.
 
         """
         # Plot at least points_to_plot points.
@@ -46,18 +46,22 @@ class AnalyzedFuncSymmetry(object):
         return random.choices(population=all_points, k=points_to_plot)
 
     def has_symmetry(self, axis: int) -> bool:
-        """Determine if self.func is symmetric about given axis.
+        """Determine function symmetry about a vertical axis.
+
+        Reflects a sample of function coordinates across a vertical
+        axis to determine if y-values remain unchanged.
 
         Parameters
         ----------
         axis
-            The number representing the domain of the vertical
-            line about which self.func has symmetry.
+            The number representing the x-value of the vertical line
+            about which the function might have symmetry.
 
         Returns
         -------
         has_symmetry : bool
-            True if self.func is symmetric about axis, False otherwise.
+            True if the function is symmetric about ``axis``,
+            False otherwise.
 
         """
         saved_coordinates = np.array(self._plot_enough())
@@ -74,8 +78,8 @@ class AnalyzedFuncSymmetry(object):
         Returns
         -------
         list_of_axes : List[Real]
-            A list of x-values for vertical lines about which self.func
-            has symmetry.
+            A list of x-values for vertical lines about which the
+            function has symmetry.
 
         """
         return [

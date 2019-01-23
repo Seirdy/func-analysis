@@ -1,7 +1,7 @@
 [MASTER]
 jobs = 4
 disable =
-  C0330,
+  bad-continuation,
   wrong-import-order,
   no-member,
   import-error,

@@ -9,19 +9,19 @@ from func_analysis.custom_types import Interval
 
 
 def typecheck_multi(item_to_check, *args) -> bool:
-    """Check if item_to_check is instance of anything in *args."""
+    """Ensure ``item_to_check`` is instance of element in ``args``."""
     return any(
         isinstance(item_to_check, allowed_type) for allowed_type in args
     )
 
 
 def typecheck_number(number_to_check):
-    """Assert that item is a Real."""
+    """Assert that item is a number."""
     assert typecheck_multi(number_to_check, Real, float, np.float64, int)
 
 
 def typecheck_iterable(items_to_check: Iterable, *args):
-    """Typecheck items_to_check in an Iterable."""
+    """Typecheck all elements in ``items_to_check``."""
     assert all(
         typecheck_multi(each_item, args) for each_item in items_to_check
     )

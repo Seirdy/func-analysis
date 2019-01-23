@@ -13,11 +13,17 @@ from func_analysis.decorators import copy_docstring_from
 
 
 class AnalyzedFunc(AnalyzedFuncIntervals, AnalyzedFuncExtrema):
-    """Complete function analysis, with special points and intervals."""
+    """Complete function analysis.
+
+    Function analysis includes:
+        - special points
+        - special intervals
+        - signed/unsigned area.
+    """
 
     @property
     def _analyzed_func_symmetry(self) -> AnalyzedFuncSymmetry:
-        """Class composition for AnalyzedFuncSymmetry."""
+        """Class composition for ``AnalyzedFuncSymmetry``."""
         return AnalyzedFuncSymmetry(
             func=self.func_real,
             x_range=self.x_range,
@@ -54,7 +60,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals, AnalyzedFuncExtrema):
     # noinspection PyCallingNonCallable
     @copy_docstring_from(AnalyzedFuncSymmetry.has_symmetry)
     def has_symmetry(self, axis: int) -> bool:
-        """Determine if self.func is symmetric about given axis.
+        """Determine function symmetry about a vertical axis.
 
         See Also
         --------

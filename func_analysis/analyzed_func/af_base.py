@@ -15,6 +15,7 @@ import numpy as np
 from func_analysis.custom_types import Coordinate, Func, Interval
 from func_analysis.decorators import SaveXY
 
+# Need to allow nested imports in order to use backport.
 try:
     from functools import singledispatchmethod  # type: ignore # noqa: Z435
 except ImportError:
@@ -57,7 +58,7 @@ class _AnalyzedFuncBaseFunc(object):
         ------
         TypeError
             If called with argument that isn't an instance
-            of Real or Iterable[Real].
+            of ``Real`` or ``Iterable[Real]``.
 
         """
         bad_types = (type(bad_arg) for bad_arg in args)
@@ -73,31 +74,32 @@ class _AnalyzedFuncBaseFunc(object):
         Parameters
         ----------
         x_val
-            The independent variable to input to self.func_memoized.
+            The independent variable to pass to
+            ``self.func_memoized``.
 
         Returns
         -------
         y_val : Real
-            The y_value of self.func_memoized when x is x_val.
+            The y_value of ``self.func_memoized`` when given ``x_val``.
 
         """
         return self.func_memoized(x_val)
 
     @func.register(abc.Iterable)
     def func_iterable(self, x_vals: Iterable[Real]) -> List[Real]:
-        """Register an iterable type as the parameter for self.func.
+        """Register an iterable type for ``self.func``.
 
-        Map self.func_memoized over iterable input.
+        Map ``self.func_real`` over iterable input.
 
         Parameters
         ----------
         x_vals
-            Multiple x_vals to pass to self.func_real.
+            Multiple x_vals to pass to ``self.func_real``.
 
         Returns
         -------
         y_vals : List[Real]
-            The y-values corresponding to x_vals.
+            The y-values corresponding to ``x_vals``.
 
         """
         return [self.func_real(x_val) for x_val in x_vals]
@@ -127,11 +129,11 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
             The interval of x-values. This is treated as an
             open interval except when finding absolute extrema.
         derivatives
-            A dictionary of derivatives. derivatives[nth]
-            is the nth derivative of func.
+            A dictionary of derivatives. ``derivatives[nth]``
+            is the nth derivative of the function.
         _
-            Unused arguments intended for other AnalyzedFuncBase
-            ancestors.
+            Unused arguments intended for other ``AnalyzedFuncBase``
+            children.
 
         """
 
@@ -141,7 +143,7 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
 
     @property
     def derivatives(self) -> Dict[int, Func]:
-        """Return all known derivatives of self.func.
+        """Return all known derivatives of the function.
 
         Returns
         -------
@@ -158,18 +160,19 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
         return {}
 
     def plot(self, points_to_plot: int) -> np.ndarray:
-        """Produce x,y pairs for self.func in range.
+        """Produce x,y pairs for the function.
 
         Parameters
         ----------
         points_to_plot
-            The number of evenly-spaced points to plot in self.x_range.
+            The number of evenly-spaced points to plot across
+            ``self.x_range``.
 
         Returns
         -------
         xy_table : ndarray of ints
-            A 2d numpy array containing a column of x-values (see
-            Args: x_vals) and computed y-values.
+            A 2d numpy array containing one column for x-values and
+            another column for computed y-values.
 
         """
         x_vals = np.linspace(*self.x_range, points_to_plot)
@@ -179,9 +182,9 @@ class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
     def nth_derivative(self, nth: int) -> Func:
         """Create the nth-derivative of a function.
 
-        If the nth-derivative has already been found, grab it.
-        Otherwise, numerically compute an arbitrary derivative of
-        self.func and save it for re-use.
+        If the nth-derivative has already been found, return that.
+        Otherwise, numerically estimate an arbitrary derivative of
+        the function.
 
         Parameters
         ----------

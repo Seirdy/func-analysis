@@ -30,7 +30,11 @@ class _AnalyzedFuncCrits(object):
             A list of critical numbers already known, used
             as starting points for more precise calculation.
         **kwargs
-            Keyword arguments to pass to AnalyzedFuncZeros.
+            Keyword arguments to pass to ``AnalyzedFuncZeros``.
+
+        See Also
+        --------
+        AnalyzedFuncZeros : embedded via composition.
 
         """
         self.af_zeros = AnalyzedFuncZeros(**kwargs)
@@ -104,8 +108,8 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
         Returns
         -------
         fprime : AnalyzedFuncSpecialPts
-            Analyzed 1st derivative of self.func, complete with zeros,
-            crits, and an iterable func.
+            Analyzed 1st derivative of the function, complete with
+            zeros, crits, and an iterable func.
 
         """
         derivatives_of_fprime: Dict[int, Func] = {
@@ -129,8 +133,8 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
         Returns
         -------
         fprime2 : AnalyzedFuncZeros
-            Analyzed 2nd derivative of self.func, complete with zeros
-            and an iterable func.
+            Analyzed 2nd derivative of the function, complete with
+            zeros and an iterable func.
 
         """
         # This doesn't use the obvious approach of
@@ -157,7 +161,7 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
         Returns
         -------
         crits : ndarray of Reals
-            An array of precise critical points for self.func.
+            An array of precise critical points for the function.
 
         """
         if not self.af_crits.crits_wanted:
@@ -176,7 +180,7 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
         Returns
         -------
         pois : ndarray of Reals.
-            An array of precise points of inflection for self.func.
+            An array of precise points of inflection for the function.
 
         """
         if not self.pois_wanted:

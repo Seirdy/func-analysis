@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 from numbers import Real
-from typing import Iterable, Iterator, List, Optional, Set, Tuple
+from typing import Collection, Iterator, List, Optional, Set, Tuple
 
 import mpmath as mp
 import numpy as np
@@ -20,20 +20,20 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
     """Function analysis with root-finding."""
 
     def __init__(
-        self, zeros_wanted: int = 0, zeros: Iterable[Real] = None, **kwargs
+        self, zeros_wanted: int = 0, zeros: Collection[Real] = None, **kwargs
     ):
         """Initialize the object.
 
         Parameters
         ----------
         zeros_wanted
-            The number of zeros to find
+            The number of zeros to find.
         zeros
             List of zeros already known. Used as starting points for
             more exact computation.
         **kwargs
             Keyword arguments to pass to super. See doc for
-            AnalyzedFunc.__init__()
+            ``AnalyzedFuncBase.__init__()``.
 
         """
         super().__init__(**kwargs)
@@ -52,8 +52,9 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         Returns
         -------
         List[Interval]
-            All x-intervals across which self.func crosses the x-axis.
-            Minimum number of intervals is self.zeros_wanted.
+            All x-intervals across which the function being analyzed
+            crosses the x-axis. Minimum number of intervals is
+            ``self.zeros_wanted``.
 
         """
         points_to_plot = self.zeros_wanted + 3
@@ -73,8 +74,9 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         Returns
         -------
         intervals_found : Set[Interval]
-            A subset of self._all_zero_intervals() containing zeros
-            in self._zeros
+            A subset of ``self._all_zero_intervals()`` containing
+            intervals that contain values already present in
+            ```self._zeros```
 
         """
         return {
@@ -90,13 +92,13 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
 
     @lru_cache(maxsize=1)
     def _known_zeros(self) -> Optional[Iterator[Real]]:
-        """Try to make self._zeros an iterator for _compute_zeros.
+        """Make ``self._zeros`` an iterator, if possible.
 
         Returns
         -------
         zeros : Optional[Iterator[Real]]
-            None if self._zeros is None. Otherwise, an iterator that
-            iterates across self._zeros.
+            ``None`` if ``self._zeros`` is ``None``. Otherwise, an
+            iterator that iterates across ``self._zeros``.
 
         """
         try:
@@ -133,12 +135,12 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
 
     @property
     def zeros(self) -> np.ndarray:
-        """List all zeros wanted in x_range.
+        """Find all zeros wanted.
 
         Returns
         -------
         zeros : ndarray
-            An array of precise zeros for self.func.
+            An array of precise zeros for the function.
 
         """
         if not self.zeros_wanted:
@@ -155,9 +157,10 @@ def find_one_zero(
     """Find the zero of a function in a given interval.
 
     mpmath's zero-finding algorithms require a starting "guess" point.
-    `scipy.optimize.brentq` can find an imprecise zero in a given
-    interval. Combining these, this method uses scipy.optimize's output
-    as a starting point for mpmath's more precise root-finding algo.
+    ``scipy.optimize.brentq`` can find an imprecise zero in a given
+    interval. Combining these, this method uses the output of
+    ``scipy.optimize.brentq`` as a starting point for mpmath's more
+    precise root-finding algo.
 
     If a starting point is provided, the interval argument
     becomes unnecessary.
@@ -167,10 +170,11 @@ def find_one_zero(
     func
         The function to find a zero for.
     x_range
-        The x-interval in which to find a zero.
+        The x-interval in which to find a zero. It must contain at
+        least one zero.
     starting_point
-        A guess-point. Can be `None`, in which case
-        use `scipy.optimize.brentq` to calculate one.
+        A guess-point. Can be ``None``, in which case
+        use ``scipy.optimize.brentq`` to calculate one.
 
     Returns
     -------
@@ -198,14 +202,16 @@ def items_in_range(
     Parameters
     ----------
     unfiltered : ndarray of Reals
-        The 1D array to filter
+        The 1D array to filter.
     interval
-        The closed interval of acceptable values.
+        The closed interval of acceptable values. Doesn't necessarily
+        have to be an instance of Interval.
 
     Returns
     -------
     filtered_items : ndarray
-        A subset of `unfiltered` that includes only values in interval
+        A subset of ``unfiltered`` that includes only values in
+        ``interval``.
 
     """
     mask = np.logical_and(
@@ -225,8 +231,8 @@ def zero_intervals(coordinates: np.ndarray) -> List[Interval]:
     Returns
     -------
     List[Interval]
-        A list of x-intervals across which self.func crosses the
-        x-axis
+        A list of x-intervals across which the function represented
+        by the x-y table crosses the x-axis
 
     """
     x_intervals = make_intervals(coordinates[:, 0])

@@ -85,13 +85,13 @@ def workout_analyzed_func(
     Parameters
     ----------
     analyzed_func
-        The AnalyzedFuncCounted object to run analysis on while
+        The ``AnalyzedFuncCounted`` object to run analysis on while
         counting calls.
 
     Returns
     -------
     Tuple[Dict[str, int], Dict[str, int]]
-        The number of times analyzed_func.func was called, and the
+        The number of times ``analyzed_func.func`` was called, and the
         number of times it was called with a unique argument.
 
     """

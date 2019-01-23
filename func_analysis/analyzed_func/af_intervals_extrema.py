@@ -18,7 +18,7 @@ from func_analysis.interval_util import (
 
 
 class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
-    """Function analysis with special intervals.
+    """Function analysis concerning special intervals.
 
     These intervals include:
         - Intervals of increase/decrease.
@@ -30,8 +30,13 @@ class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
     ) -> Iterator[Interval]:
         """Construct intervals to filter in interval analysis.
 
-        All interval analysis uses intervals bounded by values taken
-        from the x-range and a set of special points.
+        All interval analysis filters a set of intervals constructed
+        from:
+
+        - the upper- and lower- bounds of the x-range
+        - a set of special points (critical or inflection points).
+
+        This method constructs those intervals.
 
         Parameters
         ----------
@@ -51,13 +56,13 @@ class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
 
     @property
     def increasing(self) -> List[Interval]:
-        """List self.func's intervals of increase.
+        """List the function's intervals of increase.
 
         Returns
         -------
         intervals_of_increase : List[Interval]
-            All intervals of self.x_range across which self.func is
-            increasing.
+            All intervals within ``self.x_range`` across which
+            the function is increasing.
 
         """
         return increasing_intervals(
@@ -66,13 +71,13 @@ class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
 
     @property
     def decreasing(self) -> List[Interval]:
-        """List self.func's intervals of decrease.
+        """List the function's intervals of decrease.
 
         Returns
         -------
         intervals_of_decrease : List[Interval]
-            All intervals of self.x_range across which self.func is
-            increasing.
+            All intervals within ``self.x_range`` across which
+            the function is increasing.
 
         """
         return decreasing_intervals(
@@ -81,13 +86,13 @@ class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
 
     @property
     def concave(self) -> List[Interval]:
-        """List self.func's intervals of concavity (opening up).
+        """List the function's intervals of concavity (opening up).
 
         Returns
         -------
         intervals_of_concavity : List[Interval]
-            All intervals of self.x_range across which self.func is
-            concave (opening up).
+            All intervals within ``self.x_range`` across which
+            the function is concave (opening up).
 
         """
         return increasing_intervals(
@@ -97,13 +102,13 @@ class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
 
     @property
     def convex(self) -> List[Interval]:
-        """List self.func's intervals of convexity. (opening down).
+        """List the function's intervals of convexity. (opening down).
 
         Returns
         -------
         intervals_of_convexity : List[Interval]
-            All intervals of self.x_range across which self.func is
-            convex (opening down).
+            All intervals within ``self.x_range`` across which
+            the function is convex (opening down).
 
         """
         return decreasing_intervals(
@@ -113,23 +118,22 @@ class AnalyzedFuncIntervals(AnalyzedFuncSpecialPts):
 
 
 class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
-    """Complete function analysis, with special points and intervals.
+    """Function analysis concerning special points.
 
     This class adds relative/absolute extrema to the analysis.
     """
 
     @property
     def relative_maxima(self) -> np.ndarray:
-        """List all relative maxima of self.func.
+        """Find all relative minima of the function.
 
-        Find the subset of self.crits that includes critical numbers
-        appearing on intervals in which func is convex.
+        Find the subset of ``self.crits`` containing critical numbers
+        appearing on intervals in which the function is convex.
 
         Returns
         -------
         relative_maxima : ndarray of Reals
-            Array of precise relative maxima of self.func appearing in
-            x_range.
+            Array of precise relative maxima appearing in x_range.
 
         """
         fp2_of_crits = self.rooted_second_derivative.func_iterable(self.crits)
@@ -138,16 +142,15 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
 
     @property
     def relative_minima(self) -> np.ndarray:
-        """List all relative maxima of self.func.
+        """Find all relative maxima of the function.
 
-        Find the subset of self.crits that includes critical numbers
-        appearing on intervals in which func is concave.
+        Find the subset of ``self.crits`` containing critical numbers
+        appearing on intervals in which the function is concave.
 
         Returns
         -------
-        relative_minima : ndarray of Coords
-            Array of precise relative minima of self.func appearing in
-            x_range.
+        relative_minima : ndarray of Coordinates
+            Array of precise relative minima appearing in x_range.
 
         """
         fp2_of_crits = self.rooted_second_derivative.func_iterable(self.crits)
@@ -156,7 +159,7 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
 
     @property
     def absolute_maximum(self) -> Coordinate:
-        """Find the absolute maximum of self.simple_func.
+        """Find the absolute maximum of the function.
 
         Find the maximum of self.relative_maxima and the bounds of
         x_range.
@@ -164,8 +167,7 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
         Returns
         -------
         abs_max : Coordinate
-            The x-y coordinate of the absolute maximum of self.func in
-            the form [x, y].
+            The coordinate of the absolute maximum of the function.
 
         """
         return self._absolute_extrema(self.relative_maxima, np.argmax)
@@ -180,8 +182,7 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
         Returns
         -------
         abs_min : Coordinate
-            The x-y coordinate of the absolute minimum of self.func in
-            the form [x, y].
+            The coordinate of the absolute minimum of the function.
 
         """
         return self._absolute_extrema(self.relative_minima, np.argmin)
@@ -197,15 +198,15 @@ class AnalyzedFuncExtrema(AnalyzedFuncSpecialPts):
         ----------
         points
             The contenders for the absolute extrema excluding the
-            bounds of self.x_range.
+            bounds of ``self.x_range``.
         extrema_finder
             The function that computes the index of the extrema
-            (i.e., np.argmax or np.argmin).
+            (i.e., ``np.argmax`` or ``np.argmin``).
 
         Returns
         -------
         absolute_extrema : Coordinate
-            The x-y coordinates of the absolute extrema.
+            The coordinates of the absolute extrema.
 
         """
         x_vals: np.ndarray = np.concatenate((points, self.x_range))

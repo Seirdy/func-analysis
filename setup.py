@@ -14,7 +14,7 @@ PROJECT_ROOT = Path(__file__).parent
 class PyTest(test):
     """Class to execute pytest as test suite without.
 
-    To run tests, just type `python3 setup.py test`.
+    To run tests, just type ``python3 setup.py test``.
     """
 
     def finalize_options(self):
@@ -36,12 +36,12 @@ class PyTest(test):
 
 
 def get_long_description() -> str:
-    """Read README.md.
+    """Read README.rst.
 
     Returns
     -------
     long_description : str
-        The text of README.md.
+        The text of README.rst.
 
     """
     with PROJECT_ROOT.joinpath("README.rst").open() as file_contents:
@@ -54,13 +54,13 @@ def get_version() -> str:
     Returns
     -------
     version : str
-        The version found in func_analysis/__init__.py.
+        The version found in ``func_analysis/__init__.py``.
 
     Raises
     ------
     RuntimeError
         If the string "__version__" cannot be found in the file
-        `func_analysis/__init__.py`.
+        ``func_analysis/__init__.py``.
 
     """
     version_path = PROJECT_ROOT.joinpath("func_analysis", "__init__.py")
