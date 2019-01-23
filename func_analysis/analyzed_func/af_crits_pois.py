@@ -11,7 +11,7 @@ import numpy as np
 from func_analysis.analyzed_func.af_base import AnalyzedFuncBase
 from func_analysis.analyzed_func.af_zeros import AnalyzedFuncZeros
 from func_analysis.custom_types import Func
-from func_analysis.decorators import copy_docstring_from
+from func_analysis.decorators import copy_metadata_from
 
 
 class _AnalyzedFuncCrits(object):
@@ -88,7 +88,7 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
     # See https://github.com/python/mypy/issues/1362
     # noinspection PyCallingNonCallable
     @property  # type: ignore
-    @copy_docstring_from(AnalyzedFuncZeros.zeros)
+    @copy_metadata_from(AnalyzedFuncZeros.zeros)
     def zeros(self):
         """List all zeros wanted in x_range.
 

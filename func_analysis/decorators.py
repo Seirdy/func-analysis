@@ -98,37 +98,40 @@ class SaveXY(object):
         return y_val
 
 
-def copy_docstring_from(good_doc_obj):
-    """Copy another object's docstring into doc of decorated object.
+def copy_metadata_from(good_obj):
+    """Copy another object's metadata into doc of decorated object.
+
+    This copies the docstring and type annotations from one object to
+    another.
 
     Parameters
     ----------
-    good_doc_obj
-        The object to copy the docstring from.
+    good_obj
+        The object to copy the metadata from.
 
     Returns
     -------
-    updated_doc_obj_wrapper : object
-        bad_doc_object with a docstring copied from ```good_doc_obj```.
+    updated_obj_wrapper : object
+        ``bad_obj`` with metadata copied from ``good_obj``.
 
     """
 
-    def wrapper(bad_doc_obj):
+    def wrapper(bad_obj):
         """Wrap the decorated object.
 
         Parameters
         ----------
-        bad_doc_obj
+        bad_obj
             The decorated object to update the docstring for.
 
         Returns
         -------
-        updated_doc_obj : object
-            ```bad_doc_obj``` with a docstring copied from
-            ```good_doc_obj```.
+        updated_obj : object
+            ``bad_doc_obj`` with a docstring copied from
+            ``good_obj``.
 
         """
-        bad_doc_obj.__doc__ = good_doc_obj.__doc__
-        return bad_doc_obj
+        update_wrapper(wrapper=bad_obj, wrapped=good_obj)
+        return bad_obj
 
     return wrapper

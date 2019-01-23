@@ -11,7 +11,7 @@ from func_analysis.analyzed_func.af_intervals_extrema import (
 )
 from func_analysis.analyzed_func.af_symmetry import AnalyzedFuncSymmetry
 from func_analysis.custom_types import Coordinate
-from func_analysis.decorators import copy_docstring_from
+from func_analysis.decorators import copy_metadata_from
 
 
 # This class is kinda big by design; it needs a lot of members.
@@ -39,7 +39,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
     # See https://github.com/python/mypy/issues/1362
     # noinspection PyCallingNonCallable
     @property  # type: ignore
-    @copy_docstring_from(AnalyzedFuncExtrema.relative_minima)
+    @copy_metadata_from(AnalyzedFuncExtrema.relative_minima)
     def relative_minima(self) -> np.ndarray:
         """Find all the relative minima of the function.
 
@@ -54,7 +54,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
     # See https://github.com/python/mypy/issues/1362
     # noinspection PyCallingNonCallable
     @property  # type: ignore
-    @copy_docstring_from(AnalyzedFuncExtrema.relative_maxima)
+    @copy_metadata_from(AnalyzedFuncExtrema.relative_maxima)
     def relative_maxima(self) -> np.ndarray:
         """Find all the relative maxima of the function.
 
@@ -69,7 +69,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
     # See https://github.com/python/mypy/issues/1362
     # noinspection PyCallingNonCallable
     @property  # type: ignore
-    @copy_docstring_from(AnalyzedFuncExtrema.absolute_maximum)
+    @copy_metadata_from(AnalyzedFuncExtrema.absolute_maximum)
     def absolute_maximum(self) -> Coordinate:
         """Find all the absolute maximum of the function.
 
@@ -84,7 +84,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
     # See https://github.com/python/mypy/issues/1362
     # noinspection PyCallingNonCallable
     @property  # type: ignore
-    @copy_docstring_from(AnalyzedFuncExtrema.absolute_minimum)
+    @copy_metadata_from(AnalyzedFuncExtrema.absolute_minimum)
     def absolute_minimum(self) -> Coordinate:
         """Find all the absolute minimum of the function.
 
@@ -122,7 +122,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
         return mp.quad(lambda x_val: abs(self.func_real(x_val)), self.x_range)
 
     # noinspection PyCallingNonCallable
-    @copy_docstring_from(AnalyzedFuncSymmetry.has_symmetry)
+    @copy_metadata_from(AnalyzedFuncSymmetry.has_symmetry)
     def has_symmetry(self, axis: int) -> bool:
         """Determine function symmetry about a vertical axis.
 
@@ -137,7 +137,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
     # See https://github.com/python/mypy/issues/1362
     # noinspection PyCallingNonCallable
     @property  # type: ignore
-    @copy_docstring_from(AnalyzedFuncSymmetry.vertical_axis_of_symmetry)
+    @copy_metadata_from(AnalyzedFuncSymmetry.vertical_axis_of_symmetry)
     def vertical_axis_of_symmetry(self) -> List[mp.mpf]:
         """Find all vertical axes of symmetry.
 
