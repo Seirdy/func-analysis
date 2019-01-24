@@ -71,7 +71,7 @@ class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
         self._af_symmetry = AnalyzedFuncSymmetry(
             func=self.func_real,
             x_range=self.x_range,
-            crits_wanted=self.af_crits.crits_wanted,
+            crits_wanted=self._af_crits.crits_wanted,
             crits=self._crits,
         )
 

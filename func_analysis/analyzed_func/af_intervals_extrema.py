@@ -125,12 +125,12 @@ class AnalyzedFuncExtrema(object):
 
     def __init__(self, **kwargs):
         """Initialize the object."""
-        self.af_special_pts = AnalyzedFuncSpecialPts(**kwargs)
+        self._af_specialpts = AnalyzedFuncSpecialPts(**kwargs)
 
     def _concavity_at_crits(self):
         """Find slope of second derivative at each critical point."""
-        return self.af_special_pts.rooted_second_derivative.func_iterable(
-            self.af_special_pts.crits
+        return self._af_specialpts.rooted_second_derivative.func_iterable(
+            self._af_specialpts.crits
         )
 
     @property
@@ -147,7 +147,7 @@ class AnalyzedFuncExtrema(object):
 
         """
         mask = np.less(self._concavity_at_crits(), 0)
-        return self.af_special_pts.crits[mask]
+        return self._af_specialpts.crits[mask]
 
     @property
     def relative_minima(self) -> np.ndarray:
@@ -162,11 +162,11 @@ class AnalyzedFuncExtrema(object):
             Array of precise relative minima appearing in x_range.
 
         """
-        concavity = self.af_special_pts.rooted_second_derivative.func_iterable(
-            self.af_special_pts.crits
+        concavity = self._af_specialpts.rooted_second_derivative.func_iterable(
+            self._af_specialpts.crits
         )
         mask = np.greater(concavity, 0)
-        return self.af_special_pts.crits[mask]
+        return self._af_specialpts.crits[mask]
 
     @property
     def absolute_maximum(self) -> Coordinate:
@@ -221,9 +221,10 @@ class AnalyzedFuncExtrema(object):
 
         """
         x_vals: np.ndarray = np.concatenate(
-            (points, self.af_special_pts.x_range)
+            (points, self._af_specialpts.x_range)
         )
         pairs: np.ndarray = np.stack(
-            (x_vals, self.af_special_pts.func_iterable(x_vals)), axis=-1
+            (x_vals, self._af_specialpts.func_iterable(x_vals)), axis=-1
         )
+        # build a Coordinate object from the right item in pairs.
         return Coordinate(*pairs[extrema_finder(pairs[:, 1])])

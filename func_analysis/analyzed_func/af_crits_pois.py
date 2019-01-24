@@ -76,10 +76,10 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
 
         """
         super().__init__(**kwargs)
-        self.af_crits = _AnalyzedFuncCrits(**kwargs)
-        self._crits = self.af_crits.crits
+        self._af_crits = _AnalyzedFuncCrits(**kwargs)
+        self._crits = self._af_crits.crits
         if pois_wanted is None:
-            self.pois_wanted = max(self.af_crits.crits_wanted - 1, 0)
+            self.pois_wanted = max(self._af_crits.crits_wanted - 1, 0)
         else:
             self.pois_wanted = pois_wanted
         self._pois = pois
@@ -97,7 +97,7 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
         AnalyzedFuncZeros.zeros
 
         """
-        return self.af_crits.af_zeros.zeros
+        return self._af_crits.af_zeros.zeros
 
     # pylint and flake8 don't yet recognize postponed evaluation of
     # annotations.
@@ -113,15 +113,15 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
 
         """
         derivatives_of_fprime: Dict[int, Func] = {
-            nth - 1: self.af_crits.af_zeros.derivatives[nth]
-            for nth in self.af_crits.af_zeros.derivatives.keys()
+            nth - 1: self._af_crits.af_zeros.derivatives[nth]
+            for nth in self._af_crits.af_zeros.derivatives.keys()
         }
         return AnalyzedFuncSpecialPts(
-            func=self.af_crits.af_zeros.nth_derivative(1),
-            zeros_wanted=max(self.af_crits.crits_wanted, 1),
+            func=self._af_crits.af_zeros.nth_derivative(1),
+            zeros_wanted=max(self._af_crits.crits_wanted, 1),
             zeros=self._crits,
             derivatives=derivatives_of_fprime,
-            x_range=self.af_crits.af_zeros.x_range,
+            x_range=self._af_crits.af_zeros.x_range,
             crits_wanted=self.pois_wanted,
             crits=self._pois,
         )
@@ -141,15 +141,15 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
         # self.rooted_first_derivative.rooted_first_derivative because
         # doing so could re-calculate known values.
         derivatives_of_fprime2: Dict[int, Func] = {
-            nth - 2: self.af_crits.af_zeros.derivatives[nth]
-            for nth in self.af_crits.af_zeros.derivatives.keys()
+            nth - 2: self._af_crits.af_zeros.derivatives[nth]
+            for nth in self._af_crits.af_zeros.derivatives.keys()
         }
         return AnalyzedFuncZeros(
-            func=self.af_crits.af_zeros.nth_derivative(2),
+            func=self._af_crits.af_zeros.nth_derivative(2),
             zeros_wanted=max(self.pois_wanted, 1),
             zeros=self._pois,
             derivatives=derivatives_of_fprime2,
-            x_range=self.af_crits.af_zeros.x_range,
+            x_range=self._af_crits.af_zeros.x_range,
         )
 
     @property
@@ -164,11 +164,11 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
             An array of precise critical points for the function.
 
         """
-        if not self.af_crits.crits_wanted:
+        if not self._af_crits.crits_wanted:
             return np.array([])
         if (
             self._crits is None
-            or len(self._crits) < self.af_crits.crits_wanted
+            or len(self._crits) < self._af_crits.crits_wanted
         ):
             self._crits = self.rooted_first_derivative.zeros
         return self._crits
