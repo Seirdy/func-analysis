@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """Utility functions to typecheck function analysis."""
 from numbers import Real
 from typing import Iterable, Sequence

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """Test memoization of analyzed functions.
 
 This test is relatively slow and time-consuming, and tests a relatively

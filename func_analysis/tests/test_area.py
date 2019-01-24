@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """Test area-finding methods."""
 
 from func_analysis.tests import constants

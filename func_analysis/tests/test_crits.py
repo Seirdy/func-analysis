@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """Tests critical-number-finding algorithms in func_analysis.
 
 This deliberately uses a function requiring a high degree of precision

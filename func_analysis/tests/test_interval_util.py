@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """Tests for func_analysis._util."""
 
 from numbers import Real

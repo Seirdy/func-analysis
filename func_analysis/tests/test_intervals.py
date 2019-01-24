@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """Tests interval-finding algorithms in func_analysis.
 
 These include intervals of increase/decrease and concavity/convexity.

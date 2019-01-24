@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """Add axes-of-symmetry to function analysis."""
 import random
 from typing import List, Sequence

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """Package func-analysis."""
 
 import re

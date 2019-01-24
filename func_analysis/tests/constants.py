@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """Constants to be used in other tests.
 
 This module contains "expected" values to be compared with "actual"

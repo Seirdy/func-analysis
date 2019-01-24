@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """Helper functions for testing AnalyzedFunc."""
 from __future__ import annotations
 

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """Decorators to use in AnalyzedFunc."""
 
 from functools import singledispatch, update_wrapper

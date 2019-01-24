@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """Analyzer of the behavior of mathematical functions.
 
 Given functions that are real, continuous, and differentiable

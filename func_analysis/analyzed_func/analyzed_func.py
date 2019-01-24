@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """The classes that do the actual function analysis."""
 from typing import List
 
