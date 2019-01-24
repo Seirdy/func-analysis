@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from functools import update_wrapper
-from typing import Callable, Dict, List, Tuple
+from typing import Callable, Dict, Tuple
 
 import numpy as np
 
@@ -14,13 +14,6 @@ from func_analysis import AnalyzedFunc
 # pylint: disable=undefined-variable, too-many-ancestors
 class AnalyzedFuncCounted(AnalyzedFunc):
     """Save number of calls/unique calls to function."""
-
-    instances: List[AnalyzedFuncCounted] = []  # noqa: F821
-
-    def __init__(self, **kwargs):
-        """Initialize the object."""
-        super().__init__(**kwargs)
-        self.instances.append(self)
 
     @property
     def counts(self) -> int:
