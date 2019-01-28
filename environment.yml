@@ -29,9 +29,7 @@ dependencies:
   - pyroma
   - wheel
   - setuptools
-  - pytest-pylint
-  - pytest-flake8
-  - tox
+  - tox>=3.7.0
   - twine
   - xenon
   - pip:
@@ -49,8 +47,5 @@ dependencies:
       - flake8-pytest
       - flake8-isort
       - flake8-tidy-imports
-      - pytest-black
-      - pytest-mypy
-      - pytest-docstyle
-      - wemake-python-styleguide
+      - wemake-python-styleguide>=0.8.0
       - yesqa

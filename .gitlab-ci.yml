@@ -5,7 +5,7 @@ stages:
 image: python:alpine
 
 before_script:
-  - pip install tox
+  - pip install tox>=3.7.0
 
 pytest:
   stage: test
@@ -41,24 +41,13 @@ pytest-cov:
 linting 1/4:
   stage: test
   script:
-    - tox -e pydocstyle,pyroma,xenon
+    - tox -e pydocstyle, pyroma, xenon -p auto
 
 linting 2/4:
   stage: test
   image: python:slim
   script:
-    - tox -e mypy
-
-linting 3/4:
-  stage: test
-  image: python:slim
-  script:
-    - tox -e flake8
-
-linting 4/4:
-  stage: test
-  script:
-    - tox -e pylint
+    - tox -e mypy, flake8, pylint -p auto
 
 build-test:
   stage: build
@@ -107,4 +96,3 @@ deps-report-tag:
     - requires.io update-tag -t $REQUIRESIO_TOKEN -r func-analysis -n $CI_COMMIT_TAG .
   only:
     - tags
-

@@ -4,7 +4,7 @@ requires = ['setuptools>=38.6.0', 'wheel>0.31.0']
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py37
+envlist = format, py37, xenon, pyroma, build, mypy, flake8, pydocstyle, pylint
 
 [testenv]
 whitelist_externals =
@@ -97,6 +97,14 @@ deps =
   setuptools
 commands =
   python setup.py sdist bdist_wheel
+
+[testenv:docs]
+changedir = docs
+deps =
+  sphinx
+  numpydoc
+commands =
+  sphinx-build -E -W -c {toxinidir}/docs/source/ -b html {toxinidir}/docs/source/ {toxinidir}/docs/build/html
 
 """
 
