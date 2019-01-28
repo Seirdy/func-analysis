@@ -23,18 +23,40 @@ except ImportError:
     from func_analysis.decorators import singledispatchmethod  # noqa: Z435
 
 
-class _AnalyzedFuncBaseFunc(object):
-    """Initialize single-dispatched AnalyzedFuncBase.func."""
+class AnalyzedFuncBase(object):
+    """Parent class of all function analysis.
 
-    def __init__(self, func: Func):
-        """Initialize a memoized function that saves its computations.
+    AnalyzedFuncBase performs all possible analysis that does NOT
+    require any calculus.
+    """
+
+    def __init__(
+        self,
+        func: Func,
+        x_range: Tuple[Real, Real],
+        derivatives: Dict[int, Func] = None,
+        **_,
+    ):
+        """Initialize AnalyzedFuncBase with explicit MRO.
 
         Parameters
         ----------
         func
             The function to analyze
+        x_range
+            The interval of x-values. This is treated as an
+            open interval except when finding absolute extrema.
+        derivatives
+            A dictionary of derivatives. ``derivatives[nth]``
+            is the nth derivative of the function.
+        _
+            Unused arguments intended for other ``AnalyzedFuncBase``
+            children.
 
         """
+
+        self.x_range = Interval(*x_range)
+        self._derivatives = derivatives
         self.func_plotted = SaveXY(func)
         self.func_memoized = mp.memoize(self.func_plotted)
 
@@ -104,43 +126,6 @@ class _AnalyzedFuncBaseFunc(object):
 
         """
         return [self.func_real(x_val) for x_val in x_vals]
-
-
-class AnalyzedFuncBase(_AnalyzedFuncBaseFunc):
-    """Parent class of all function analysis.
-
-    AnalyzedFuncBase performs all possible analysis that does NOT
-    require any calculus.
-    """
-
-    def __init__(
-        self,
-        func: Func,
-        x_range: Tuple[Real, Real],
-        derivatives: Dict[int, Func] = None,
-        **_,
-    ):
-        """Initialize AnalyzedFuncBase with explicit MRO.
-
-        Parameters
-        ----------
-        func
-            The function to analyze
-        x_range
-            The interval of x-values. This is treated as an
-            open interval except when finding absolute extrema.
-        derivatives
-            A dictionary of derivatives. ``derivatives[nth]``
-            is the nth derivative of the function.
-        _
-            Unused arguments intended for other ``AnalyzedFuncBase``
-            children.
-
-        """
-
-        self.x_range = Interval(*x_range)
-        self._derivatives = derivatives
-        super().__init__(func=func)
 
     @property
     def derivatives(self) -> Dict[int, Func]:
