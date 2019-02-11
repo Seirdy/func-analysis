@@ -38,7 +38,7 @@ def test_trig_func_has_correct_abs_max(analyzed_trig_func):
     exact_expected_max = analyzed_trig_func.relative_maxima[10]
     np.testing.assert_equal(
         trig_abs_max,
-        [exact_expected_max, analyzed_trig_func.func(exact_expected_max)],
+        [exact_expected_max, analyzed_trig_func.func_real(exact_expected_max)],
     )
 
 
@@ -47,5 +47,5 @@ def test_trig_func_has_correct_abs_min(analyzed_trig_func):
     expected_min = analyzed_trig_func.relative_minima[0]
     np.testing.assert_equal(
         analyzed_trig_func.absolute_minimum,
-        [expected_min, analyzed_trig_func.func(expected_min)],
+        [expected_min, analyzed_trig_func.func_real(expected_min)],
     )
