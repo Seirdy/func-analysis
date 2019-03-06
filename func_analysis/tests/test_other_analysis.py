@@ -43,14 +43,6 @@ def test_unregistered_func_exception(all_analyzed_funcs):
         )
 
 
-def test_original_func_forbidden(all_analyzed_funcs):
-    """Test original func supplied to constructor is forbidden."""
-    for analyzed_func in all_analyzed_funcs:
-        with raises(RuntimeError) as excinfo:
-            analyzed_func.func_plotted.__wrapped__(2)  # noqa: Z441
-        assert "forbidden" in str(excinfo.value)
-
-
 def test_parabola_has_symmetry(analyzed_parab):
     """Check analyzed_parab's symmetry functions."""
     assert analyzed_parab.has_symmetry(axis=0)
