@@ -57,6 +57,7 @@ linting 3/4:
 
 linting 4/4:
   stage: test
+  image: python:slim
   script:
     - tox -e pylint
 
