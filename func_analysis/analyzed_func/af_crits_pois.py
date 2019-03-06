@@ -39,10 +39,10 @@ class _AnalyzedFuncCrits(object):
 
         """
         self.af_zeros = AnalyzedFuncZeros(**kwargs)
-        if not crits_wanted:
-            self.crits_wanted = max(self.af_zeros.zeros_wanted - 1, 0)
-        else:
+        if crits_wanted:
             self.crits_wanted = crits_wanted
+        else:
+            self.crits_wanted = max(self.af_zeros.zeros_wanted - 1, 0)
         self.crits = crits
 
 
