@@ -40,9 +40,11 @@ class singledispatchmethod(object):  # NOSONAR  # noqa: N801
         def _method(*args, **kwargs):
             """Access single-dispatch method."""
             method = self.dispatcher.dispatch(args[0].__class__)
-            return method.__get__(obj, cls)(*args, **kwargs)  # type: ignore
+            return method.__get__(obj, cls)(  # noqa: Z
+                *args, **kwargs  # type: ignore
+            )
 
-        _method.__isabstractmethod__ = (  # type: ignore
+        _method.__isabstractmethod__ = (  # type: ignore  # noqa: Z
             self.__isabstractmethod__
         )
         _method.register = self.register  # type: ignore
@@ -52,7 +54,7 @@ class singledispatchmethod(object):  # NOSONAR  # noqa: N801
     @property
     def __isabstractmethod__(self):
         """Magic method for marking decorated func as implemented."""
-        return getattr(self.func, "__isabstractmethod__", False)  # NOQA
+        return getattr(self.func, "__isabstractmethod__", False)  # noqa: Z
 
 
 class SaveXY(object):
