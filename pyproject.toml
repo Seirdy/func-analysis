@@ -98,14 +98,6 @@ deps =
 commands =
   python setup.py sdist bdist_wheel
 
-[testenv:docs]
-changedir = docs
-deps =
-  sphinx
-  numpydoc
-commands =
-  sphinx-build -E -W -c {toxinidir}/docs/source/ -b html {toxinidir}/docs/source/ {toxinidir}/docs/build/html
-
 """
 
 [tool.isort]
