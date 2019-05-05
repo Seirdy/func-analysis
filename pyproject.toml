@@ -40,7 +40,7 @@ basepython = python3
 skip_install = true
 deps =
   flake8
-  wemake-python-styleguide
+  wemake-python-styleguide==0.8.1
   flake8-blind-except
   flake8-deprecated
   flake8-mutable
@@ -71,7 +71,7 @@ commands = sh -c "pydocstyle *.py func_analysis/*.py func_analysis/**/*.py"
 [testenv:mypy]
 basepython = python3
 skip_install = true
-deps = mypy-mypyc
+deps = mypy
 commands =
   mypy .
 
