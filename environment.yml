@@ -30,7 +30,6 @@ dependencies:
   - setuptools
   - twine
   - xenon
-  - python-language-server>=0.22.0
   - pip:
       - cohesion
       - hacking
@@ -45,11 +44,6 @@ dependencies:
       - pytest-sugar>=0.9.2
       - flake8-bandit
       - flake8-pytest
-      - flake8-isort
-      - flake8-tidy-imports
-      - wemake-python-styleguide>=0.7.1
+      # - wemake-python-styleguide>=0.8.1
       - yesqa
-      - pyls-isort
-      - pyls-black
-      - pyls-mypy
       - tox>=3.7.0
