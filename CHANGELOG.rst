@@ -28,10 +28,7 @@ Fixed
 Changed
 -------
 
--  Improved performance of symmetry-finding.
--  Put all pairing logic in the functions ``make_pairs`` and ``make_intervals``
-   in the module ``func_analysis.interval_util``, and make both functions
-   generators.
+-  Improved performance of interval-finding, esp. for symmetry-finding.
 -  Use ``Coordinate`` objects to represent extrema
 
    -  ``AnalyzedFunc.absolute_maximum`` and ``AnalyzedFunc.absolute_minimum``
@@ -49,6 +46,9 @@ Internal
    -  Cohesion still sucks; still have a long way to go!
 
 -  Move once-used functions from ``util.py`` to the submodules that use them.
+-  Put all pairing logic in the functions ``make_pairs`` and ``make_intervals``
+   in the module ``func_analysis.interval_util``, and make both functions
+   generators.
 -  Replace ``util.py`` with ``custom_types.py`` and ``interval_util.py``.
 -  Use reST formatting throughout the program.
 -  Testing improvements:
