@@ -1,3 +1,4 @@
+=================
 Function Analysis
 =================
 
@@ -21,7 +22,7 @@ to describe properties of continuous, differentiable, single-variable
 functions.
 
 Using this library
-------------------
+==================
 
 The ``func_analysis`` module defines the class ``AnalyzedFunc``. An instance of
 this class has several attributes describing the behavior of this function.
@@ -46,7 +47,7 @@ include:
 Any of the above data can be calculated by an instance of ``AnalyzedFunc``.
 
 License
--------
+=======
 
 This program is licensed under the GNU Affero General Public License v3 or
 later.
