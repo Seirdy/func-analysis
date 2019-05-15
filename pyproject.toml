@@ -21,7 +21,7 @@ deps =
   isort
 commands =
   sh -c "isort *.py func_analysis/*.py func_analysis/**/*.py"
-  sh -c "black --py36 -l 79 *.py func_analysis/*.py func_analysis/**/*.py"
+  sh -c "black -l 79 *.py func_analysis/*.py func_analysis/**/*.py"
 
 # Linters
 
@@ -111,6 +111,6 @@ known_future_library="annotations"
 
 [tool.black]
 line-length = 79
-py36 = true
+target-version = ['py37']
 quiet = true
 skip-numeric-underscore-normalization = true
