@@ -10,7 +10,13 @@ to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`__.
 ====================================================================
 
 `Full
-Changelog <https://gitlab.com/Seirdy/func-analysis/compare/0.2.0...master>`__
+Changelog <https://gitlab.com/Seirdy/func-analysis/compare/0.3.0...master>`__
+
+`0.3.0 <https://gitlab.com/Seirdy/func-analysis/tree/0.3.0>`__ (2019-04-16)
+===========================================================================
+
+`Full
+Changelog <https://gitlab.com/Seirdy/func-analysis/compare/0.2.0...0.3.0>`__
 
 Added
 -----
