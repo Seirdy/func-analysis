@@ -11,7 +11,7 @@ import numpy as np
 from func_analysis import AnalyzedFunc
 
 
-# pylint: disable=undefined-variable, too-many-ancestors
+# pylint: disable=too-many-ancestors
 class AnalyzedFuncCounted(AnalyzedFunc):
     """Save number of calls/unique calls to function."""
 
@@ -26,7 +26,7 @@ class AnalyzedFuncCounted(AnalyzedFunc):
         return len(np.unique([coord[0] for coord in self.plotted_points]))
 
 
-# pylint: enable=undefined-variable, too-many-ancestors
+# pylint: enable=too-many-ancestors
 
 
 class ForbidCalling(object):
@@ -103,9 +103,7 @@ def workout_analyzed_func(
     logged_calculation(analyzed_func.convex, "convex")
     saved_coords = set(analyzed_func.plotted_points)
     saved_points = [coord[0] for coord in saved_coords]
-    # noinspection PyTypeChecker
     logged_calculation(analyzed_func.func_iterable(saved_points), "dupe")
-    # noinspection PyTypeChecker
     logged_calculation(
         analyzed_func.rooted_second_derivative.func_iterable(saved_points),
         "sec_der",

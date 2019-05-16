@@ -87,7 +87,6 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
 
     # mypy false positive: decorated property not supported.
     # See https://github.com/python/mypy/issues/1362
-    # noinspection PyCallingNonCallable
     @property  # type: ignore
     @copy_metadata_from(AnalyzedFuncZeros.zeros)
     def zeros(self):

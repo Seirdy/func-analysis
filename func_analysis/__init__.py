@@ -24,9 +24,7 @@ These data can be:
 This code uses the Black formatter.
 """
 
-# noinspection PyUnusedName
 __version__ = "0.2.0"
-# noinspection PyUnusedImport
 from func_analysis.analyzed_func.analyzed_func import (  # noqa: F401
     AnalyzedFunc,
 )

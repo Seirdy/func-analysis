@@ -13,7 +13,6 @@ Func = Callable[[Real], Real]
 
 # "start" and "stop" are sometimes erroneously flagged as unresolved
 # references in the class docstring.
-# noinspection PyUnresolvedReferences
 class Interval(NamedTuple):
     """Special NamedTuple for interval between two numbers.
 
@@ -32,7 +31,6 @@ class Interval(NamedTuple):
 
 # "x_val" and "y_val" are sometimes erroneously flagged as unresolved
 # references in the class docstring.
-# noinspection PyUnresolvedReferences
 class Coordinate(NamedTuple):
     """Special NamedTuple for x-y coordinate.
 

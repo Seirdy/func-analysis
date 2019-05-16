@@ -78,7 +78,6 @@ class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
 
     # mypy false positive: decorated property not supported.
     # See https://github.com/python/mypy/issues/1362
-    # noinspection PyCallingNonCallable
     @property  # type: ignore
     @copy_metadata_from(AnalyzedFuncExtrema.relative_minima)
     def relative_minima(self) -> np.ndarray:
@@ -93,7 +92,6 @@ class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
 
     # mypy false positive: decorated property not supported.
     # See https://github.com/python/mypy/issues/1362
-    # noinspection PyCallingNonCallable
     @property  # type: ignore
     @copy_metadata_from(AnalyzedFuncExtrema.relative_maxima)
     def relative_maxima(self) -> np.ndarray:
@@ -108,7 +106,6 @@ class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
 
     # mypy false positive: decorated property not supported.
     # See https://github.com/python/mypy/issues/1362
-    # noinspection PyCallingNonCallable
     @property  # type: ignore
     @copy_metadata_from(AnalyzedFuncExtrema.absolute_maximum)
     def absolute_maximum(self) -> Coordinate:
@@ -123,7 +120,6 @@ class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
 
     # mypy false positive: decorated property not supported.
     # See https://github.com/python/mypy/issues/1362
-    # noinspection PyCallingNonCallable
     @property  # type: ignore
     @copy_metadata_from(AnalyzedFuncExtrema.absolute_minimum)
     def absolute_minimum(self) -> Coordinate:
@@ -162,7 +158,6 @@ class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
         """
         return mp.quad(lambda x_val: abs(self.func_real(x_val)), self.x_range)
 
-    # noinspection PyCallingNonCallable
     @copy_metadata_from(AnalyzedFuncSymmetry.has_symmetry)
     def has_symmetry(self, axis: int) -> bool:
         """Determine function symmetry about a vertical axis.
@@ -176,7 +171,6 @@ class AnalyzedFunc(AnalyzedFuncIntervals):  # noqa: Z214
 
     # mypy false positive: decorated property not supported.
     # See https://github.com/python/mypy/issues/1362
-    # noinspection PyCallingNonCallable
     @property  # type: ignore
     @copy_metadata_from(AnalyzedFuncSymmetry.vertical_axis_of_symmetry)
     def vertical_axis_of_symmetry(self) -> List[mp.mpf]:

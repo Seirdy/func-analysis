@@ -21,7 +21,6 @@ def test_zeroth_derivative_is_itself(all_analyzed_funcs):
     )
     points = points[abs(points) > 1e-4]
     for analyzed_func in all_analyzed_funcs:
-        # noinspection PyTypeChecker
         np.testing.assert_array_equal(
             analyzed_func.nth_derivative(0)(points), analyzed_func.func(points)
         )

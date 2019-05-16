@@ -185,7 +185,6 @@ def find_one_zero(
     """
     # If a starting point is not provided, find one.
     if starting_point is None:
-        # noinspection PyTypeChecker
         starting_point = brentq(
             f=func, a=x_range[0], b=x_range[1], maxiter=50, disp=False
         )

@@ -66,7 +66,6 @@ class AnalyzedFuncBase(object):
     # and func_iterable access instance state. Therefore, it makes
     # sense to violate wemake-python-styleguide's Z433 and make it
     # static.
-    # noinspection PyNestedDecorators
     @singledispatchmethod  # noqa: Z433
     @staticmethod
     def func(*args) -> None:
