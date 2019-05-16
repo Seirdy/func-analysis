@@ -18,7 +18,7 @@ basepython = python3
 skip_install = true
 deps =
   black
-  isort
+  isort[pyproject]
 commands =
   sh -c "isort *.py func_analysis/*.py func_analysis/**/*.py"
   sh -c "black -l 79 *.py func_analysis/*.py func_analysis/**/*.py"
@@ -57,7 +57,9 @@ commands =
 [testenv:pylint]
 basepython = python3
 skip_install = true
-deps = pylint
+deps =
+  pylint
+  isort[pyproject]
 commands =
   sh -c "pylint *.py func_analysis/*.py func_analysis/analyzed_func/*.py"
   sh -c "pylint -d redefined-outer-name func_analysis/tests/*.py"
