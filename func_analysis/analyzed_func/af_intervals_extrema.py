@@ -128,7 +128,7 @@ class AnalyzedFuncExtrema(object):
         """Initialize the object."""
         self._af_specialpts = AnalyzedFuncSpecialPts(**kwargs)
 
-    def _concavity_at_crits(self):
+    def _concavity_at_crits(self) -> List[Real]:
         """Find slope of second derivative at each critical point."""
         return self._af_specialpts.rooted_second_derivative.func_iterable(
             self._af_specialpts.crits

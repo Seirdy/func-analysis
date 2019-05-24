@@ -23,7 +23,7 @@ class AnalyzedFuncCounted(AnalyzedFunc):
     @property
     def deduped_counts(self) -> int:
         """Remove duplicates from self.counts."""
-        return len(np.unique([coord[0] for coord in self.plotted_points]))
+        return len(np.unique([coord.x_val for coord in self.plotted_points]))
 
 
 # pylint: enable=too-many-ancestors

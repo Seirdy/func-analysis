@@ -83,11 +83,9 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         return {
             possible_zero_interval
             for possible_zero_interval in self._all_zero_intervals()
-            # if any zeros are found that fit in an interval,
-            # include the interval.
             if np.logical_and(
-                self._zeros > possible_zero_interval[0],
-                self._zeros < possible_zero_interval[1],
+                self._zeros > possible_zero_interval.start,
+                self._zeros < possible_zero_interval.stop,
             ).any()
         }
 
@@ -153,7 +151,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
 
 
 def find_one_zero(
-    func: Func, x_range: Tuple[Real, Real], starting_point: Real = None
+    func: Func, x_range: Interval, starting_point: Real = None
 ) -> Real:
     """Find the zero of a function in a given interval.
 
@@ -186,7 +184,7 @@ def find_one_zero(
     # If a starting point is not provided, find one.
     if starting_point is None:
         starting_point = brentq(
-            f=func, a=x_range[0], b=x_range[1], maxiter=50, disp=False
+            f=func, a=x_range.start, b=x_range.stop, maxiter=50, disp=False
         )
     # Maybe this starting point is good enough.
     if not func(starting_point):
