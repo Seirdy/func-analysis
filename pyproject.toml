@@ -80,7 +80,9 @@ commands =
 [testenv:pyroma]
 basepython = python3
 skip_install = true
-deps = pyroma
+deps =
+  pyroma
+  Pygments
 commands =
   pyroma -n 10 .
 
