@@ -9,7 +9,6 @@ envlist = format, py37, xenon, pyroma, build, mypy, flake8, pydocstyle, pylint
 [testenv]
 whitelist_externals =
   sh
-  rm
 commands =
   python3 setup.py test
 
@@ -20,8 +19,8 @@ deps =
   black
   isort[pyproject]
 commands =
-  sh -c "isort *.py func_analysis/*.py func_analysis/**/*.py"
-  sh -c "black -l 79 *.py func_analysis/*.py func_analysis/**/*.py"
+  sh -c "isort *.py func_analysis"
+  sh -c "black *.py func_analysis"
 
 # Linters
 
@@ -40,7 +39,8 @@ basepython = python3
 skip_install = true
 deps =
   flake8
-  wemake-python-styleguide==0.8.1
+  pydocstyle < 4.0.0  # flake8-docstrings 1.3 doesn't support pydocstyle 4.0.0
+  wemake-python-styleguide == 0.9.0
   flake8-blind-except
   flake8-deprecated
   flake8-mutable
@@ -51,8 +51,8 @@ deps =
   flake8-tuple
   hacking
 commands =
-  flake8 --version
-  sh -c "flake8 *.py func_analysis/*.py func_analysis/**/*.py"
+  sh -c "flake8 *.py"
+  flake8 func_analysis
 
 [testenv:pylint]
 basepython = python3
@@ -64,11 +64,14 @@ commands =
   sh -c "pylint *.py func_analysis/*.py func_analysis/analyzed_func/*.py"
   sh -c "pylint -d redefined-outer-name func_analysis/tests/*.py"
 
+# pydocstyle gets own testenv till flake8-docstrings supports pydocstyle 4.0.0
 [testenv:pydocstyle]
 basepython = python3
 skip_install = true
 deps = pydocstyle
-commands = sh -c "pydocstyle *.py func_analysis/*.py func_analysis/**/*.py"
+commands =
+  sh -c "pydocstyle *.py"
+  pydocstyle func_analysis
 
 [testenv:mypy]
 basepython = python3
@@ -82,7 +85,7 @@ basepython = python3
 skip_install = true
 deps =
   pyroma
-  Pygments
+  pygments
 commands =
   pyroma -n 10 .
 
@@ -91,7 +94,7 @@ basepython = python3
 skip_install = true
 deps = xenon
 commands =
-    xenon -b A -a A -m A .
+    xenon -b A -a A -m A func_analysis
 
 [testenv:build]
 basepython = python3
