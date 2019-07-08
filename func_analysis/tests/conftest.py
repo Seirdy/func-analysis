@@ -32,15 +32,13 @@ def trig_func_args() -> MutableMapping:
 @pytest.fixture
 def analyzed_trig_func(trig_func_args) -> AnalyzedFunc:
     """Fixture for an AnalyzedFunc describing trig_func."""
-    analyzed_func = AnalyzedFunc(**trig_func_args)
-    return analyzed_func
+    return AnalyzedFunc(**trig_func_args)
 
 
 @pytest.fixture
 def analyzed_trig_func_counted(trig_func_args) -> AnalyzedFuncCounted:
     """Version of analyzed_trig_func with counted calls."""
-    analyzed_func = AnalyzedFuncCounted(**trig_func_args)
-    return analyzed_func
+    return AnalyzedFuncCounted(**trig_func_args)
 
 
 @pytest.fixture
