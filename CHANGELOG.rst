@@ -1,4 +1,3 @@
-=========
 Changelog
 =========
 
@@ -7,43 +6,69 @@ Changelog <https://keepachangelog.com/en/1.0.0/>`__, and this project adheres
 to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`__.
 
 `Unreleased <https://gitlab.com/Seirdy/func-analysis/tree/master>`__
-====================================================================
+--------------------------------------------------------------------
 
 `Full
 Changelog <https://gitlab.com/Seirdy/func-analysis/compare/0.3.0...master>`__
 
+Added
+~~~~~
+
+Fixed
+~~~~~
+
+-  Typos
+
+Changed
+~~~~~~~
+
+-  Updated type annotations
+
+Internal
+~~~~~~~~
+
+-  Updated tox dependencies
+
 `0.3.0 <https://gitlab.com/Seirdy/func-analysis/tree/0.3.0>`__ (2019-04-16)
-===========================================================================
+---------------------------------------------------------------------------
 
 `Full
 Changelog <https://gitlab.com/Seirdy/func-analysis/compare/0.2.0...0.3.0>`__
 
+.. _added-1:
+
 Added
------
+~~~~~
 
 -  Added new analysis: signed area and unsigned area of the function across the
    x-range.
 -  Docs for all public attributes of ``AnalyzedFunc``.
 
+.. _fixed-1:
+
 Fixed
------
+~~~~~
 
 -  Handle multiple bad args passed to ``AnalyzedFunc.func``.
 -  Interval-finding no longer raises a ``StopIteration`` exception.
 
+.. _changed-1:
+
 Changed
--------
+~~~~~~~
 
 -  Improved performance of interval-finding, esp. for symmetry-finding.
 -  Use ``Coordinate`` objects to represent extrema
 
    -  ``AnalyzedFunc.absolute_maximum`` and ``AnalyzedFunc.absolute_minimum``
-      are now ``Coordinate`` instancesl
+      are now ``Coordinate`` instances
    -  ``AnalyzedFunc.relative_maxima`` and ``AnalyzedFunc.relative_minima`` are
       numpy arrays of ``Coordinate`` objects.
 
+.. _internal-1:
+
 Internal
---------
+~~~~~~~~
 
 -  Improve class cohesion for ``AnalyzedFunc`` and its parents.
 
@@ -63,14 +88,16 @@ Internal
       ``test_other_analysis.test_zeroth_derivative_is_itself``.
    -  Fix some static analyzers missing some directories.
 
+.. _section-1:
+
 `0.2.0 <https://gitlab.com/Seirdy/func-analysis/tree/0.2.0>`__ (2018-12-27)
-===========================================================================
+---------------------------------------------------------------------------
 
 `Full
 Changelog <https://gitlab.com/Seirdy/func-analysis/compare/0.1.2...0.2.0>`__
 
 Summary
--------
+~~~~~~~
 
 This update contains many breaking changes.
 
@@ -83,7 +110,7 @@ properties.
 .. _fixed-1:
 
 Fixed
------
+~~~~~
 
 -  ``zeros_wanted``, ``crits_wanted``, and ``pois_wanted`` cannot be negative
    anymore.
@@ -91,7 +118,7 @@ Fixed
 .. _added-1:
 
 Added
------
+~~~~~
 
 -  ``AnalyzedFunc.func_real`` and ``AnalyzedFunc.func_iterable`` are limited
    versions of AnalyzedFunc.func.
@@ -99,7 +126,7 @@ Added
 .. _changed-1:
 
 Changed
--------
+~~~~~~~
 
 -  In ``AnalyzedFunc.__init__``, rename parameters ``known_zeros``,
    ``known_crits``, and ``known_pois`` to ``zeros``, ``crits``, and ``pois``.
@@ -137,7 +164,7 @@ Changed
 .. _internal-1:
 
 Internal
---------
+~~~~~~~~
 
 -  Split ``analysis_classes`` into ``af_base``, ``af_zeros``,
    ``af_crits_pois``, and ``analyzed_func``.
@@ -175,7 +202,7 @@ Internal
 .. _section-1:
 
 `0.1.2 <https://gitlab.com/Seirdy/func-analysis/tree/0.1.2>`__ (2018-12-19)
-===========================================================================
+---------------------------------------------------------------------------
 
 `Full
 Changelog <https://gitlab.com/Seirdy/func-analysis/compare/0.1.1...0.1.2>`__
@@ -183,21 +210,21 @@ Changelog <https://gitlab.com/Seirdy/func-analysis/compare/0.1.1...0.1.2>`__
 .. _summary-1:
 
 Summary
--------
+~~~~~~~
 
 A bugfix in ``AnalyzedFunc`` and a ton of testing and pipeline improvements.
 
 .. _fixed-2:
 
 Fixed
------
+~~~~~
 
 -  Special point properties work correctly when no special points are wanted.
 
 .. _added-2:
 
 Added
------
+~~~~~
 
 -  More tests
 
@@ -212,7 +239,7 @@ Added
 .. _changed-2:
 
 Changed
--------
+~~~~~~~
 
 -  Testing improvements
 
@@ -229,7 +256,7 @@ Changed
 .. _section-2:
 
 `0.1.1 <https://gitlab.com/Seirdy/func-analysis/tree/0.1.1>`__ (2018-12-17)
-===========================================================================
+---------------------------------------------------------------------------
 
 `Full
 Changelog <https://gitlab.com/Seirdy/func-analysis/compare/0.1.0...0.1.1>`__
@@ -240,7 +267,7 @@ file to PYPI.
 .. _section-3:
 
 `0.1.0 <https://gitlab.com/Seirdy/func-analysis/tree/0.1.0>`__ (2018-12-17)
-===========================================================================
+---------------------------------------------------------------------------
 
 `Full
 Changelog <https://gitlab.com/Seirdy/func-analysis/compare/0.0.1...0.1.0>`__
@@ -248,7 +275,7 @@ Changelog <https://gitlab.com/Seirdy/func-analysis/compare/0.0.1...0.1.0>`__
 .. _added-3:
 
 Added
------
+~~~~~
 
 -  This changelog
 -  Built-in test suite: ``python3 setup.py test`` runs unit tests
@@ -257,7 +284,7 @@ Added
 .. _changed-3:
 
 Changed
--------
+~~~~~~~
 
 -  Now there is only one public class for analyzed functions: ``AnalyzedFunc``.
    It has the same capabilities as ``FuncIntervals`` from v0.0.1
@@ -274,7 +301,7 @@ Changed
 .. _fixed-3:
 
 Fixed
------
+~~~~~
 
 -  Corrected (and expanded) type annotations.
 -  The parameter ``known_zeros`` in ``AnalyzedFunc.__init__()`` is optional.
@@ -282,7 +309,7 @@ Fixed
 .. _section-4:
 
 `0.0.1 <https://gitlab.com/Seirdy/func-analysis/tree/0.0.1>`__ (2018-12-11)
-===========================================================================
+---------------------------------------------------------------------------
 
 `Full Changelog <https://gitlab.com/Seirdy/func-analysis/commits/0.0.1>`__
 

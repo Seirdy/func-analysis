@@ -1,28 +1,26 @@
-=================
 Function Analysis
 =================
 
-+------------------+-------------------------------------------------------+
-| CI & Test Status | |Gitlab Pipeline Status| |Coverage Report|            |
-+------------------+-------------------------------------------------------+
-| Code Quality     | |Code Climate| |Codacy| |codebeat| |CodeFactor|       |
-|                  | |LGTM|                                                |
-+------------------+-------------------------------------------------------+
-| Code Style       | |code style: black|                                   |
-+------------------+-------------------------------------------------------+
-| Dependencies     | |Requirements Status|                                 |
-+------------------+-------------------------------------------------------+
-| Usage            | |license|                                             |
-+------------------+-------------------------------------------------------+
-| PyPI             | |python version| |latest release|                     |
-+------------------+-------------------------------------------------------+
++------------------+--------------------------------------------------------+
+| CI & Test Status | |Gitlab Pipeline Status| |Coverage Report|             |
++------------------+--------------------------------------------------------+
+| Code Quality     | |Code Climate| |Codacy| |codebeat| |CodeFactor| |LGTM| |
++------------------+--------------------------------------------------------+
+| Code Style       | |code style: black|                                    |
++------------------+--------------------------------------------------------+
+| Dependencies     | |Requirements Status|                                  |
++------------------+--------------------------------------------------------+
+| Usage            | |license|                                              |
++------------------+--------------------------------------------------------+
+| Get It           | |python version| |latest release| |repository|         |
++------------------+--------------------------------------------------------+
 
 This library uses concepts typically taught in an introductory Calculus class
 to describe properties of continuous, differentiable, single-variable
 functions.
 
 Using this library
-==================
+------------------
 
 The ``func_analysis`` module defines the class ``AnalyzedFunc``. An instance of
 this class has several attributes describing the behavior of this function.
@@ -47,7 +45,7 @@ include:
 Any of the above data can be calculated by an instance of ``AnalyzedFunc``.
 
 Example Usage
--------------
+~~~~~~~~~~~~~
 
 This paste from an interactive Python session showcases all the functionality
 of ``AnalyzedFunc``:
@@ -57,8 +55,6 @@ of ``AnalyzedFunc``:
    >>> from func_analysis import AnalyzedFunc
 
    >>> import mpmath as mp; import numpy as np
-
-   >>> mp.pretty = True
 
    >>> def example_func(x):
    ...     return mp.cos(x ** 2) - mp.sin(x) + (x / 68)
@@ -235,7 +231,7 @@ Here's an example of a function that's symmetric about the y-axis:
    [0.0]
 
 License
-=======
+-------
 
 This program is licensed under the GNU Affero General Public License v3 or
 later.
@@ -258,9 +254,11 @@ later.
    :target: https://github.com/ambv/black
 .. |Requirements Status| image:: https://requires.io/enterprise/Seirdy/func-analysis/requirements.svg?branch=MASTER
    :target: https://requires.io/enterprise/Seirdy/func-analysis/requirements/?branch=MASTER
-.. |license| image:: https://img.shields.io/pypi/l/func-analysis.svg
+.. |license| image:: https://img.shields.io/pypi/l/func-analysis.svg?logo=gnu
    :target: https://gitlab.com/Seirdy/func-analysis/blob/master/LICENSE
 .. |python version| image:: https://img.shields.io/pypi/pyversions/func-analysis.svg?logo=python
    :target: https://pypi.org/project/func-analysis/
 .. |latest release| image:: https://img.shields.io/pypi/v/func-analysis.svg
    :target: https://pypi.org/project/func-analysis/
+.. |repository| image:: https://img.shields.io/badge/repository-GitLab-orange.svg?logo=gitlab
+   :target: https://gitlab.com/Seirdy/func-analysis
