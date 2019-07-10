@@ -4,8 +4,22 @@ stages:
 
 image: python:alpine
 
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
 before_script:
-  - pip install tox
+  - pip install --upgrade pip
+  - pip install --upgrade virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+  - python -V  # Print out python version for debugging
+  - pip install --upgrade setuptools wheel tox
 
 pytest:
   stage: test
