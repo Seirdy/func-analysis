@@ -104,7 +104,6 @@ deps =
   setuptools
 commands =
   python setup.py sdist bdist_wheel
-	sh -c "pip install dist/*"
 
 """
 
