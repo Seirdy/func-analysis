@@ -144,7 +144,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
         """
         if not self.zeros_wanted:
             return np.array([])
-        if self._zeros is None or len(self._zeros) < self.zeros_wanted:
+        if len(self._zeros) < self.zeros_wanted:
             # Collect values from self._compute_zeros() into a numpy array.
             self._zeros = np.array(tuple(self._compute_zeros()))
         return self._zeros

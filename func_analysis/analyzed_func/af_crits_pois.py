@@ -174,10 +174,7 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
         """
         if not self._af_crits.crits_wanted:
             return np.array([])
-        if (
-            self._crits is None
-            or len(self._crits) < self._af_crits.crits_wanted
-        ):
+        if len(self._crits) < self._af_crits.crits_wanted:
             self._crits = self.rooted_first_derivative.zeros
         return self._crits
 
@@ -193,7 +190,7 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
         """
         if not self.pois_wanted:
             return np.array([])
-        if self._pois is None or len(self._pois) < self.pois_wanted:
+        if len(self._pois) < self.pois_wanted:
             fp2_zeros = self.rooted_second_derivative.zeros
             self._pois = fp2_zeros[
                 np.nonzero(
