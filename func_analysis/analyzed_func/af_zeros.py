@@ -44,7 +44,7 @@ class AnalyzedFuncZeros(AnalyzedFuncBase):
                 np.array(zeros), self.x_range
             )
         else:
-            self._zeros = None
+            self._zeros = np.array(())
 
     @lru_cache(maxsize=1)
     def _all_zero_intervals(self) -> List[Interval]:

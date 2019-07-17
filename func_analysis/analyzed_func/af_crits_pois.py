@@ -43,7 +43,11 @@ class _AnalyzedFuncCrits(object):
             self.crits_wanted = crits_wanted
         else:
             self.crits_wanted = max(self.af_zeros.zeros_wanted - 1, 0)
-        self.crits = crits
+        self.crits: np.ndarray
+        if crits is not None:
+            self.crits = np.array(crits)
+        else:
+            self.crits = np.array(())
 
 
 class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
@@ -83,7 +87,11 @@ class AnalyzedFuncSpecialPts(AnalyzedFuncBase):
             self.pois_wanted = max(self._af_crits.crits_wanted - 1, 0)
         else:
             self.pois_wanted = pois_wanted
-        self._pois = pois
+        self._pois: np.ndarray
+        if pois is not None:
+            self._pois = np.array(pois)
+        else:
+            self._pois = np.array(())
 
     # mypy false positive: decorated property not supported.
     # See https://github.com/python/mypy/issues/1362
