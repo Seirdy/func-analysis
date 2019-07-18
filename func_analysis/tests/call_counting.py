@@ -101,7 +101,7 @@ def workout_analyzed_func(
     logged_calculation(analyzed_func.zeros, "zeros")
     logged_calculation(analyzed_func.absolute_minimum, "abs_min")
     logged_calculation(analyzed_func.convex, "convex")
-    saved_coords = set(analyzed_func.plotted_points)
+    saved_coords = {*(analyzed_func.plotted_points)}
     saved_points = [coord[0] for coord in saved_coords]
     logged_calculation(analyzed_func.func_iterable(saved_points), "dupe")
     logged_calculation(
